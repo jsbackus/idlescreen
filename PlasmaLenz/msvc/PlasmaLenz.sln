@@ -1,0 +1,31 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glut_demo", "glut_demo\PlasmaLenz_glut.vcproj", "{40673460-AD38-42EA-BB87-65AAD770DD20}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scr", "scr\PlasmaLenz_scr.vcproj", "{40673460-AD38-42EA-BB87-65AAD770DD20}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{40673460-AD38-42EA-BB87-65AAD770DD20}.Debug.ActiveCfg = Debug|Win32
+		{40673460-AD38-42EA-BB87-65AAD770DD20}.Debug.Build.0 = Debug|Win32
+		{40673460-AD38-42EA-BB87-65AAD770DD20}.Release.ActiveCfg = Release|Win32
+		{40673460-AD38-42EA-BB87-65AAD770DD20}.Release.Build.0 = Release|Win32
+		{40673460-AD38-42EA-BB87-65AAD770DD20}.Debug.ActiveCfg = Debug|Win32
+		{40673460-AD38-42EA-BB87-65AAD770DD20}.Debug.Build.0 = Debug|Win32
+		{40673460-AD38-42EA-BB87-65AAD770DD20}.Release.ActiveCfg = Release|Win32
+		{40673460-AD38-42EA-BB87-65AAD770DD20}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionItems) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

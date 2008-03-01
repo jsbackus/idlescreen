@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+	<file alias="defaults.xml">defaults.xml</file>
+	<file alias="gplv2.txt">../../common/gpl_related/gplv2.txt</file>
+</qresource>
+</RCC>
