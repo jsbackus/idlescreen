@@ -1,9 +1,0 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-	<file alias="defaults.xml">defaults.xml</file>
-	<file alias="tile1.bmp">images/tile1.bmp</file>
-	<file alias="img31.gif">images/img31.gif</file>
-	<file alias="img21.jpg">images/img21.jpg</file>
-	<file alias="gplv2.txt">../common/gplv2.txt</file>
-</qresource>
-</RCC>
