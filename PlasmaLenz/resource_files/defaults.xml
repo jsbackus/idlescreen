@@ -2,17 +2,17 @@
 <PlasmaLenz_Configuration>
  <BackgroundProfile>
   <type>PlasmaFractalBackground</type>
-  <name>Plasma</name>
+  <name>Classic RGB Profile</name>
   <coarseness>4.5</coarseness>
   <steps_per_tick>2048</steps_per_tick>
   <anmiate_palette>true</anmiate_palette>
   <palette_x_speed>1</palette_x_speed>
   <palette_y_speed>1</palette_y_speed>
   <clamp_color>true</clamp_color>
-  <palette>Classic RGB</palette>
+  <palette>Classic RGB Palette</palette>
  </BackgroundProfile>
  <IndexedPaletteProfile>
-  <name>Classic RGB</name>
+  <name>Classic RGB Palette</name>
   <width>192</width>
   <height>96</height>
   <interpolate_colors>true</interpolate_colors>
@@ -211,24 +211,24 @@
   <instances_max>5</instances_max>
  </LensProfile>
  <MasterProfile>
-  <name>Plasma SCR</name>
+  <name>Classic RGB</name>
   <width>1024</width>
   <height>1024</height>
   <timer_millis>50</timer_millis>
-  <background_profile>Plasma</background_profile>
+  <background_profile>Classic RGB Profile</background_profile>
   <lens_profile>Sphere</lens_profile>
  </MasterProfile>
  <random_master_profiles>false</random_master_profiles>
  <master_profile_history_size>5</master_profile_history_size>
  <master_profile_history>
   <history_entry>
-   <name>Image SCR</name>
+   <name>Classic RGB</name>
    <location>0</location>
   </history_entry>
  </master_profile_history>
  <selected_master_profile_list>
   <selected_entry>
-   <name>Plasma SCR</name>
+   <name>Classic RGB</name>
    <location>0</location>
   </selected_entry>
  </selected_master_profile_list>
