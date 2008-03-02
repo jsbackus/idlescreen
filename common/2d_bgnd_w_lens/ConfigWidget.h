@@ -81,14 +81,9 @@ public slots:
 	void advancedChecked(bool checked = false);
 	void profileNameChange(QString oldName, QString newName);
 
-/*
-	//advanced tools related
-	void editPalClicked(bool checked = false);
-	void editLensClicked(bool checked = false);
-	void editBackgroundClicked(bool checked = false);
 	void importClicked(bool checked = false);
 	void exportClicked(bool checked = false);
-*/
+
 signals:
 	void dialogFinished(void);
 
@@ -106,8 +101,6 @@ private:
 
 	ConfigManager* _manager;
 	GPLDialog* _gplDialog;
-
-	bool _bEnableAdvanced;
 
 	//widget 0 is simple, widget 1 is advanced!
 	QStackedLayout* _stackedLayout;

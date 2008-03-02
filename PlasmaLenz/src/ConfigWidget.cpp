@@ -101,103 +101,33 @@ void ConfigWidget::setup(void) {
 
 	_gplDialog = new GPLDialog(_manager->getGPLAccepted());
 
-	_bEnableAdvanced = true;
-
 	QWidget* tempWidget = NULL;
 	QPushButton* tempButton = NULL;
 	QLabel* tempLabel = NULL;
 	QVBoxLayout* mainLayout = new QVBoxLayout();
-
-	QCheckBox* tempCheckBox = new QCheckBox(tr("Advanced Mode"));
-	tempCheckBox->setCheckable(true);
-	tempCheckBox->setChecked(_bEnableAdvanced);
-	QObject::connect(tempCheckBox, SIGNAL(clicked(bool)), this, SLOT(advancedChecked(bool)));
-	mainLayout->addWidget(tempCheckBox);
 
 	//Master Profile selection lists and related.
 	tempWidget = genMPWidget();
 	mainLayout->addWidget(tempWidget);
 	tempWidget = NULL;
 
-	// *** Begin definition of the Simple/Advanced Stacked Layout
-	//widget 0 is simple, widget 1 is advanced!
-	_stackedLayout = new QStackedLayout();
-	QVBoxLayout* simpleLayout = new QVBoxLayout();
-	QVBoxLayout* advancedLayout = new QVBoxLayout();
-
-	//simple mode
-
-	tempLabel = new QLabel("Simple Mode");
-	simpleLayout->addWidget(tempLabel);
-	tempLabel = NULL;
-
-	//advanced mode
-
-	tempLabel = new QLabel("Advanced Mode");
-	advancedLayout->addWidget(tempLabel);
-	tempLabel = NULL;
-/*
-	//editors button box
-	QHBoxLayout* editorsButtonsLayout = new QHBoxLayout();
-	
-	tempButton = new QPushButton(tr("Import Settings"));
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(importClicked(bool)));
-	editorsButtonsLayout->addWidget(tempButton);
-	tempButton = NULL;
-
-	tempButton = new QPushButton(tr("Export Settings"));
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(exportClicked(bool)));
-	editorsButtonsLayout->addWidget(tempButton);
-	tempButton = NULL;
-
-	editorsButtonsLayout->addStretch(0);
-
-	tempButton = new QPushButton(tr("Background Editor"));
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(editBackgroundClicked(bool)));
-	editorsButtonsLayout->addWidget(tempButton);
-	tempButton = NULL;
-
-	tempButton = new QPushButton(tr("Lens Editor"));
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(editLensClicked(bool)));
-	editorsButtonsLayout->addWidget(tempButton);
-	tempButton = NULL;
-
-	tempButton = new QPushButton(tr("Palette Editor"));
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(editPalClicked(bool)));
-	editorsButtonsLayout->addWidget(tempButton);
-	tempButton = NULL;
-
-	tempWidget = new QWidget();
-	tempWidget->setLayout(editorsButtonsLayout);
-	advancedLayout->addWidget(tempWidget);
-	tempWidget = NULL;
-*/
-	//add simple & advanced layouts to the stacked layout.
-	tempWidget = new QWidget();
-	tempWidget->setLayout(simpleLayout);
-	_stackedLayout->addWidget(tempWidget);
-	tempWidget = NULL;
-
-	tempWidget = new QWidget();
-	tempWidget->setLayout(advancedLayout);
-	_stackedLayout->addWidget(tempWidget);
-	tempWidget = NULL;
-
-	tempWidget = new QWidget();
-	tempWidget->setLayout(_stackedLayout);
-	mainLayout->addWidget(tempWidget);
-	tempWidget = NULL;
-
-	//set up w/r/t mode
-	advancedChecked(_bEnableAdvanced);
-	// *** End definition of the Simple/Advanced Stacked Layout
-
 	//About, OK, Apply, and Cancel buttons
 	QHBoxLayout* botButtonsLayout = new QHBoxLayout();
 	
 	tempButton = new QPushButton(tr("A&bout"));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(aboutClicked(bool)));
-	//QObject::connect(tempButton, SIGNAL(clicked()), _about, SLOT(exec()));
+	botButtonsLayout->addWidget(tempButton);
+	tempButton = NULL;
+
+	//botButtonsLayout->addStretch(0);
+
+	tempButton = new QPushButton(tr("Import Settings"));
+	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(importClicked(bool)));
+	botButtonsLayout->addWidget(tempButton);
+	tempButton = NULL;
+
+	tempButton = new QPushButton(tr("Export Settings"));
+	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(exportClicked(bool)));
 	botButtonsLayout->addWidget(tempButton);
 	tempButton = NULL;
 
@@ -285,21 +215,12 @@ void ConfigWidget::downListClicked(bool checked) {
 }
 
 void ConfigWidget::okClicked(bool checked) {
-/*
-	storeSelected();
-	_manager->setHistorySize(_historyBox->value());
-*/
 	saveData();
 
 	emit dialogFinished();
 }
 
 void ConfigWidget::applyClicked(bool checked) {
-/*
-	storeSelected();
-	_manager->setHistorySize(_historyBox->value());
-	_manager->setTimerMinutes(_timerIntervalBox->value());
-*/
 	saveData();
 }
 
@@ -358,20 +279,25 @@ void ConfigWidget::editMPClicked(bool checked) {
 }
 
 void ConfigWidget::deleteMPClicked(bool checked) {
-	/*
 	if(_mpAvailList == NULL)
 		return;
 
 	QList<QListWidgetItem*> list = _mpAvailList->selectedItems();
 	for(int i=0;i<list.size(); i++) {
-		//first remove from available list.
+		// get the selected master profile
 		QListWidgetItem* tmp = _mpAvailList->takeItem(_mpAvailList->row(list.at(i)));
 		QString name = tmp->text();
 		delete tmp;
 		tmp = NULL;
+
+		//delete the background profile
+		MasterProfile tempMp = _manager->getProfile(name);
+		_manager->removeBackgroundProfile(tempMp.getBackgroundProfileName());
+
+		//delete the master profile
 		_manager->removeProfile(name);
 
-		//now remove from selected list, if it is in there.
+		//now remove the master profile from selected list, if it is in there.
 		int j=0;
 		bool bDone = false;
 		while(!bDone) {
@@ -388,18 +314,10 @@ void ConfigWidget::deleteMPClicked(bool checked) {
 				bDone = true;
 		}
 	}
-	*/
 }
 
 void ConfigWidget::advancedChecked(bool checked) {
-
-	//update internal representation of the check box
-	_bEnableAdvanced = checked;
-
-	//update stacked layout
-	if(_stackedLayout != NULL) {
-		_stackedLayout->setCurrentIndex( _bEnableAdvanced ? 1 : 0);
-	}
+// nada
 }
 
 //clears and then populates both MasterProfile lists.
@@ -582,35 +500,6 @@ void ConfigWidget::profileNameChange(QString oldName, QString newName) {
 		}
 	}
 }
-/*
-void ConfigWidget::editLensClicked(bool checked) {
-//	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
-	LensEditor* dlg = new LensEditor(_manager, this);
-	dlg->exec();
-
-	//clean up
-	delete dlg;
-	dlg = NULL;
-}
-
-void ConfigWidget::editBackgroundClicked(bool checked) {
-//	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
-	BackgroundEditor* dlg = new BackgroundEditor(_manager, this);
-	dlg->exec();
-
-	//clean up
-	delete dlg;
-	dlg = NULL;
-}
-
-void ConfigWidget::editPalClicked(bool checked) {
-	PaletteEditor* dlg = new PaletteEditor(_manager, this);
-	dlg->exec();
-
-	//clean up
-	delete dlg;
-	dlg = NULL;
-}
 
 void ConfigWidget::importClicked(bool checked) {
 	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
@@ -619,4 +508,3 @@ void ConfigWidget::importClicked(bool checked) {
 void ConfigWidget::exportClicked(bool checked) {
 	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
 }
-*/

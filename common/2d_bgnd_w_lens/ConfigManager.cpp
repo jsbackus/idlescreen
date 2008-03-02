@@ -118,9 +118,7 @@ QString ConfigManager::getMainConfigPath() {
 	retVal += "Application Data/";
 #endif
 
-	//**** NOTE!!!!
-	//need to fix!!!
-	retVal += "Phej/" + getAppConfigName();
+	retVal += "idlescreen/" + getAppConfigName();
 
 	return retVal;
 }
