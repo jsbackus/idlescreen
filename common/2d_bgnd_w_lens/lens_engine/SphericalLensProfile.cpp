@@ -247,3 +247,14 @@ LensObject* SphericalLensProfile::getNewLensObject() {
 int SphericalLensProfile::getMaxNumLenses() {
 	return _maxNumLenses;
 }
+
+/*
+ * Creates a new object with this object's settings.
+ */
+LensProfile* SphericalLensProfile::clone() {
+	SphericalLensProfile* retVal = new SphericalLensProfile();
+
+	*retVal = *this;
+
+	return (LensProfile*)retVal;
+}

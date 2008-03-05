@@ -21,10 +21,14 @@
  *     http://trolltech.com/
  * 
  */
+#include <stdlib.h>
+#include <ctime>
+
+using namespace std;
 
 #include <QString>
 
-/*
+/**
  * converts a bool to a QString.
  */
 QString boolToString(bool bVal) {
@@ -32,7 +36,7 @@ QString boolToString(bool bVal) {
 	return (bVal) ? QString("true") : QString("false");
 }
 
-/*
+/**
  * Converts a QString to a bool.  TRUE is returned
  * whenever the provided string equals "true", otherwise
  * false is returned.  Not case-sensitive.
@@ -49,4 +53,23 @@ bool stringToBool(QString &strVal) {
 //returns (v1x,v1y) dot (v2x, v2y)
 float dotProduct(float v1x, float v1y, float v2x, float v2y) {
 	return (v1x*v2x + v1y*v2y);	
+}
+
+/**
+ * Creates a string of random numbers and letters of the
+ * specified length.
+ */
+QString randStr(int length) {
+	//seed the random number generator.
+	srand((unsigned)time( NULL ));
+
+	QString retVal = "";
+	QString validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+	for(int i=0;i<length;i++) {
+		int idx = rand()%validChars.length();
+		retVal.append(validChars.at(idx));
+	}
+
+	return retVal;
 }

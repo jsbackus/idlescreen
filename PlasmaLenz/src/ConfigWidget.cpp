@@ -36,6 +36,9 @@
 //end temp
 
 #include "../../common/2d_bgnd_w_lens/ConfigWidget.h"
+#include "../../common/2d_bgnd_w_lens/PaletteEditor.h"
+#include "ProfileEditDialog.h"
+
 /*
 #include "gui/PaletteEditor.h"
 #include "gui/LensEditor.h"
@@ -111,6 +114,31 @@ void ConfigWidget::setup(void) {
 	mainLayout->addWidget(tempWidget);
 	tempWidget = NULL;
 
+	// import/export/palette editor buttons
+	QHBoxLayout* midButtonsLayout = new QHBoxLayout();
+
+	tempButton = new QPushButton(tr("Palette Editor"));
+	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(paletteEditorClicked(bool)));
+	midButtonsLayout->addWidget(tempButton);
+	tempButton = NULL;
+
+	midButtonsLayout->addStretch(0);
+
+	tempButton = new QPushButton(tr("Import Settings"));
+	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(importClicked(bool)));
+	midButtonsLayout->addWidget(tempButton);
+	tempButton = NULL;
+
+	tempButton = new QPushButton(tr("Export Settings"));
+	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(exportClicked(bool)));
+	midButtonsLayout->addWidget(tempButton);
+	tempButton = NULL;
+
+	tempWidget = new QWidget();
+	tempWidget->setLayout(midButtonsLayout);
+	mainLayout->addWidget(tempWidget);
+	tempWidget = NULL;
+
 	//About, OK, Apply, and Cancel buttons
 	QHBoxLayout* botButtonsLayout = new QHBoxLayout();
 	
@@ -119,17 +147,6 @@ void ConfigWidget::setup(void) {
 	botButtonsLayout->addWidget(tempButton);
 	tempButton = NULL;
 
-	//botButtonsLayout->addStretch(0);
-
-	tempButton = new QPushButton(tr("Import Settings"));
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(importClicked(bool)));
-	botButtonsLayout->addWidget(tempButton);
-	tempButton = NULL;
-
-	tempButton = new QPushButton(tr("Export Settings"));
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(exportClicked(bool)));
-	botButtonsLayout->addWidget(tempButton);
-	tempButton = NULL;
 
 	botButtonsLayout->addStretch(0);
 
@@ -251,22 +268,22 @@ void ConfigWidget::showGPLDialog(void) {
 }
 
 void ConfigWidget::addMPClicked(bool checked) {
-	/*
-	MasterProfileEditDialog* dlg = new MasterProfileEditDialog("", _manager);
+	
+	ProfileEditDialog* dlg = new ProfileEditDialog("", _manager);
 	QObject::connect(dlg, SIGNAL(profileNameChange(QString, QString)), this, SLOT(profileNameChange(QString, QString)));
-	dlg->exec();
-	*/
+	dlg->exec();	
 }
 
 void ConfigWidget::editMPClicked(bool checked) {
-	/*
+//	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+
 	if(_mpAvailList == NULL)
 		return;
 
 	QList<QListWidgetItem*> list = _mpAvailList->selectedItems();
 	for(int i=0;i<list.size(); i++) {
 		QListWidgetItem* tmp = _mpAvailList->item(_mpAvailList->row(list.at(i)));
-		MasterProfileEditDialog* dlg = new MasterProfileEditDialog(tmp->text(), _manager);
+		ProfileEditDialog* dlg = new ProfileEditDialog(tmp->text(), _manager);
 		QObject::connect(dlg, SIGNAL(profileNameChange(QString, QString)), this, SLOT(profileNameChange(QString, QString)));
 		dlg->exec();
 
@@ -275,7 +292,6 @@ void ConfigWidget::editMPClicked(bool checked) {
 		delete dlg;
 		dlg = NULL;
 	}
-	*/
 }
 
 void ConfigWidget::deleteMPClicked(bool checked) {
@@ -507,4 +523,13 @@ void ConfigWidget::importClicked(bool checked) {
 
 void ConfigWidget::exportClicked(bool checked) {
 	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+}
+
+void ConfigWidget::paletteEditorClicked(bool checked) {
+	PaletteEditor* dlg = new PaletteEditor(_manager, this);
+	dlg->exec();
+
+	//clean up
+	delete dlg;
+	dlg = NULL;
 }

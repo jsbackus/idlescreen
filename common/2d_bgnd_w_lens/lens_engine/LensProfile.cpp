@@ -554,4 +554,10 @@ bool LensProfile::isInitialized() {
 	return _bInitialized;
 }
 
+/*
+ * Creates a new object with this object's settings.
+ */
+LensProfile* LensProfile::clone() {
+	return new LensProfile();
+}
 

@@ -83,6 +83,7 @@ public slots:
 
 	void importClicked(bool checked = false);
 	void exportClicked(bool checked = false);
+	void paletteEditorClicked(bool checked = false);
 
 signals:
 	void dialogFinished(void);

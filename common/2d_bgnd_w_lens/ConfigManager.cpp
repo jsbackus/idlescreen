@@ -894,8 +894,7 @@ void ConfigManager::addBackgroundProfile(BackgroundProfile& backgroundProfile) {
 	//check for preexisting profile name.
 	if(!doesProfileExist(backgroundProfile.getName())) {
 		//if not, create a new profile off of the heap to add to the hash.
-		BackgroundProfile* newProfile = new BackgroundProfile();
-		*newProfile = backgroundProfile;
+		BackgroundProfile* newProfile = backgroundProfile.clone();
 		_backgroundHash.insert(backgroundProfile.getName(), newProfile);
 	}
 }
@@ -966,8 +965,7 @@ void ConfigManager::addLensProfile(LensProfile& lensProfile) {
 	//check for preexisting profile name.
 	if(!doesProfileExist(lensProfile.getName())) {
 		//if not, create a new profile off of the heap to add to the hash.
-		LensProfile* newProfile = new LensProfile();
-		*newProfile = lensProfile;
+		LensProfile* newProfile = lensProfile.clone();
 		_lensHash.insert(lensProfile.getName(), newProfile);
 	}
 }

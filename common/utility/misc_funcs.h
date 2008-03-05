@@ -24,12 +24,12 @@
 
 #include <QString>
 
-/*
+/**
  * converts a bool to a QString.
  */
 extern QString boolToString(bool bVal);
 
-/*
+/**
  * Converts a QString to a bool.  TRUE is returned
  * whenever the provided string equals "true", otherwise
  * false is returned.  Not case-sensitive.
@@ -38,3 +38,9 @@ extern bool stringToBool(QString &strVal);
 
 //returns (v1x,v1y) dot (v2x, v2y)
 extern float dotProduct(float v1x, float v1y, float v2x, float v2y);
+
+/**
+ * Creates a string of random numbers and letters of the
+ * specified length.
+ */
+extern QString randStr(int length);

@@ -104,6 +104,12 @@ public:
 	 */
 	QString getLensType();
 
+	/*
+	 * Creates a new object with this object's settings.
+	 */
+	virtual LensProfile* clone();
+
+
 protected:
 	//load and save base class values.  The only values not saved or loaded are _sizeX & _sizeY
 	void loadBase(QDomNode &node);

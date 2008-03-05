@@ -59,6 +59,9 @@ nmake release-clean
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\Background.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\common\2d_bgnd_w_lens\BackgroundProfile.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\configdlg_main.cpp">
 			</File>
 			<File
@@ -110,6 +113,12 @@ nmake release-clean
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\opengl_main.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\common\2d_bgnd_w_lens\PaletteEditor.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\common\2d_bgnd_w_lens\PaletteSelectWidget.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\common\plasma\PlasmaAlgorithm.cpp">
 			</File>
 			<File
@@ -117,6 +126,9 @@ nmake release-clean
 			</File>
 			<File
 				RelativePath="..\..\src\PlasmaFractalBackgroundProfile.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\ProfileEditDialog.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\project_specific_externs.cpp">
@@ -137,6 +149,9 @@ nmake release-clean
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\Background.h">
+			</File>
+			<File
+				RelativePath="..\..\..\common\2d_bgnd_w_lens\BackgroundProfile.h">
 			</File>
 			<File
 				RelativePath="..\..\..\common\core\configdlg_main.h">
@@ -193,6 +208,12 @@ nmake release-clean
 				RelativePath="..\..\..\common\core\opengl_main.h">
 			</File>
 			<File
+				RelativePath="..\..\..\common\2d_bgnd_w_lens\PaletteEditor.h">
+			</File>
+			<File
+				RelativePath="..\..\..\common\2d_bgnd_w_lens\PaletteSelectWidget.h">
+			</File>
+			<File
 				RelativePath="..\..\..\common\plasma\PlasmaAlgorithm.h">
 			</File>
 			<File
@@ -200,6 +221,9 @@ nmake release-clean
 			</File>
 			<File
 				RelativePath="..\..\src\PlasmaFractalBackgroundProfile.h">
+			</File>
+			<File
+				RelativePath="..\..\src\ProfileEditDialog.h">
 			</File>
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\project_specific_extern_defs.h">

@@ -18,6 +18,8 @@ SOURCES		+=	../../../common/2d_bgnd_w_lens/Background.cpp ../../../common/2d_bgn
 SOURCES		+=	../../../common/2d_bgnd_w_lens/configdlg_main.cpp ../../../common/2d_bgnd_w_lens/ConfigManager.cpp
 SOURCES		+=	../../../common/2d_bgnd_w_lens/IndexedPaletteBackground.cpp
 SOURCES		+=	../../../common/2d_bgnd_w_lens/MasterProfile.cpp
+SOURCES		+=	../../../common/2d_bgnd_w_lens/PaletteEditor.cpp
+SOURCES		+=	../../../common/2d_bgnd_w_lens/PaletteSelectWidget.cpp
 
 SOURCES		+=	../../../common/2d_bgnd_w_lens/lens_engine/LensProfile.cpp
 SOURCES		+=	../../../common/2d_bgnd_w_lens/lens_engine/GenericLensObject.cpp
@@ -27,6 +29,7 @@ SOURCES		+=	../../../common/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.cpp
 
 SOURCES		+=	../../src/ConfigWidget.cpp ../../src/PlasmaFractal.cpp
 SOURCES		+=	../../src/PlasmaFractalBackgroundProfile.cpp ../../src/project_specific_externs.cpp
+SOURCES		+=	../../src/ProfileEditDialog.cpp
 
 HEADERS		=	../../../common/core/win_misc_funcs.h
 
@@ -47,6 +50,8 @@ HEADERS		+=	../../../common/2d_bgnd_w_lens/MasterProfile.h
 HEADERS		+=	../../../common/2d_bgnd_w_lens/globaldefs.h 
 HEADERS		+=	../../../common/2d_bgnd_w_lens/ConfigWidget.h
 HEADERS		+=	../../../common/2d_bgnd_w_lens/project_specific_extern_defs.h
+HEADERS		+=	../../../common/2d_bgnd_w_lens/PaletteEditor.h
+HEADERS		+=	../../../common/2d_bgnd_w_lens/PaletteSelectWidget.h
 
 HEADERS		+=	../../../common/2d_bgnd_w_lens/lens_engine/LensProfile.h
 HEADERS		+=	../../../common/2d_bgnd_w_lens/lens_engine/GenericLensObject.h
@@ -56,6 +61,7 @@ HEADERS		+=	../../../common/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h
 
 HEADERS		+=	../../src/PlasmaFractalBackgroundProfile.h ../../src/PlasmaFractal.h
 HEADERS		+=	../../resource_files/resource.h
+HEADERS		+=	../../src/ProfileEditDialog.h
 
 TARGET		= PlasmaLenz_glut
 RC_FILE		= ../../resource_files/win_resource.rc
