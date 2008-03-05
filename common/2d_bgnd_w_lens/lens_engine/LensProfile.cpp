@@ -561,3 +561,40 @@ LensProfile* LensProfile::clone() {
 	return new LensProfile();
 }
 
+/*
+ * Overloaded assignment operator
+ */
+LensProfile& LensProfile::operator=(LensProfile& other) {
+
+	*_pal = *other._pal;
+
+	_name = other._name;
+	_palName = other._palName;
+	_outlineWidth = other._outlineWidth;
+
+	_bRandTint = other._bRandTint;
+	_bUseComplement = other._bUseComplement;
+	_bUseTint = other._bUseTint;
+	_bUseOutlineComplement = other._bUseOutlineComplement;
+	_bUseOutlineTint = other._bUseOutlineTint;
+	_lastColorIndex = other._lastColorIndex;
+
+	_minSpeed = other._minSpeed;
+	_maxSpeed = other._maxSpeed;
+	_bRandSpeed = other._bRandSpeed;
+
+	_minAngle = other._minAngle;
+	_maxAngle = other._maxAngle;
+	_bRandAngle = other._bRandAngle;
+
+	_numSides = other._numSides;
+	for(int i=0; i<_numSides; i++) {
+		_sides[i] = other._sides[i];
+	}
+	_lastSide = other._lastSide;
+	_bRandSide = other._bRandSide;
+	_bInitialized = other._bInitialized;
+
+	return *this;
+}
+

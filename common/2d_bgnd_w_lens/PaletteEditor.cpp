@@ -72,11 +72,13 @@ PaletteEditor::~PaletteEditor() {
 }
 
 void PaletteEditor::closeClicked(bool checked) {
-	emit finished(0);
 	close();
+	emit finished(0);
+//	close();
 }
 
 void PaletteEditor::done(int r) {
-	emit finished(r);
 	close();
+	emit finished(r);
+//	close();
 }

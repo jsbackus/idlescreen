@@ -73,7 +73,7 @@ signals:
 
 private:
 	//attempts to edit the specified palette.
-	void editPalette(IndexedPaletteProfile& pal, bool bWasAddRename = false);
+	void editPalette(IndexedPaletteProfile* pal, bool bWasAddRename = false);
 
 	// populates the palette name selection combo box
 	void populatePalList(QString selected);
@@ -96,6 +96,8 @@ private:
 //	PlasmaFractalBackgroundProfile _plasma;
 
 	IndexedPaletteDialog* _palDlg;
+	QString _palOldName;
+	bool _bFinishedAddEdit;
 
 	// lens related
 

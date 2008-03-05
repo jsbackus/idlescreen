@@ -67,6 +67,11 @@ public:
 	 */
 	void initialize(QHash<QString, IndexedPaletteProfile*>* palHash, screen_struct* screenObj); 
 
+	/*
+	 * Creates a new object with this object's settings.
+	 */
+	LensProfile* clone();
+
 private:
 	QHash<QString, LensProfile*>* _lensHash;
 	QStringList _profiles;

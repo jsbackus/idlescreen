@@ -217,3 +217,15 @@ void LensCollectionProfile::initialize(QHash<QString, IndexedPaletteProfile*>* p
 	}
 	_bInitialized = true;
 }
+
+/*
+ * Creates a new object with this object's settings.
+ */
+LensProfile* LensCollectionProfile::clone() {
+	LensCollectionProfile* retVal = new LensCollectionProfile();
+
+	// deep copy needs implemented!
+	*retVal = *this;
+
+	return (LensProfile*)retVal;
+}

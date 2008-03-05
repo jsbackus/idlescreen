@@ -279,3 +279,15 @@ LensObject* TriangularLensProfile::getNewLensObject() {
 int TriangularLensProfile::getMaxNumLenses() {
 	return _maxNumLenses;
 }
+
+/*
+ * Creates a new object with this object's settings.
+ */
+LensProfile* TriangularLensProfile::clone() {
+	TriangularLensProfile* retVal = new TriangularLensProfile();
+
+	// deep copy needs implemented!
+	*retVal = *this;
+
+	return (LensProfile*)retVal;
+}

@@ -56,6 +56,11 @@ public:
 	 */
 	virtual int getMaxNumLenses();
 
+	/*
+	 * Creates a new object with this object's settings.
+	 */
+	LensProfile* clone();
+
 private:
 	float _minSizeX;
 	float _maxSizeX;

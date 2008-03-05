@@ -21,6 +21,8 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	_paletteXSpeedBox = NULL;
 	_paletteYSpeedBox = NULL;
 	_clampColorBox = NULL;
+	_palDlg = NULL;
+	_bFinishedAddEdit = true;
 
 	_confMgr = confMgr;
 
@@ -329,6 +331,10 @@ ProfileEditDialog::~ProfileEditDialog() {
 		delete _clampColorBox;
 		_clampColorBox = NULL;
 	}
+	if(_palDlg != NULL) {
+		delete _palDlg;
+		_palDlg = NULL;
+	}
 }
 
 void ProfileEditDialog::okClicked(bool checked) {
@@ -345,14 +351,19 @@ void ProfileEditDialog::okClicked(bool checked) {
 
 	// BackgroundProfile related
 	// populate data fields
+	if(_paletteBox->currentIndex() < 0) {
+		QMessageBox::warning(this, _windowTitle, "Please choose a palette from the drop-down box.", QMessageBox::Ok);
+		return;
+	}
+
 	PlasmaFractalBackgroundProfile tmpProfile;
 	tmpProfile.setAnimatePalette(_bAnimatePalette);
 	tmpProfile.setClampColorIndex(_clampColorBox->isChecked());
 	tmpProfile.setCoarseness(_coarsenessBox->value());
 	tmpProfile.setGenStepsPerTick(2048);
-	tmpProfile.setPaletteName(_paletteBox->currentText());
 	tmpProfile.setPaletteXSpeed(_paletteXSpeedBox->value());
 	tmpProfile.setPaletteYSpeed(_paletteYSpeedBox->value());
+	tmpProfile.setPaletteName(_paletteBox->currentText());
 
 	// check for an existing BackgroundProfile.  If none
 	// create a new one, otherwise update the current one.
@@ -366,7 +377,6 @@ void ProfileEditDialog::okClicked(bool checked) {
 		_confMgr->addBackgroundProfile(tmpProfile);
 	} else {
 		tmpProfile.setName(tempName);
-		QMessageBox::warning(this, _windowTitle, "Replacing '" + tempName + "' with '"+tmpProfile.getName()+"'", QMessageBox::Ok);
 		_confMgr->replaceBackgroundProfile(tempName,tmpProfile);		
 	}
 	_mp.setBackgroundProfileName(tempName);
@@ -427,7 +437,6 @@ void ProfileEditDialog::done(int r) {
 }
 
 void ProfileEditDialog::addPalClicked(bool checked) {
-//	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
 	if(_confMgr == NULL)
 		return;
 
@@ -457,30 +466,43 @@ void ProfileEditDialog::addAccepted(void) {
 			QMessageBox::warning(this, 0, "Please enter a valid name.", QMessageBox::Ok);
 
 			//attempt to edit
-			editPalette(pal, true);
+			//editPalette(pal, true);
 		} else if(_confMgr->doesPaletteExist(pal.getName())) {
 			//give the user a warning dialog box
 			QString message(tr("A palette with name '"));
 			message += pal.getName();
 			message += "' already exists.  Please choose a new name.";
 			QMessageBox::warning(this, 0, message, QMessageBox::Ok);
+			pal.setName(QString(""));
 
 			//attempt to edit
-			editPalette(pal, true);
+			//editPalette(pal, true);
 		} else {
 			//nope, not in the list.  Add it!
 			_confMgr->addPalette(pal);
 			_paletteBox->addItem(pal.getName());
+			_bFinishedAddEdit = true;
 		}
 	}
 }
 
 void ProfileEditDialog::editPalClicked(bool checked) {
-	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+//	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+	if(_confMgr == NULL || _paletteBox == NULL)
+		return;
+
+	if(_paletteBox->currentIndex() >= 0) {
+		QString selected = _paletteBox->currentText();
+
+		//first, check for existence.
+		if(_confMgr->doesPaletteExist(selected)) {
+			editPalette(&_confMgr->getPaletteProfile(selected), false);
+		}
+	}
 }
+
 void ProfileEditDialog::editAccepted(void) {
- /*
-	if(_confMgr == NULL || _list == NULL)
+ 	if(_confMgr == NULL || _paletteBox == NULL)
 		return;
 
 	if(_palDlg != NULL) {
@@ -493,7 +515,7 @@ void ProfileEditDialog::editAccepted(void) {
 
 			//restore old name and attempt to edit
 			pal.setName(_palOldName);
-			editPalette(pal, false);
+			editPalette(&pal, false);
 			return;
 		}
 
@@ -505,8 +527,9 @@ void ProfileEditDialog::editAccepted(void) {
 			message += "' already exists.  Please choose a new name.";
 			QMessageBox::warning(this, 0, message, QMessageBox::Ok);
 
-			//attempt to edit
-			editPalette(pal, false);
+			//restore old name and attempt to edit
+			pal.setName(_palOldName);
+			editPalette(&pal, false);
 			return;
 		}
 
@@ -521,34 +544,39 @@ void ProfileEditDialog::editAccepted(void) {
 		//widget, remove the old and add the new
 		if(_palOldName != "" && _palOldName != pal.getName()) {
 			int i=0;
-			int count = _list->count();
-			QListWidgetItem* tmpItem = _list->item(0);
-			while(tmpItem != NULL && tmpItem->text() != _palOldName && i < count) {
+			int count = _paletteBox->count();
+			QString tmpItem = _paletteBox->itemText(0);
+			while(tmpItem != _palOldName && i < count) {
 				i++;
-				tmpItem = _list->item(i);
+				tmpItem = _paletteBox->itemText(i);
 			}
-			if(tmpItem != NULL && tmpItem->text() == _palOldName) {
-				_list->takeItem(i);
-				_list->addItem(pal.getName());
+			if(!tmpItem.isEmpty() && tmpItem == _palOldName) {
+				_paletteBox->removeItem(i);
+				_paletteBox->addItem(pal.getName());
+				_paletteBox->setCurrentIndex(_paletteBox->count()-1);
 			}
 		}
 	}
-	*/
 }
 
 //attempts to edit the specified palette.
-void ProfileEditDialog::editPalette(IndexedPaletteProfile& pal, bool bWasAddRename) {
-/*
+void ProfileEditDialog::editPalette(IndexedPaletteProfile* pal, bool bWasAddRename) {
 	//store the current name, in case the name has changed.  If this is 
 	//a forced rename, don't store the current name.
-	if(bWasAddRename) {
-		_palOldName = "";
+	if(bWasAddRename && pal != NULL) {
+		//_palOldName = "";
 	} else {
-		_palOldName = pal.getName();
+		_palOldName = pal->getName();
 	}
-
+/*
+	if(_palDlg != NULL) {
+		_palDlg->done(0);
+		delete _palDlg;
+		_palDlg = NULL;
+	}
+*/
 	//attempt to create the dialog
-	_palDlg = new IndexedPaletteDialog(&pal,this);
+	_palDlg = new IndexedPaletteDialog(pal,this);
 	if(_palDlg != NULL) {
 		QObject::connect(_palDlg, SIGNAL(paletteUpdated()), this, SLOT(editAccepted()));
 		_palDlg->exec();
@@ -560,7 +588,6 @@ void ProfileEditDialog::editPalette(IndexedPaletteProfile& pal, bool bWasAddRena
 		//problem.  clear the current name
 		_palOldName = "";
 	}
-	*/
 }
 void ProfileEditDialog::animatePalClicked(bool checked) {
 	_bAnimatePalette = checked;

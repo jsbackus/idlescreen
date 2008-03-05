@@ -61,6 +61,11 @@ public:
 	 */
 	LensProfile* clone();
 
+	/*
+	 * Overloaded assignment operator.
+	 */
+	SphericalLensProfile& operator=(SphericalLensProfile& other);
+
 private:
 	float _minRadius;
 	float _maxRadius;

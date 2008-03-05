@@ -109,6 +109,10 @@ public:
 	 */
 	virtual LensProfile* clone();
 
+	/*
+	 * Overloaded assignment operator.
+	 */
+	LensProfile& operator=(LensProfile& other);
 
 protected:
 	//load and save base class values.  The only values not saved or loaded are _sizeX & _sizeY
@@ -134,8 +138,9 @@ protected:
 	static side_type stringToSide(QString side);
 
 	QString _xmlTypeValue; /* Needs set by subclasses!*/
-	IndexedPalette* _pal;
 	screen_struct* _screenObj;
+
+	IndexedPalette* _pal;
 
 	QString _name;
 	QString _palName;

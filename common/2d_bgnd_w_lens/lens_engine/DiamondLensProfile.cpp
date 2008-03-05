@@ -342,3 +342,15 @@ LensObject* DiamondLensProfile::getNewLensObject() {
 int DiamondLensProfile::getMaxNumLenses() {
 	return _maxNumLenses;
 }
+
+/*
+ * Creates a new object with this object's settings.
+ */
+LensProfile* DiamondLensProfile::clone() {
+	DiamondLensProfile* retVal = new DiamondLensProfile();
+
+	// deep copy needs implemented!
+	*retVal = *this;
+
+	return (LensProfile*)retVal;
+}

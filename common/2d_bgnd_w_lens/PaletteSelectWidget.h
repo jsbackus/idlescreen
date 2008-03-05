@@ -65,7 +65,6 @@ private:
 	QListWidget* _list;
 	
 	IndexedPaletteDialog* _palDlg;
-
 	QString _palOldName;
 };
 #endif

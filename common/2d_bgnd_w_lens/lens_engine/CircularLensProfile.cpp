@@ -204,3 +204,15 @@ LensObject* CircularLensProfile::getNewLensObject() {
 int CircularLensProfile::getMaxNumLenses() {
 	return _maxNumLenses;
 }
+
+/*
+ * Creates a new object with this object's settings.
+ */
+LensProfile* CircularLensProfile::clone() {
+	CircularLensProfile* retVal = new CircularLensProfile();
+
+	// deep copy needs implemented!
+	*retVal = *this;
+
+	return (LensProfile*)retVal;
+}
