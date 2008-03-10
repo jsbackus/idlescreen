@@ -1,6 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
-#include "resource1.h"
+#include "redirector_resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 1 TEXTINCLUDE 
 BEGIN
-    "resource1.h\0"
+    "redirector_resource.h\0"
 END
 
 2 TEXTINCLUDE 
@@ -46,7 +46,6 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
@@ -54,7 +53,7 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDS_DESCRIPTION         "Plasma!! With Lenses!!"
+    IDS_REDIRECTOR_ID_STRING "The IdleScreen Project Execution Redirector"
 END
 
 #endif    // English (U.S.) resources

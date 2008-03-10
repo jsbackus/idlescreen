@@ -229,7 +229,7 @@ nmake release-clean
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\project_specific_extern_defs.h">
 			</File>
 			<File
-				RelativePath="..\..\src\resource.h">
+				RelativePath="..\..\resource_files\resource.h">
 			</File>
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\lens_engine\SphericalLensProfile.h">
@@ -243,7 +243,10 @@ nmake release-clean
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 			<File
-				RelativePath=".\win_resource.rc">
+				RelativePath="..\..\resource_files\app_icon.ico">
+			</File>
+			<File
+				RelativePath="..\..\resource_files\win_resource.rc">
 			</File>
 		</Filter>
 		<File

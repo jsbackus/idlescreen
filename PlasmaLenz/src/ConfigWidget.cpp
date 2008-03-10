@@ -62,7 +62,7 @@ ConfigWidget::ConfigWidget(QWidget* parent, Qt::WindowFlags f) {
 
 	setWindowTitle(_windowTitle);
 
-	QIcon icon(":/icon1.png");
+	QIcon icon(":/app_icon.png");
 	setWindowIcon(icon);
 }
 

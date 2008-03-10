@@ -33,7 +33,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 
 	setWindowTitle(_windowTitle);
 	setWindowModality(Qt::WindowModal);
-	QIcon icon(":/icon1.png");
+	QIcon icon(":/app_icon.png");
 	setWindowIcon(icon);
 
 	_oldName = targetName;

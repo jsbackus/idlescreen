@@ -44,8 +44,8 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 	QDialog(parent, f);
 	setWindowTitle(tr("Palette Editor"));
 	setWindowModality(Qt::WindowModal);
-	//QIcon icon(":/icon1.png");
-	//setWindowIcon(icon);
+	QIcon icon(":/app_icon.png");
+	setWindowIcon(icon);
 
 	_prgDlg = NULL;
 	_prgCount = 0;

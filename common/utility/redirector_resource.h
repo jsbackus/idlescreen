@@ -1,10 +1,8 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by win_resource.rc
+// Used by redirector_resource.rc
 //
-#define IDS_DESCRIPTION                 1
-#define ID_APP                          100
-#define DLG_SCRNSAVECONFIGURE           2003
+#define IDS_REDIRECTOR_ID_STRING        2112
 
 // Next default values for new objects
 // 

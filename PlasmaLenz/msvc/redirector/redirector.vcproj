@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.10"
 	Name="redirector"
-	ProjectGUID="{96C65366-D4C3-47AA-9925-B21D364F78D1}"
+	ProjectGUID="{EA7E874D-D7ED-4DAC-B8F8-75917A53A1E2}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"
@@ -35,7 +35,7 @@
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/redirector.pdb"
-				SubSystem="1"
+				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -66,7 +66,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="4"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -79,7 +79,7 @@
 				OutputFile="$(OutDir)/redirector.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"/>
@@ -113,10 +113,10 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="..\..\..\common\utility\file_crc.cpp">
+				RelativePath="..\..\..\common\utility\redirector.cpp">
 			</File>
 			<File
-				RelativePath="..\src\redirector.cpp">
+				RelativePath="..\..\src\redirector_main.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -124,13 +124,19 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath="..\..\..\common\utility\file_crc.h">
+				RelativePath="..\..\..\common\utility\redirector.h">
+			</File>
+			<File
+				RelativePath=".\resource.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+			<File
+				RelativePath=".\redirector.rc">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -39,7 +39,7 @@ GPLDialog::GPLDialog(bool bAccepted, QWidget* parent, Qt::WindowFlags f) {
 	QDialog(parent, f);
 	_bAccepted = bAccepted;
 	setWindowTitle(tr("GPL"));
-	QIcon icon(":/icon1.png");
+	QIcon icon(":/app_icon.png");
 	setWindowIcon(icon);
 
 	QVBoxLayout* layout = new QVBoxLayout();
