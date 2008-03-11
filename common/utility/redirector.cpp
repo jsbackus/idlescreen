@@ -252,6 +252,8 @@ char** convArgs(LPSTR lpCmdLine, int& argc) {
 int redirector(LPSTR lpCmdLine, const char* keyName) {
 	int i;
 
+	bool bIsThumbnail = false;
+
 	int argc = 0;
 	char** argv = NULL;
 
@@ -260,8 +262,17 @@ int redirector(LPSTR lpCmdLine, const char* keyName) {
 	// process arguments, if any.
 	for(i=1;i<argc+1;i++) {
 		char* tmp = argv[i];
-		if(strcmp(argv[i], "-v")==0 || strcmp(argv[i], "-V")==0) {
-			displayAbout();
+		if( (*argv[i] == '-' || *argv[i] == '/') && (*(argv[i]+2) == 0)) {
+			switch(*(argv[i]+1)) {
+				case 'v':
+				case 'V':
+					displayAbout();
+					break;
+				case 'p':
+				case 'P':
+					bIsThumbnail = true;
+					break;
+			}
 		}
 	}
 
@@ -289,15 +300,15 @@ int redirector(LPSTR lpCmdLine, const char* keyName) {
 
 	argv[0] = &path[0];
 
-	// not sure which is better for screen savers, exec or spawn..
-	/*
-	// execute!
-	_execv(&path[0], argv);
-
-	// this is only reached if exec fails.
-	cout<<"Execution failed!  Is '"<<path<<"' correct?"<<endl;
-	return 1;
-	*/
-	_spawnv(_P_WAIT, &path[0], argv);
-	return 0;
+	// if this is a thumbnail, use exec otherwise the setup box
+	// will appear to hang.  Use spawn for all other cases.
+	if(bIsThumbnail) {
+		_execv(&path[0], argv);
+		// this is only reached if exec fails.
+		cout<<"Execution failed!  Is '"<<path<<"' correct?"<<endl;
+		return 1;
+	} else {
+		_spawnv(_P_WAIT, &path[0], argv);
+		return 0;
+	}
 }
