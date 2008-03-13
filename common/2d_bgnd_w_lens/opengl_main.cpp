@@ -45,6 +45,7 @@ LensManager* _lensManager;
 ConfigManager* _configManager;
 Background* backgroundObj;
 screen_struct _screenObj;
+bool bDontSave; // so that the glut demo can specify a different config file to load.
 
 /**
  * Sets up the OpenGL viewport.  Takes as an argument the height and width
@@ -164,7 +165,9 @@ void exitFunc(void)
 
 	if(_configManager != NULL) {
 		//save
-		_configManager->save();
+		if(!bDontSave) {
+			_configManager->save();
+		}
 		delete _configManager;
 		_configManager = NULL;
 	}
@@ -188,11 +191,13 @@ long getTimerMillis() {
 
 /**
  * Initializes any global variables that aren't architecture specific.
- * Note: This is called before OpenGL is initialized.
+ * Note: This is called before OpenGL is initialized.  Takes as an
+ * argument the name of the config file to load.  If NULL, loads
+ * from the default location.
  */
-void initFunc(void)
-{
-	//move this to opengl_main! (?)
+void initFunc(char* filename) {
+	bDontSave = false;
+
 	/** NOTE!!! You have to use a QApplication (somewhere) to load plugins! **/
 	int argc=0;
 	QApplication app(argc, NULL);
@@ -208,7 +213,15 @@ void initFunc(void)
 
 	//set up the config manager
 	_configManager = new ConfigManager();
-	_configManager->load();
+	if(filename == NULL) {
+		_configManager->load();
+	} else {
+		bDontSave = true;
+		_configManager->deleteAllSettings();
+		if(!_configManager->importFromFile(QString(filename), true)) {
+			_configManager->load();
+		}
+	}
 	_configManager->chooseActiveProfile();
 
 	//set up the screen object

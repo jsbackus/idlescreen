@@ -30,11 +30,19 @@
 #ifndef __OPENGL_MAIN_H__
 #define __OPENGL_MAIN_H__
 
+#ifdef _M_IX86
+#include <windows.h>
+#else
+#include <stream.h>
+#endif
+
 /**
  * Initializes any global variables that aren't architecture specific.
- * Note: This is called before OpenGL is initialized.
+ * Note: This is called before OpenGL is initialized.  Takes as an
+ * argument the name of the config file to load.  If NULL, loads
+ * from the default location.
  */
-extern void initFunc(void);
+extern void initFunc(char* filename = NULL);
 
 /**
  * Sets up the OpenGL viewport.  Takes as an argument the height and width

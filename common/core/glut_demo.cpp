@@ -50,6 +50,12 @@
 #include <gl/glu.h>
 #include <glut.h>
 
+#include <QString>
+#include <QStringList>
+#include <QDateTime>
+#include <QImage>
+#include <QFile>
+
 #include "opengl_main.h"
 
 using namespace std;
@@ -58,22 +64,41 @@ void init(void);
 void display(void);
 void timerFunc( int );
 void handle_kb(unsigned char, int, int);
+void takeSnapshot(void);
+void handleArgs(int, char**);
 
 int	window_id;	// the window id
 
 //Maintains the configuraiton
 bool bShowFPS;
+QString capturePath;
+QString captureExt;
+int captureNextNum;
+int viewportWidth;
+int viewportHeight;
+char* configFile;
+
+// used to calculate FPS
 long lastTimeStamp;
 int frameCount;
+
 void main(int argc, char* argv[])
 {
-	//load configuration
-	//confMgr = ConfigManager().getConfigManager();
-	//set up any data structures
-	initFunc();
 	frameCount = 0;
 	lastTimeStamp = time(NULL);
 	bShowFPS = true;
+	viewportWidth = 1024;
+	viewportHeight = 768;
+	captureNextNum = 0;
+	capturePath = QString("./");
+	captureExt = ".BMP";
+	configFile = NULL;
+
+	// process command-line arguments and set up path for capture
+	handleArgs(argc, argv);
+
+	//set up any data structures
+	initFunc(configFile);
 
 	//initialize & set up glut
 	glutInit( &argc, argv );
@@ -97,7 +122,7 @@ void main(int argc, char* argv[])
 void init(void)
 {
 	//set up viewport
-	setupViewport(1280,1024);
+	setupViewport(viewportWidth,viewportHeight);
 
 }
 
@@ -127,11 +152,14 @@ void timerFunc( int value)
 
 void handle_kb(unsigned char key, int x, int y)
 {
-	switch(key)
-	{
+	switch(key) {
 	case 32:	//space bar
 		//toggle fps dump
 		bShowFPS = !bShowFPS;
+		break;
+	case 's':
+	case 'S':
+		takeSnapshot();
 		break;
 	default:
 		exitFunc();
@@ -140,3 +168,116 @@ void handle_kb(unsigned char key, int x, int y)
 	}
 }
 
+/**
+ * Attempts to dump the framebuffer into a file.  Automatically
+ * generates the filename.
+ */
+void takeSnapshot(void) {
+	if(viewportHeight < 1 || viewportWidth <1)
+		return;
+
+	// create data space
+	unsigned char* buff = new unsigned char[viewportWidth*viewportHeight*3];
+	if(buff == NULL)
+		return;
+
+	// grab the data from the framebuffer
+	glReadBuffer(GL_FRONT);
+	glReadPixels(0, 0, viewportWidth-1, viewportHeight-1, GL_RGB, GL_UNSIGNED_BYTE, buff);
+
+	// stuff into a QImage object
+	QImage imageObj(viewportWidth, viewportHeight, QImage::Format_RGB32);
+	for(int y=0;y<viewportHeight;y++) {
+		int yOffset = (viewportHeight-1-y)*viewportWidth;
+		for(int x=0;x<viewportWidth;x++) {
+			// pack RGB values into an unsigned int
+			// NOTE: this code is architecture dependent!
+			int idx = (x+yOffset)*3;
+			unsigned int color = 0xFF;
+			for(int k=0;k<3;k++) {
+				color = color << 8 | (buff[idx+k] & 0xFF);
+			}
+			// set the pixel in the QImage object
+			imageObj.setPixel(x, y, color);
+		}
+	}
+
+	// save to file
+	if(!imageObj.isNull()) {
+		QString filename = capturePath+QString::number(captureNextNum++)+captureExt;
+		imageObj.save(filename);
+	}
+}
+
+// process arguments and set globals
+void handleArgs(int argc, char** argv) {
+	if(argc < 1)
+		return;
+
+	for(int i=1; i<argc+1;i++) {
+		if(argv[i] != NULL && (argv[i][0] == '-' || argv[i][0] == '/')) {
+			switch(argv[i][1]) {
+				case 'p':
+				case 'P':
+					// set snapshot path
+					if(i < argc) {
+						// if not the last argument, get path and remove all quotes
+						capturePath = QString(argv[i+1]).remove('\"').remove('\'');
+					}
+					break;
+				case 'e':
+				case 'E':
+					// set snapshot extension
+					if(i < argc) {
+						// if not the last argument, get extension
+						captureExt = QString(".") + QString(argv[i+1]);
+					}
+					break;
+				case 'd':
+				case 'D':
+					// set viewport dimensions
+					if(i < argc) {
+						// looking for string WWWWxHHHH.  If
+						// x not present, dimensions are equal
+						QString tmpStr(argv[i+1]);
+						QStringList dimList = tmpStr.split("x");
+						bool bOk;
+						if(dimList.size() > 1) {
+							viewportWidth = dimList.at(0).toInt(&bOk);
+							if(!bOk)
+								viewportWidth = 1024;
+							viewportHeight = dimList.at(1).toInt(&bOk);
+							if(!bOk)
+								viewportHeight = 768;
+						} else {
+							viewportWidth = dimList.at(0).toInt(&bOk);
+							viewportHeight = viewportWidth;
+							if(!bOk) {
+								viewportWidth = 1024;
+								viewportHeight = 768;
+							}
+						}
+					}
+					break;
+				case 'c':
+				case 'C':
+					// set config file
+					if(i < argc) {
+						// if not the last argument, get config file name
+						int len = strlen(argv[i+1]);
+						configFile = new char[len];
+						if(configFile == NULL)
+							break;
+						strcpy(configFile, argv[i+1]);
+					}
+					break;
+				case 'f':
+				case 'F':
+					// log FPS
+					bShowFPS = true;
+					break;
+			}
+		}
+	}
+	capturePath = capturePath+QString("/")+QDateTime::currentDateTime().toString("yyyyMMddhhmmss")+QString("_");
+}
