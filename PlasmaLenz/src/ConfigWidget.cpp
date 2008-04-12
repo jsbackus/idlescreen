@@ -38,6 +38,7 @@
 #include "../../common/2d_bgnd_w_lens/ConfigWidget.h"
 #include "../../common/2d_bgnd_w_lens/PaletteEditor.h"
 #include "ProfileEditDialog.h"
+#include "AboutDialog.h"
 
 /*
 #include "gui/PaletteEditor.h"
@@ -255,7 +256,12 @@ void ConfigWidget::aboutClicked(bool checked) {
 */
 	//temporary!
 	//QMessageBox::information(this, tr("About"), "Not implemented yet.", QMessageBox::Ok);
-	QMessageBox::aboutQt(this, "About");
+	AboutDialog* dlg = new AboutDialog();
+	if(dlg != NULL) {
+		dlg->exec();
+		delete dlg;
+		dlg = NULL;
+	}
 }
 
 //shows the GPL dialog
