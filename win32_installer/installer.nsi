@@ -1,5 +1,7 @@
 # Globals
-!define VERSION "0.2"
+!define VERSION_MAJOR "0"
+!define VERSION_MINOR "2"
+!define VERSION "${VERSION_MAJOR}.${VERSION_MINOR}"
 Name "Idle Screen Installer ${VERSION}"
 OutFile "idlescreen_${VERSION}.exe"
 SetCompressor /FINAL lzma
@@ -14,7 +16,12 @@ Var UNINST_NAME
 
 # Functions
 Function .onInit
-  StrCpy $TARGET_DIR "$PROGRAMFILES\Blargh"
+  # attempt to install as admin
+  SetShellVarContext all
+
+  #set variables
+  #StrCpy $TARGET_DIR "$PROGRAMFILES\Blargh"
+  StrCpy $TARGET_DIR "C:\IdleScreen"
   StrCpy $REDIRECTOR_TARGET "$SYSDIR"
   StrCpy $DATA_DIR "$APPDATA\idlescreen_inst"
   StrCpy $UNINST_NAME "idlescreen_uninstaller.exe"
@@ -50,11 +57,56 @@ PageExEnd
 section "Base Files"
   #ExpandEnvStrings $QTDIR "%QTDIR%"
   SectionIn 1 RO
-  MessageBox MB_OK "The installer will now install the required Qt libraries."
+  #MessageBox MB_OK "The installer will now install the required Qt libraries."
+
+  #icon
+  SetOutPath "$TARGET_DIR"
+  File /oname=idlescreen.ico "installer_icon.ico"
 
   # general docs
   SetOutPath "$TARGET_DIR\doc"
   File "..\common\gpl_related\gplv2.txt"
+
+  # uninstaller
+  WriteUninstaller $TARGET_DIR\$UNINST_NAME
+
+  # Add entry to add/remove programs
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
+	"DisplayName" "Idle Screen Project"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
+	"DisplayIcon" "$TARGET_DIR\idlescreen.ico"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
+	"UninstallString" "$TARGET_DIR\$UNINST_NAME"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
+	"InstallLocation" "$TARGET_DIR"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
+	"HelpLink"  "http://idlescreen.googlepages.com"
+
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
+	"URLUpdateInfo" "http://idlescreen.googlepages.com"
+
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
+	"URLInfoAbout" "http://idlescreen.googlepages.com"
+
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
+	"DisplayVersion" ${VERSION}
+
+  WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
+	"NoModify" "1"
+
+  WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
+	"NoRepair" "1"
+
+  WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
+	"VersionMajor" ${VERSION_MAJOR}
+
+  WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
+	"VersionMinor" ${VERSION_MINOR}
+
+sectionEnd
+
+Section "Qt Libraries"
+  SectionIn 1 RO
 
   SetOutPath "$TARGET_DIR\bin"
   # include files
@@ -67,10 +119,7 @@ section "Base Files"
   File "${QTDIR}\plugins\imageformats\qjpeg1.dll"
   File "${QTDIR}\plugins\imageformats\qmng1.dll"
   File "${QTDIR}\plugins\imageformats\qsvg1.dll"
-
-  # uninstaller
-  WriteUninstaller $TARGET_DIR\$UNINST_NAME
-sectionEnd
+SectionEnd
 
 SectionGroup "Screen Savers"
 Section "PlasmaLenz"
@@ -83,7 +132,7 @@ Section "PlasmaLenz"
   File /oname=PlasmaLenz.scr "..\PlasmaLenz\msvc\redirector\Release\redirector.exe"
 
   # registry entry for the redirector
-  WriteRegStr SHCTX "Software\IdleScreen\Redirector" "PlasmaLenz" "$TARGET_DIR\bin"
+  WriteRegStr SHCTX "Software\IdleScreen\Redirector" "PlasmaLenz" "$TARGET_DIR\bin\PlasmaLenz.scr"
 SectionEnd
 SectionGroupEnd
 
@@ -101,6 +150,9 @@ SectionGroupEnd
 #SectionEnd
 
 Section "Uninstall"
+  # attempt to install as admin
+  SetShellVarContext all
+
   StrCpy $REDIRECTOR_TARGET "$SYSDIR"
 
   MessageBox MB_YESNO "Are you sure you want to uninstall the Idle Screen Project?" /SD IDYES IDNO dontremove
@@ -108,6 +160,7 @@ Section "Uninstall"
   #remove reg keys
   #DeleteRegValue SHCTX "Software\IdleScreen\Redirector" "PlasmaLenz"
   DeleteRegKey SHCTX "Software\IdleScreen"
+  DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
 
   # delete files and directories
   Delete $REDIRECTOR_TARGET\PlasmaLenz.scr
