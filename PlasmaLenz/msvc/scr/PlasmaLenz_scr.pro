@@ -29,6 +29,7 @@ SOURCES		+=	../../../common/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.cpp
 
 SOURCES		+=	../../src/ConfigWidget.cpp ../../src/PlasmaFractal.cpp
 SOURCES		+=	../../src/PlasmaFractalBackgroundProfile.cpp ../../src/project_specific_externs.cpp
+SOURCES		+=	../../src/AboutDialog.cpp
 SOURCES		+=	../../src/ProfileEditDialog.cpp
 
 HEADERS		=	../../../common/core/win_misc_funcs.h
@@ -60,6 +61,7 @@ HEADERS		+=	../../../common/2d_bgnd_w_lens/lens_engine/LensManager.h
 HEADERS		+=	../../../common/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h
 
 HEADERS		+=	../../src/PlasmaFractalBackgroundProfile.h ../../src/PlasmaFractal.h
+HEADERS		+=	../../src/AboutDialog.h
 HEADERS		+=	../../resource_files/resource.h
 HEADERS		+=	../../src/ProfileEditDialog.h
 
