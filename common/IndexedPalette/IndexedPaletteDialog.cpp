@@ -39,6 +39,8 @@
 #include <QString>
 
 #include "IndexedPaletteDialog.h"
+//#include "IndexedPaletteEditorRawWidget.h"
+#include "IndexedPaletteEditorTableWidget.h"
 
 IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QWidget* parent, Qt::WindowFlags f) {
 	QDialog(parent, f);
@@ -47,6 +49,8 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 	QIcon icon(":/app_icon.png");
 	setWindowIcon(icon);
 
+	_colorScrollWidget = NULL;
+	_colorWidget = NULL;
 	_prgDlg = NULL;
 	_prgCount = 0;
 
@@ -62,8 +66,10 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 	_prgDlg = new QProgressDialog("Please wait...", 0, 0, _palProfile.getHeight()*3+2);
 	_prgCount = 0;
 
-	_colorWidget = new IndexedPaletteEditorWidget();
-	QObject::connect(_colorWidget, SIGNAL(colorChanged(int, int, QRgb)), this, SLOT(colorChanged(int, int, QRgb)));
+	//_colorWidget = new IndexedPaletteEditorRawWidget();
+	//_colorWidget = new IndexedPaletteEditorListWidget();
+	_colorWidget = new IndexedPaletteEditorTableWidget();
+	QObject::connect(_colorWidget, SIGNAL(colorChanged(int, int, QRgb*)), this, SLOT(colorChanged(int, int, QRgb*)));
 	populateColorWidget();
 
 	//hide();
@@ -166,10 +172,11 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 	tempWidget = NULL;
 
 	//draw grid of entry buttons
-	_colorScrollWidget = new QScrollArea();
+	//_colorScrollWidget = new QScrollArea();
 
-	_colorScrollWidget->setWidget(_colorWidget);
-	mainLayout->addWidget(_colorScrollWidget);
+	//_colorScrollWidget->setWidget(_colorWidget);
+	//mainLayout->addWidget(_colorScrollWidget);
+	mainLayout->addWidget(_colorWidget->getWidget());
 
 	//preview area
 	tmpLabel = new QLabel("Preview:");
@@ -304,19 +311,25 @@ void IndexedPaletteDialog::revertClicked(bool checked) {
 	_palProfile.setWidth(_palProfile.getWidth()*2);
 	_nameEdit->setText(_palProfile.getName());
 
+	/*
 	if(_colorWidget != NULL)
 		delete _colorWidget;
-	_colorWidget = new IndexedPaletteEditorWidget();
+	//_colorWidget = new IndexedPaletteEditorRawWidget();
 	if(_colorScrollWidget != NULL)
 		_colorScrollWidget->setWidget(_colorWidget);
 	QObject::connect(_colorWidget, SIGNAL(colorChanged(int, int, QRgb)), this, SLOT(colorChanged(int, int, QRgb)));
+	*/
 	populateColorWidget();
 
 	updatePreviewIcon();
 }
 
-void IndexedPaletteDialog::colorChanged(int x, int y, QRgb color) {
-	_palProfile.setColor(x, y, color);
+void IndexedPaletteDialog::colorChanged(int x, int y, QRgb* color) {
+	if(color == NULL) {
+		_palProfile.deleteColor(x,y);
+	} else {
+		_palProfile.setColor(x, y, *color);
+	}
 	updatePreviewIcon();
 }
 

@@ -14,6 +14,8 @@ PaletteEditor::PaletteEditor(ConfigManager* confMgr, QWidget* parent, Qt::Window
 	_windowTitle = tr("Palette Editor");
 	setWindowTitle(_windowTitle);
 	setWindowModality(Qt::WindowModal);
+	QIcon icon(":/app_icon.png");
+	setWindowIcon(icon);
 
 	_listWidget = NULL;
 	_confMgr = confMgr;

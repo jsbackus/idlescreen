@@ -115,10 +115,12 @@ QString ConfigManager::getMainConfigPath() {
 	QString retVal = QDir::homePath() + "/";
 
 #ifdef _M_IX86
-	retVal += "Application Data/";
+	retVal += "Application Data/idlescreen/";
+#else
+	retVal += ".idlescreen/";
 #endif
 
-	retVal += "idlescreen/" + getAppConfigName();
+	retVal += getAppConfigName();
 
 	return retVal;
 }
@@ -393,6 +395,17 @@ void ConfigManager::loadMiscInfo(QDomNode &node) {
 		_selectedProfileList.replace(index, name);
 
 		tempNode = tempNode.previousSiblingElement("selected_entry");
+	}
+
+	// truncate profile history to no more than 1 less than the number of profiles or 0, whichever is greater.
+	int numProfiles = _selectedProfileList.size();
+	if(_profileHistorySize >= numProfiles) {
+		_profileHistorySize = numProfiles - 1;
+	}
+	// check profile history size.  If less than 1, disable it.
+	if(_profileHistorySize < 1) {
+		_profileHistorySize = 0;
+		_bRandomProfiles = false;
 	}
 }
 

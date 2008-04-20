@@ -56,7 +56,7 @@ public slots:
 
 	void done(int r = 0);
 
-	void colorChanged(int x, int y, QRgb color);
+	void colorChanged(int x, int y, QRgb* color);
 	void defaultColorClicked(bool checked = false);
 	void resizeClicked(bool checked = false);
 	void interpClicked(bool checked = false);

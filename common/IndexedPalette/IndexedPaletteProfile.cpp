@@ -433,7 +433,7 @@ QRgb IndexedPaletteProfile::getColor(int x, int y) {
 	}
 
 	return qRgba(_defaultColor[0], _defaultColor[1], _defaultColor[2], 0);
-};
+}
 
 /*
  * Whether the specified color has been previously defined.
@@ -569,4 +569,24 @@ IndexedPaletteProfile& IndexedPaletteProfile::operator=(IndexedPaletteProfile& o
 
 	return *this;
 }
+
+/*
+ * Used to delete/undefine a color.
+ */
+void IndexedPaletteProfile::deleteColor(int x, int y) {
+	if(x >= _width || y >= _height) {
+		return;
+	}
+
+	int i=0;
+	while(i < _colorList.size()) {
+		color_data_struct tmpColor = _colorList.at(i);
+		if(tmpColor.x == x && tmpColor.y == y) {
+			_colorList.removeAt(i);
+			return;
+		}
+		i++;
+	}
+}
+
 

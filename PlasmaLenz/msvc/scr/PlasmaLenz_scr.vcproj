@@ -92,6 +92,24 @@ nmake release-clean
 				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteDialogEntryButton.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorListWidget.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorListWidgetItem.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorRawWidget.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorTableWidget.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorTableWidgetItem.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorTableWidgetSplitDlg.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorWidget.cpp">
 			</File>
 			<File
@@ -188,6 +206,24 @@ nmake release-clean
 			</File>
 			<File
 				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteDialogEntryButton.h">
+			</File>
+			<File
+				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorListWidget.h">
+			</File>
+			<File
+				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorListWidgetItem.h">
+			</File>
+			<File
+				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorRawWidget.h">
+			</File>
+			<File
+				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorTableWidget.h">
+			</File>
+			<File
+				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorTableWidgetItem.h">
+			</File>
+			<File
+				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorTableWidgetSplitDlg.h">
 			</File>
 			<File
 				RelativePath="..\..\..\common\IndexedPalette\IndexedPaletteEditorWidget.h">

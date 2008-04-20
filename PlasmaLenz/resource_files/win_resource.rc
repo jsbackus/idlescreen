@@ -77,7 +77,7 @@ ID_APP                  ICON                    "../../resource_files/app_icon.i
 
 STRINGTABLE 
 BEGIN
-    IDS_DESCRIPTION         "Dr. Pepper"
+    IDS_DESCRIPTION         "PlasmaLenz"
 END
 
 #endif    // English (U.S.) resources

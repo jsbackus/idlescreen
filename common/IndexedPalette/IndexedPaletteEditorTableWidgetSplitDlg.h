@@ -23,25 +23,43 @@
  */
 
 /**
- * This class is the About dialog.
+ * This class is the Split Rows/Columns dialog used by the
+ * IndexedPaletteEditorTableWidget.
  */
 
-#ifndef __ABOUTDIALOG_H__
-#define __ABOUTDIALOG_H__
+#ifndef __INDEXEDPALETTEEDITORTABLEWIDGETSPLITDLG_H__
+#define __INDEXEDPALETTEEDITORTABLEWIDGETSPLITDLG_H__
 
 #include <QDialog>
+#include <QSpinBox>
 
-class AboutDialog : public QDialog {
+class IndexedPaletteEditorTableWidgetSplitDlg : public QDialog {
 
 	Q_OBJECT
 
 public:
-	AboutDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
+	// If start == stop, box is disabled.
+	IndexedPaletteEditorTableWidgetSplitDlg(int startX, int stopX, int startY, int stopY, QWidget* parent = 0, Qt::WindowFlags f = 0);
+
+	// get coordinates.  Returns -1 if invalid.
+	int getX();
+	int getY();
 
 public slots:
-	void gplClicked(bool checked = false);
-	void qtClicked(bool checked = false);
+	void cancelClicked(bool checked = false);
+	void okClicked(bool checked = false);
 	void done(int r = 0);
+
+private:
+	int _x;
+	int _y;
+	int _startX;
+	int _startY;
+	int _stopX;
+	int _stopY;
+	
+	QSpinBox* _xBox;
+	QSpinBox* _yBox;
 
 };
 

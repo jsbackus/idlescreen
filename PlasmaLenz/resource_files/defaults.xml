@@ -2,6 +2,17 @@
 <PlasmaLenz_Configuration>
  <BackgroundProfile>
   <type>PlasmaFractalBackground</type>
+  <name>BackgroundProfile_pbtpRgiyAbCPZMk1CZgt</name>
+  <coarseness>4.5</coarseness>
+  <steps_per_tick>2048</steps_per_tick>
+  <anmiate_palette>true</anmiate_palette>
+  <palette_x_speed>1</palette_x_speed>
+  <palette_y_speed>1</palette_y_speed>
+  <clamp_color>true</clamp_color>
+  <palette>Steel</palette>
+ </BackgroundProfile>
+ <BackgroundProfile>
+  <type>PlasmaFractalBackground</type>
   <name>BackgroundProfile_6GEHzwwERPdKOJWTykPA</name>
   <coarseness>4.5</coarseness>
   <steps_per_tick>2048</steps_per_tick>
@@ -653,6 +664,68 @@
   </color_list>
  </IndexedPaletteProfile>
  <IndexedPaletteProfile>
+  <name>Steel</name>
+  <width>60</width>
+  <height>1</height>
+  <interpolate_colors>true</interpolate_colors>
+  <wrap_colors>true</wrap_colors>
+  <default_color>
+   <red>0</red>
+   <green>0</green>
+   <blue>0</blue>
+  </default_color>
+  <color_list>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>0</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>196</blue>
+    <alpha>255</alpha>
+    <x_coordinate>9</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>128</red>
+    <green>196</green>
+    <blue>196</blue>
+    <alpha>255</alpha>
+    <x_coordinate>19</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>255</red>
+    <green>255</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+    <x_coordinate>29</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>128</red>
+    <green>196</green>
+    <blue>196</blue>
+    <alpha>255</alpha>
+    <x_coordinate>39</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>196</blue>
+    <alpha>255</alpha>
+    <x_coordinate>49</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+  </color_list>
+ </IndexedPaletteProfile>
+ <IndexedPaletteProfile>
   <name>The Gamut</name>
   <width>128</width>
   <height>1</height>
@@ -1005,6 +1078,14 @@
   <height>1024</height>
   <timer_millis>50</timer_millis>
   <background_profile>BackgroundProfile_EzO1EEKX1ry1xFZ8NPD4</background_profile>
+  <lens_profile>Sphere</lens_profile>
+ </MasterProfile>
+ <MasterProfile>
+  <name>Steel</name>
+  <width>1024</width>
+  <height>1024</height>
+  <timer_millis>50</timer_millis>
+  <background_profile>BackgroundProfile_pbtpRgiyAbCPZMk1CZgt</background_profile>
   <lens_profile>Sphere</lens_profile>
  </MasterProfile>
  <MasterProfile>

@@ -92,6 +92,11 @@ public:
 	QRgb getColor(int x, int y);
 
 	/*
+	 * Used to delete/undefine a color.
+	 */
+	void deleteColor(int x, int y);
+
+	/*
 	 * Whether the specified color has been previously defined.
 	 */
 	bool isColorDefined(int x, int y);

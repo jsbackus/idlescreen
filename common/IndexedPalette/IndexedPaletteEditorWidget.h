@@ -23,34 +23,38 @@
  */
 
 /**
- * This widget draws a grid with data points that represent
- * the colors in the palette.  It also intercepts mouse events
- * to look for clicking on the data points.  Clicking on a
- * datapoint will bring up the color chooser.
+ * This class is the base class for the indexed palette editor
+ * widgets.  Implementing classes aren't actually widgets, but
+ * must return a suitable widget.
  */
 
 #ifndef __INDEXEDPALETTEEDITORWIDGET_H__
 #define __INDEXEDPALETTEEDITORWIDGET_H__
 
-#include <QLabel>
+#include <QObject>
+#include <QWidget>
 #include <QColor>
 #include <QMouseEvent>
 #include <QProgressDialog>
 
-class IndexedPaletteEditorWidget : public QLabel {
+class IndexedPaletteEditorWidget : public QObject {
 
 	Q_OBJECT
 
 public:
-	IndexedPaletteEditorWidget(int width=0, int height=0, QWidget* parent = 0, Qt::WindowFlags f = 0);
+	IndexedPaletteEditorWidget();
 	~IndexedPaletteEditorWidget();
 
-	QRgb getColor(int x, int y);
-	void setColor(int x, int y, QRgb color);
-	void clearColor(int x, int y);
+	virtual QRgb getColor(int x, int y);
+	virtual void setColor(int x, int y, QRgb color);
+	virtual void clearColor(int x, int y);
 
-	//resizes the image.  Steps the progress dialog height+2 times.
-	void changeSize(int width=0, int height=0);
+	// resizes the image.  Steps the progress dialog height+2 times.
+	// clears out all data held within the widget.
+	virtual void changeSize(int width=0, int height=0);
+
+	// returns the actual widget.  Calling class should NOT destroy widget.
+	virtual QWidget* getWidget();
 
 	void setProgressDialog(QProgressDialog* prgDlg);
 	
@@ -58,43 +62,17 @@ public slots:
 	//void buttonClicked(bool checked = false);
 
 signals:
-	void colorChanged(int x, int y, QRgb color);
+	void colorChanged(int x, int y, QRgb* color);
 
 protected:
-	void mousePressEvent(QMouseEvent* event);
-	void mouseReleaseEvent(QMouseEvent* event);
-
-private:
-
-	//draws the specified cell, including borders and color swatch
-	void drawCell(int x, int y, QRgb color);
-
-	//updates the widget image
-	void updateImage();
 
 	//steps the progress dialog
-	void stepProgress();
+	void stepProgress(int numSteps=1);
+
+	QProgressDialog* _prgDlg;
 
 	int _width;
 	int _height;
-
-	QImage _image;
-
-	//"constants"
-	int _colorWidth;
-	int _colorHeight;
-	int _innerBorderThickness;
-	int _outerBorderThickness;
-	int _cellHeight;
-	int _cellWidth;
-	QRgb _innerBorderColor;
-	QRgb _outerBorderColor;
-	QRgb _undefinedColor;
-
-	int _clickedX;
-	int _clickedY;
-
-	QProgressDialog* _prgDlg;
 };
 
 #endif
