@@ -13,6 +13,7 @@ SOURCES		+=	../../../common/IndexedPalette/IndexedPaletteEditorTableWidgetItem.c
 SOURCES		+=	../../../common/IndexedPalette/IndexedPaletteEditorTableWidgetSplitDlg.cpp
 SOURCES		+=	../../../common/IndexedPalette/IndexedPaletteProfile.cpp
 SOURCES		+=	../../../common/utility/misc_funcs.cpp
+SOURCES		+=	../../../common/utility/ImportExportDialog.cpp
 SOURCES		+=	../../../common/gpl_related/gpldialog.cpp
 SOURCES		+=	../../../common/plasma/PlasmaAlgorithm.cpp
 
@@ -46,6 +47,7 @@ HEADERS		+=	../../../common/IndexedPalette/IndexedPaletteEditorTableWidgetItem.h
 HEADERS		+=	../../../common/IndexedPalette/IndexedPaletteEditorTableWidgetSplitDlg.h
 HEADERS		+=	../../../common/IndexedPalette/IndexedPaletteProfile.h
 HEADERS		+=	../../../common/utility/misc_funcs.h
+HEADERS		+=	../../../common/utility/ImportExportDialog.h
 HEADERS		+=	../../../common/gpl_related/gpldialog.h
 HEADERS		+=	../../../common/plasma/PlasmaAlgorithm.h
 HEADERS		+=	../../../common/core/opengl_main.h

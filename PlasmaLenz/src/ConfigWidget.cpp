@@ -30,6 +30,8 @@
 #include <QGroupBox>
 #include <QIcon>
 #include <QLabel>
+#include <QFileDialog>
+#include <QDir>
 
 //temp
 #include <QMessageBox>
@@ -37,17 +39,10 @@
 
 #include "../../common/2d_bgnd_w_lens/ConfigWidget.h"
 #include "../../common/2d_bgnd_w_lens/PaletteEditor.h"
+#include "../../common/utility/ImportExportDialog.h"
+#include "../../common/utility/misc_funcs.h"
 #include "ProfileEditDialog.h"
 #include "AboutDialog.h"
-
-/*
-#include "gui/PaletteEditor.h"
-#include "gui/LensEditor.h"
-#include "gui/BackgroundEditor.h"
-#include "gui/MasterProfileEditDialog.h"
-#include "gui/BackgroundProfileEditDialog.h"
-*/
-//#include "../common/IndexedPaletteDialog.h"
 
 //constructor & destructor
 ConfigWidget::ConfigWidget(QWidget* parent, Qt::WindowFlags f) {
@@ -524,11 +519,123 @@ void ConfigWidget::profileNameChange(QString oldName, QString newName) {
 }
 
 void ConfigWidget::importClicked(bool checked) {
-	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+//	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+	ImportExportDialog dlg(true);
+
+	// get file name to import from
+	QString filename = QFileDialog::getOpenFileName(this, tr("Import Settings From File"), QDir::homePath(), 
+			tr("Settings Files (*.xml)"));
+
+	if(filename.isEmpty())
+		return;
+	
+	// create a temporary config manager and load
+	// it with data from the import file.
+	ConfigManager* tmpMgr = new ConfigManager();
+	if(tmpMgr == NULL)
+		return;
+	tmpMgr->importFromFile(filename, false);
+
+	// populate dialog box
+	QStringList bkgnds = tmpMgr->getAvailableProfiles();
+	dlg.addSubItems("Background Profiles", bkgnds, true);
+
+	QStringList palettes = tmpMgr->getPaletteNames();
+	dlg.addSubItems("Palettes", palettes, true);
+
+	// show dialog and get lists of checked items
+	if(dlg.exec() == QDialog::Rejected) {
+QMessageBox::information(this, "Dialog", "Canceled!", QMessageBox::Ok);
+		delete tmpMgr;
+		tmpMgr = NULL;
+		return;
+	}
+	bkgnds = dlg.getSubItems("Background Profiles", true);
+	palettes = dlg.getSubItems("Palettes", true);
+
+	// first, add in the palettes, since they don't
+	// have any dependencies
+	for(int i = 0; i<palettes.size(); i++) {
+		IndexedPaletteProfile tmpPal = tmpMgr->getPaletteProfile(palettes.at(i));
+		_manager->addPalette(tmpPal);
+	}
+
+	// now go through the MasterProfiles, adding sub profiles
+	// it requires (including IndexedPaletteProfiles).
+	for(int i = 0; i<bkgnds.size(); i++) {
+		MasterProfile tmpMp = tmpMgr->getProfile(bkgnds.at(i));
+		// make sure the master profile doesn't exist, so that we don't
+		// unnecessarily the other things.  No need to check everything else
+		// since the respective add routines will check before appending
+		// to the lists.
+		if(!_manager->doesProfileExist(tmpMp.getName())) {
+			LensProfile tmpLens = tmpMgr->getLensProfile(tmpMp.getLensProfileName());
+			_manager->addLensProfile(tmpLens);
+			PlasmaFractalBackgroundProfile* tmpBkgnd = (PlasmaFractalBackgroundProfile*)tmpMgr->getBackgroundProfile(tmpMp.getBackgroundProfileName());
+			IndexedPaletteProfile tmpPal = tmpMgr->getPaletteProfile(tmpBkgnd->getPaletteName());
+			_manager->addPalette(tmpPal);
+			_manager->addBackgroundProfile(*tmpBkgnd);
+			_manager->addProfile(tmpMp);
+			_mpAvailList->addItem(tmpMp.getName());
+		}
+	}
 }
 
 void ConfigWidget::exportClicked(bool checked) {
-	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+	ImportExportDialog dlg(false);
+
+	// populate dialog box
+	QStringList bkgnds = _manager->getAvailableProfiles();
+	dlg.addSubItems("Background Profiles", bkgnds, true);
+
+	QStringList palettes = _manager->getPaletteNames();
+	dlg.addSubItems("Palettes", palettes, true);
+
+	// show dialog and get lists of checked items
+	if(dlg.exec() == 0)
+		return;
+	bkgnds = dlg.getSubItems("Background Profiles", true);
+	palettes = dlg.getSubItems("Palettes", true);
+
+	// get file name to export to
+	QString filename = QFileDialog::getSaveFileName(this, tr("Export Settings to File"), QDir::homePath(), 
+			tr("Settings Files (*.xml)"));
+
+	if(filename.isEmpty())
+		return;
+	
+	// now create a temporary config manager that
+	// contains only the profiles that we want.  Be sure to grab
+	// all miscellaneous profiles that the MasterProfile
+	// (including the IndexedPaletteProfiles).
+	ConfigManager* tmpMgr = new ConfigManager();
+	if(tmpMgr == NULL)
+		return;
+
+	// first, add in the palettes, since they don't
+	// have any dependencies
+	for(int i = 0; i<palettes.size(); i++) {
+		IndexedPaletteProfile tmpPal = _manager->getPaletteProfile(palettes.at(i));
+		tmpMgr->addPalette(tmpPal);
+	}
+
+	// now go through the MasterProfiles, adding sub profiles
+	// it requires (including IndexedPaletteProfiles).
+	for(int i = 0; i<bkgnds.size(); i++) {
+		MasterProfile tmpMp = _manager->getProfile(bkgnds.at(i));
+		LensProfile tmpLens = _manager->getLensProfile(tmpMp.getLensProfileName());
+		tmpMgr->addLensProfile(tmpLens);
+		PlasmaFractalBackgroundProfile* tmpBkgnd = (PlasmaFractalBackgroundProfile*)_manager->getBackgroundProfile(tmpMp.getBackgroundProfileName());
+		IndexedPaletteProfile tmpPal = _manager->getPaletteProfile(tmpBkgnd->getPaletteName());
+		tmpMgr->addPalette(tmpPal);
+		tmpMgr->addBackgroundProfile(*tmpBkgnd);
+		tmpMgr->addProfile(tmpMp);
+	}
+
+	// save!
+	tmpMgr->exportToFile(filename, false);
+	delete tmpMgr;
+	tmpMgr = NULL;
 }
 
 void ConfigWidget::paletteEditorClicked(bool checked) {
