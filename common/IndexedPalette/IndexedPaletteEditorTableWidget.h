@@ -66,6 +66,8 @@ public slots:
 	void pasteTriggered();
 
 	void cellClicked(int row, int column);
+	void cellDoubleClicked(int row, int column);
+	void cellPressed(int row, int column);
 
 protected:
 	// inserts a column of empty cells of the specified width at the specified X coords.
@@ -90,6 +92,7 @@ protected:
 	QAction* _emptyPasteAction;
 
 	QAction* _emptyEditAction;
+	QAction* _emptyInsertAction;
 
 	QStringList _xHeader;
 	QStringList _yHeader;
@@ -99,6 +102,7 @@ protected:
 
 	int _selRow;
 	int _selCol;
+	bool _bWasRightClick;
 };
 
 #endif

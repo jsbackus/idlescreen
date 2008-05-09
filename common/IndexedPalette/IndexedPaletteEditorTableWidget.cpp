@@ -22,10 +22,7 @@
  * 
  */
 
-//temp
-#include <QMessageBox>
-//end temp
-
+#include <QApplication>
 #include <QPoint>
 #include <QRect>
 #include <QPixmap>
@@ -45,21 +42,25 @@ IndexedPaletteEditorTableWidget::IndexedPaletteEditorTableWidget(int width, int 
 	_emptyPasteAction = NULL;
 	_bClipboardValid = false;
 	_defaultColor = QColor(0,0,0,255);
+	_bWasRightClick = false;
 
 	// create widget object
 	_widget = new QTableWidget(1,1);
-	connect(_widget, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(cellClicked(int, int)));
+	connect(_widget, SIGNAL(cellClicked(int, int)), this, SLOT(cellClicked(int, int)));
+	connect(_widget, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(cellDoubleClicked(int, int)));
+	connect(_widget, SIGNAL(cellPressed(int, int)), this, SLOT(cellPressed(int, int)));
 
 	QAction* tmpAction = NULL;
 	_definedMenu.clear();
 	_emptyMenu.clear();
 
 	// insert cell
-	tmpAction = _emptyMenu.addAction("Insert");
-	connect(tmpAction, SIGNAL(triggered()), this, SLOT(insertTriggered()));
+	_emptyInsertAction = _emptyMenu.addAction("Insert");
+	connect(_emptyInsertAction, SIGNAL(triggered()), this, SLOT(insertTriggered()));
 
 	// edit color
 	tmpAction = _definedMenu.addAction("Edit");
+	_definedMenu.setDefaultAction(tmpAction);
 	connect(tmpAction, SIGNAL(triggered()), this, SLOT(editTriggered()));
 	_emptyEditAction = _emptyMenu.addAction("Edit");
 	connect(_emptyEditAction, SIGNAL(triggered()), this, SLOT(editTriggered()));
@@ -163,7 +164,7 @@ void IndexedPaletteEditorTableWidget::setColor(int x, int y, QRgb color) {
 			}
 			bDone = true;
 		} else if(tmpX < x && tmpX + width > x) {
-			int leftWidth = x - tmpX - 1;
+			int leftWidth = x - tmpX;
 			int rightWidth = tmpX + width - x - 1;
 
 			if(leftWidth > 0) {
@@ -212,7 +213,7 @@ void IndexedPaletteEditorTableWidget::setColor(int x, int y, QRgb color) {
 			listItem->setEmpty(false);
 			bDone = true;
 		} else if(tmpY < y && tmpY + height > y) {
-			int topHeight = y - tmpY - 1;
+			int topHeight = y - tmpY;
 			int bottomHeight = tmpY + height - y - 1;
 
 			if(topHeight > 0) {
@@ -266,15 +267,15 @@ void IndexedPaletteEditorTableWidget::changeSize(int width, int height) {
 	}
 
 	_xHeader.clear();
-	_xHeader.append(formatHeaderStr(0,_width-1));
+	_xHeader.append(formatHeaderStr(0,_width));
 	_widget->setHorizontalHeaderLabels(_xHeader);
 	_yHeader.clear();
-	_yHeader.append(formatHeaderStr(0,_height-1));
+	_yHeader.append(formatHeaderStr(0,_height));
 	_widget->setVerticalHeaderLabels(_yHeader);
 
 	IndexedPaletteEditorTableWidgetItem* tmpItem = new IndexedPaletteEditorTableWidgetItem();
 	if(tmpItem != NULL) {
-		tmpItem->setValue(_defaultColor.rgb(), 0, 0, _width-1, _height-1, true);
+		tmpItem->setValue(_defaultColor.rgb(), 0, 0, _width, _height, true);
 		_widget->setItem(0,0,tmpItem);
 		tmpItem = NULL;
 	}
@@ -351,7 +352,7 @@ QString IndexedPaletteEditorTableWidget::formatHeaderStr(int start, int length) 
 	QString retVal(QString::number(start));
 	if(length > 1) {
 		retVal.append("..");
-		retVal.append(QString::number(start+length));
+		retVal.append(QString::number(start+length-1));
 	}
 	return retVal;
 }
@@ -386,9 +387,10 @@ void IndexedPaletteEditorTableWidget::insertTriggered() {
 	int width = listItem->getWidth();
 	int startY = listItem->getY();
 	int height = listItem->getHeight();
-	IndexedPaletteEditorTableWidgetSplitDlg dlg(startX, startX+width, startY, startY+height);
-	dlg.exec();
-	
+	IndexedPaletteEditorTableWidgetSplitDlg dlg(startX, startX+width-1, startY, startY+height-1);
+	if(dlg.exec() == QDialog::Rejected)
+		return;
+
 	int retX = dlg.getX();
 	int retY = dlg.getY();
 
@@ -406,8 +408,8 @@ void IndexedPaletteEditorTableWidget::insertTriggered() {
 			// insert a new column of width 1 for the selected column,
 			// then check to see if a new column needs added to account
 			// for the rest of the width.
-			changeColumnWidth(_selCol,retX-startX-1);
-			_xHeader.replace(_selCol, formatHeaderStr(startX, retX-startX-1));
+			changeColumnWidth(_selCol,retX-startX);
+			_xHeader.replace(_selCol, formatHeaderStr(startX, retX-startX));
 			insertEmptyColumn(_selCol+1, retX, 1);
 			width = width - (retX-startX) - 1;
 			if(width > 0)
@@ -425,8 +427,8 @@ void IndexedPaletteEditorTableWidget::insertTriggered() {
 			// insert a new column of width 1 for the selected column,
 			// then check to see if a new column needs added to account
 			// for the rest of the width.
-			changeRowHeight(_selRow,retY-startY-1);
-			_yHeader.replace(_selRow, formatHeaderStr(startY, retY-startY-1));
+			changeRowHeight(_selRow,retY-startY);
+			_yHeader.replace(_selRow, formatHeaderStr(startY, retY-startY));
 			insertEmptyRow(_selRow+1, retY, 1);
 			height = height - (retY-startY) - 1;
 			if(height > 0)
@@ -436,9 +438,43 @@ void IndexedPaletteEditorTableWidget::insertTriggered() {
 		_widget->setVerticalHeaderLabels(_yHeader);
 	}
 }
+void IndexedPaletteEditorTableWidget::cellPressed(int row, int column) {
+	// check to see if this was a right-click or not and store it.
+	_bWasRightClick = (QApplication::mouseButtons() == Qt::RightButton);
+}
+void IndexedPaletteEditorTableWidget::cellDoubleClicked(int row, int column) {
+	if(_widget == NULL)
+		return;
+
+	// double-clicking will perform the default action
+
+	// examine the cell that was clicked.  If it is empty, insert,
+	// otherwise change color.
+	IndexedPaletteEditorTableWidgetItem* listItem = (IndexedPaletteEditorTableWidgetItem*)_widget->item(row, column);
+	if(listItem == NULL)
+		return;
+
+	_selRow = row;
+	_selCol = column;
+	// get center of cell to pop up window
+	QRect rect = _widget->visualItemRect(listItem);
+	QPoint p = _widget->mapToGlobal(rect.center());
+	if(listItem->getEmpty() && !(listItem->getWidth() == 1 && listItem->getHeight() == 1)) {
+		insertTriggered();
+	} else {
+		editTriggered();
+	}
+}
 void IndexedPaletteEditorTableWidget::cellClicked(int row, int column) {
 	if(_widget == NULL)
 		return;
+
+	// if not a right-click, return.
+	if(!_bWasRightClick)
+		return;
+
+	// otherwise, display the appropriate menu.
+
 	// examine the cell that was clicked.  If it is empty, display the empty menu,
 	// otherwise display the defined menu.
 	IndexedPaletteEditorTableWidgetItem* listItem = (IndexedPaletteEditorTableWidgetItem*)_widget->item(row, column);
@@ -451,12 +487,23 @@ void IndexedPaletteEditorTableWidget::cellClicked(int row, int column) {
 	QRect rect = _widget->visualItemRect(listItem);
 	QPoint p = _widget->mapToGlobal(rect.center());
 	if(listItem->getEmpty()) {
-		_emptyEditAction->setEnabled((listItem->getWidth() == 1 && listItem->getHeight() == 1));
+		if(listItem->getWidth() == 1 && listItem->getHeight() == 1) {
+			_emptyEditAction->setEnabled(true);
+			_emptyInsertAction->setEnabled(false);
+			_emptyMenu.setDefaultAction(_emptyEditAction);
+		} else {
+			_emptyEditAction->setEnabled(false);
+			_emptyInsertAction->setEnabled(true);
+			_emptyMenu.setDefaultAction(_emptyInsertAction);
+		}
 		_emptyPasteAction->setEnabled(_bClipboardValid && _emptyEditAction->isEnabled());
 		_emptyMenu.popup(p);
 	} else {
 		_definedMenu.popup(p);
 	}
+
+	// go ahead and clear right click
+	_bWasRightClick = false;
 }
 
 void IndexedPaletteEditorTableWidget::copyTriggered() {

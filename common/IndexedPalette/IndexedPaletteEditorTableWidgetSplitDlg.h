@@ -48,7 +48,6 @@ public:
 public slots:
 	void cancelClicked(bool checked = false);
 	void okClicked(bool checked = false);
-	void done(int r = 0);
 
 private:
 	int _x;

@@ -153,13 +153,13 @@ void IndexedPaletteEditorTableWidgetItem::convData() {
 		text.append(QString::number(_x));
 		if(_width > 1) {
 			text.append("..");
-			text.append(QString::number(_x+_width));
+			text.append(QString::number(_x+_width-1));
 		}
 		text.append(",");
 		text.append(QString::number(_y));
 		if(_height > 1) {
 			text.append("..");
-			text.append(QString::number(_y+_height));
+			text.append(QString::number(_y+_height-1));
 		}
 		QPixmap pixmap(ICON_WIDTH,ICON_HEIGHT);
 		pixmap.fill(_undefinedBGColor);

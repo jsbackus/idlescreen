@@ -64,7 +64,7 @@ IndexedPaletteEditorTableWidgetSplitDlg::IndexedPaletteEditorTableWidgetSplitDlg
 		return;
 	_xBox->setSingleStep(1);
 	_xBox->setRange(startX, stopX);
-	_xBox->setEnabled(startX < stopX-1);
+	_xBox->setEnabled(startX < stopX);
 	tmpHLyt->addWidget(_xBox);
 
 	tempWidget = new QWidget();
@@ -82,7 +82,7 @@ IndexedPaletteEditorTableWidgetSplitDlg::IndexedPaletteEditorTableWidgetSplitDlg
 		return;
 	_yBox->setSingleStep(1);
 	_yBox->setRange(startY, stopY);
-	_yBox->setEnabled(startY < stopY-1);
+	_yBox->setEnabled(startY < stopY);
 	tmpHLyt->addWidget(_yBox);
 
 	tempWidget = new QWidget();
@@ -124,7 +124,7 @@ int IndexedPaletteEditorTableWidgetSplitDlg::getY() {
 void IndexedPaletteEditorTableWidgetSplitDlg::cancelClicked(bool checked) {
 	_x = -1;
 	_y = -1;
-	done(0);
+	reject();
 }
 
 void IndexedPaletteEditorTableWidgetSplitDlg::okClicked(bool checked) {
@@ -132,10 +132,5 @@ void IndexedPaletteEditorTableWidgetSplitDlg::okClicked(bool checked) {
 		_x = _xBox->value();
 		_y = _yBox->value();
 	}
-	done(0);
-}
-
-void IndexedPaletteEditorTableWidgetSplitDlg::done(int r) {
-	emit finished(r);
-	close();
+	accept();
 }

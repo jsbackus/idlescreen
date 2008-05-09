@@ -545,7 +545,6 @@ void ConfigWidget::importClicked(bool checked) {
 
 	// show dialog and get lists of checked items
 	if(dlg.exec() == QDialog::Rejected) {
-QMessageBox::information(this, "Dialog", "Canceled!", QMessageBox::Ok);
 		delete tmpMgr;
 		tmpMgr = NULL;
 		return;
