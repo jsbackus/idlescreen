@@ -70,6 +70,9 @@ section "Base Files"
   # uninstaller
   WriteUninstaller $TARGET_DIR\$UNINST_NAME
 
+  # Add registry entry for target path
+  WriteRegStr SHCTX "Software\IdleScreen" "InstallPath" "$TARGET_DIR"
+
   # Add entry to add/remove programs
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
 	"DisplayName" "Idle Screen Project"
@@ -130,6 +133,10 @@ Section "PlasmaLenz"
   # redirector file
   SetOutPath "$REDIRECTOR_TARGET"
   File /oname=PlasmaLenz.scr "..\PlasmaLenz\msvc\redirector\Release\redirector.exe"
+
+  # machine defaults file
+  SetOutPath "$TARGET_DIR\defaults"
+  File /oname=PlasmaLenz.xml "..\PlasmaLenz\resource_files\external_defaults.xml"
 
   # registry entry for the redirector
   WriteRegStr SHCTX "Software\IdleScreen\Redirector" "PlasmaLenz" "$TARGET_DIR\bin\PlasmaLenz.scr"

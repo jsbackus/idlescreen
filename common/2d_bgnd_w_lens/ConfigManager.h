@@ -305,6 +305,8 @@ public:
 protected:
 	QString getMainConfigFile();
 	QString getMainConfigPath();
+	QString getExternalDefaultConfigFile();
+	QString getExternalDefaultConfigPath();
 
 	//sets the active profile
 	void setActiveProfile(QString profileName);

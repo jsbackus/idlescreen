@@ -45,6 +45,9 @@ ConfigManager::ConfigManager() {
 	//specify the plugins path.  plugins should have been installed
 	//by the lib package.  the libs need to be added to the system path.
 	//first check in HKEY_CURRENT_USER.  If not there, check HKEY_LOCAL_MACHINE.
+/*
+	QString getExternalDefaultConfigFile();
+	QString getExternalDefaultConfigPath();
 	QString rootPath = readRegString(QString("Software\\Phej"),
 										QString("Lib Install Base Path"), false);
 	if(rootPath == "") {
@@ -54,6 +57,7 @@ ConfigManager::ConfigManager() {
 
 	QString libPath = rootPath + QString("\\Qt-4.2.2\\plugins\\");
 	QCoreApplication::addLibraryPath(libPath);
+*/
 
 	//set up data structures
 	_currentProfile = NULL;
@@ -112,6 +116,26 @@ void ConfigManager::load() {
 	if(!importFromFile(getMainConfigFile(), true)) {
 		setDefaults();
 	}
+}
+
+QString ConfigManager::getExternalDefaultConfigPath() {
+	QString retVal;
+
+#ifdef _M_IX86
+	QString installPath = readRegString(QString("Software\\IdleScreen"), QString("InstallPath"), false);
+	if(installPath == "") {
+		installPath = readRegString(QString("Software\\IdleScreen"), QString("InstallPath"), true);
+	}
+	retVal += installPath + "/defaults/";
+#else
+	retVal += "/etc/idlescreen/defaults/";
+#endif
+
+	return retVal;
+}
+QString ConfigManager::getExternalDefaultConfigFile() {
+	QString retVal = getExternalDefaultConfigPath() + getAppConfigName() + ".xml";
+	return retVal;
 }
 
 QString ConfigManager::getMainConfigPath() {
@@ -487,7 +511,12 @@ void ConfigManager::saveMiscInfo(QDomDocument* doc, QDomElement* root) {
 //Sets defaults
 void ConfigManager::setDefaults() {
 	deleteAllSettings();
-	importFromFile(":/defaults.xml", true);
+
+	// attempt to load from machine defaults file.
+	if(!importFromFile(getExternalDefaultConfigFile(), true)) {
+		if(!importFromFile(":/defaults.xml", true))
+			exit(1);
+	}
 }
 
 //sets the active profile
