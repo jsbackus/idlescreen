@@ -41,10 +41,10 @@
 #include <stream.h>
 #endif
 
-//#include <gl/gl.h>
-//#include <gl/glu.h>
+//#include <GL/gl.h>
+//#include <GL/glu.h>
 //#include <glut.h>
-//#include <gl/glaux.h>
+//#include <GL/glaux.h>
 
 #include <math.h>
 
