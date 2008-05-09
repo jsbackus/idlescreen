@@ -112,13 +112,16 @@ public:
 	/*
 	 * Overloaded assignment operator.
 	 */
-	LensProfile& operator=(LensProfile& other);
+	virtual LensProfile& operator=(LensProfile& other);
 
 protected:
 	//load and save base class values.  The only values not saved or loaded are _sizeX & _sizeY
 	void loadBase(QDomNode &node);
 	void saveBase(QDomDocument* doc, QDomNode &target);
 	void initializeBase(QHash<QString, IndexedPaletteProfile*>* palHash, screen_struct* screenObj);
+
+	// deep copies the specified target
+	void baseCopy(LensProfile& other);
 
 	/*
 	 * Sets the following bits of data:

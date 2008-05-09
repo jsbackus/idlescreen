@@ -561,11 +561,8 @@ LensProfile* LensProfile::clone() {
 	return new LensProfile();
 }
 
-/*
- * Overloaded assignment operator
- */
-LensProfile& LensProfile::operator=(LensProfile& other) {
-
+// deep copies the specified target
+void LensProfile::baseCopy(LensProfile& other) {
 	*_pal = *other._pal;
 
 	_name = other._name;
@@ -594,6 +591,15 @@ LensProfile& LensProfile::operator=(LensProfile& other) {
 	_lastSide = other._lastSide;
 	_bRandSide = other._bRandSide;
 	_bInitialized = other._bInitialized;
+
+}
+
+/*
+ * Overloaded assignment operator
+ */
+LensProfile& LensProfile::operator=(LensProfile& other) {
+
+	baseCopy(other);
 
 	return *this;
 }
