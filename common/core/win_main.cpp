@@ -39,8 +39,8 @@
 #include <scrnsave.h>
 #include <commctrl.h>
 
-#include <gl/gl.h>
-#include <gl/glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 #include "resource.h"
 #include "opengl_main.h"
