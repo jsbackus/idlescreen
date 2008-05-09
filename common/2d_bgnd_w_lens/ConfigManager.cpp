@@ -30,6 +30,9 @@
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
 
+// debug
+//#include <QMessageBox>
+
 #include "../utility/misc_funcs.h"
 #include "../core/win_misc_funcs.h"
 #include "project_specific_extern_defs.h"
@@ -976,9 +979,12 @@ bool ConfigManager::removeLensProfile(QString name) {
  */
 void ConfigManager::addLensProfile(LensProfile& lensProfile) {
 	//check for preexisting profile name.
-	if(!doesProfileExist(lensProfile.getName())) {
+	if(!doesLensProfileExist(lensProfile.getName())) {
 		//if not, create a new profile off of the heap to add to the hash.
+// !!! NOTE: There is a bug here such that only the base class gets cloned and added !!!
+//QMessageBox::information(NULL, lensProfile.getLensType(), lensProfile.getName(), QMessageBox::Ok);
 		LensProfile* newProfile = lensProfile.clone();
+//QMessageBox::information(NULL, newProfile->getLensType(), newProfile->getName(), QMessageBox::Ok);
 		_lensHash.insert(lensProfile.getName(), newProfile);
 	}
 }
