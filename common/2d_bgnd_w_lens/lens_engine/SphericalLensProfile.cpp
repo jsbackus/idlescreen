@@ -254,7 +254,10 @@ int SphericalLensProfile::getMaxNumLenses() {
 LensProfile* SphericalLensProfile::clone() {
 	SphericalLensProfile* retVal = new SphericalLensProfile();
 
+	/*** NOTE!! Needs finished! ***/
+
 	// deep copy base class
+	//(SphericalLensProfile)*retVal = (SphericalLensProfile)*this;
 	*retVal = *this;
 
 	return (LensProfile*)retVal;
@@ -264,6 +267,8 @@ LensProfile* SphericalLensProfile::clone() {
  * Overloaded assignment operator
  */
 SphericalLensProfile& SphericalLensProfile::operator=(SphericalLensProfile& other) {
+	baseCopy(other);
+
 	_minRadius = other._minRadius;
 	_maxRadius = other._maxRadius;
 	_bRandSize = other._bRandSize;
