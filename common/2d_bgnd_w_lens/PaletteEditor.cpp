@@ -74,13 +74,5 @@ PaletteEditor::~PaletteEditor() {
 }
 
 void PaletteEditor::closeClicked(bool checked) {
-	close();
-	emit finished(0);
-//	close();
-}
-
-void PaletteEditor::done(int r) {
-	close();
-	emit finished(r);
-//	close();
+	accept();
 }

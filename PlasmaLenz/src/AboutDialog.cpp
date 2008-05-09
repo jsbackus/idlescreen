@@ -74,7 +74,7 @@ AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f) {
 
 	tempButton = new QPushButton(tr("&OK"));
 	tempButton->setDefault(true);
-	QObject::connect(tempButton, SIGNAL(clicked()), this, SLOT(done()));
+	QObject::connect(tempButton, SIGNAL(clicked()), this, SLOT(accept()));
 	tmpHLyt->addWidget(tempButton);
 
 	tempWidget = new QWidget();
@@ -94,10 +94,5 @@ void AboutDialog::gplClicked(bool checked) {
 
 void AboutDialog::qtClicked(bool checked) {
 	QMessageBox::aboutQt(this, "About");
-}
-
-void AboutDialog::done(int r) {
-	emit finished(r);
-	close();
 }
 

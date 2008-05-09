@@ -76,27 +76,11 @@ GPLDialog::GPLDialog(bool bAccepted, QWidget* parent, Qt::WindowFlags f) {
 	//ok button
 	QPushButton* okButton = new QPushButton(tr("&OK"));
 	okButton->setDefault(true);
-	QObject::connect(okButton, SIGNAL(clicked()), this, SLOT(done()));
+	QObject::connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
 	layout->addWidget(okButton);
 
 	setLayout(layout);
 	
-}
-
-void GPLDialog::accept(void) {
-	emit accepted();
-	close();
-	//emit finished(0);
-}
-
-void GPLDialog::done(int r) {
-	emit finished(r);
-	close();
-}
-
-void GPLDialog::reject(void) {
-	emit rejected();
-	close();
 }
 
 bool GPLDialog::isAccepted() {

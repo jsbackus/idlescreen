@@ -24,7 +24,6 @@ public:
 
 public slots:
 	void closeClicked(bool checked = false);
-	void done(int r = 0);
 
 //signals:
 	//void paletteUpdated(void);

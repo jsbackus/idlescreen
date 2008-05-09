@@ -42,9 +42,6 @@ public:
 
 public slots:
 	void gplAcceptDown(bool checked = false);
-	void accept(void);
-	void done(int r = 0);
-	void reject(void);
 
 private:
 	bool _bAccepted;

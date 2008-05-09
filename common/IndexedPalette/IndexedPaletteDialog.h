@@ -54,8 +54,6 @@ public slots:
 	void cancelClicked(bool checked = false);
 	void revertClicked(bool checked = false);
 
-	void done(int r = 0);
-
 	void colorChanged(int x, int y, QRgb* color);
 	void defaultColorClicked(bool checked = false);
 	void resizeClicked(bool checked = false);

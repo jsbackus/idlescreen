@@ -286,23 +286,15 @@ IndexedPaletteProfile IndexedPaletteDialog::getPalette(void) {
 	return _palProfile;
 }
 
-void IndexedPaletteDialog::done(int r) {
-	emit finished(r);
-	close();
-}
-
 void IndexedPaletteDialog::okClicked(bool checked) {
 	_palProfile.setName(_nameEdit->text());
 	emit paletteUpdated();
-	emit accepted();
-	emit finished(0);
-	close();
+	accept();
 }
 
 void IndexedPaletteDialog::cancelClicked(bool checked) {
 	_palProfile = _origPalProfile;
-	emit finished(1);
-	close();
+	reject();
 }
 
 void IndexedPaletteDialog::revertClicked(bool checked) {

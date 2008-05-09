@@ -41,8 +41,6 @@ public:
 public slots:
 	void gplClicked(bool checked = false);
 	void qtClicked(bool checked = false);
-	void done(int r = 0);
-
 };
 
 #endif
