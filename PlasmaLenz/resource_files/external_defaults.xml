@@ -57,6 +57,17 @@
  </BackgroundProfile>
  <BackgroundProfile>
   <type>PlasmaFractalBackground</type>
+  <name>BackgroundProfile_IwHOxcQm7Lrmn3LkmoKD</name>
+  <coarseness>4.5</coarseness>
+  <steps_per_tick>2048</steps_per_tick>
+  <anmiate_palette>true</anmiate_palette>
+  <palette_x_speed>1</palette_x_speed>
+  <palette_y_speed>1</palette_y_speed>
+  <clamp_color>true</clamp_color>
+  <palette>RGB Waves</palette>
+ </BackgroundProfile>
+ <BackgroundProfile>
+  <type>PlasmaFractalBackground</type>
   <name>Classic RGB Profile</name>
   <coarseness>4.5</coarseness>
   <steps_per_tick>2048</steps_per_tick>
@@ -81,7 +92,7 @@
   <name>RGB Highlights</name>
   <width>120</width>
   <height>1</height>
-  <interpolate_colors>true</interpolate_colors>
+  <interpolate_colors>Linear</interpolate_colors>
   <wrap_colors>true</wrap_colors>
   <default_color>
    <red>0</red>
@@ -212,10 +223,408 @@
   </color_list>
  </IndexedPaletteProfile>
  <IndexedPaletteProfile>
+  <name>Mono</name>
+  <width>128</width>
+  <height>128</height>
+  <interpolate_colors>Linear</interpolate_colors>
+  <wrap_colors>true</wrap_colors>
+  <default_color>
+   <red>0</red>
+   <green>0</green>
+   <blue>0</blue>
+  </default_color>
+  <color_list>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>0</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>255</red>
+    <green>255</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+    <x_coordinate>2</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>4</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>64</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>255</red>
+    <green>255</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+    <x_coordinate>66</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>68</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>0</x_coordinate>
+    <y_coordinate>16</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>255</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+    <x_coordinate>2</x_coordinate>
+    <y_coordinate>16</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>4</x_coordinate>
+    <y_coordinate>16</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>64</x_coordinate>
+    <y_coordinate>16</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>255</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+    <x_coordinate>66</x_coordinate>
+    <y_coordinate>16</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>68</x_coordinate>
+    <y_coordinate>16</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>0</x_coordinate>
+    <y_coordinate>32</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+    <x_coordinate>2</x_coordinate>
+    <y_coordinate>32</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>4</x_coordinate>
+    <y_coordinate>32</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>64</x_coordinate>
+    <y_coordinate>32</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+    <x_coordinate>66</x_coordinate>
+    <y_coordinate>32</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>68</x_coordinate>
+    <y_coordinate>32</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>0</x_coordinate>
+    <y_coordinate>48</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>255</red>
+    <green>0</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+    <x_coordinate>2</x_coordinate>
+    <y_coordinate>48</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>4</x_coordinate>
+    <y_coordinate>48</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>64</x_coordinate>
+    <y_coordinate>48</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>255</red>
+    <green>0</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+    <x_coordinate>66</x_coordinate>
+    <y_coordinate>48</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>68</x_coordinate>
+    <y_coordinate>48</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>0</x_coordinate>
+    <y_coordinate>64</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>255</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>2</x_coordinate>
+    <y_coordinate>64</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>4</x_coordinate>
+    <y_coordinate>64</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>64</x_coordinate>
+    <y_coordinate>64</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>255</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>66</x_coordinate>
+    <y_coordinate>64</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>68</x_coordinate>
+    <y_coordinate>64</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>0</x_coordinate>
+    <y_coordinate>80</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>255</red>
+    <green>255</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>2</x_coordinate>
+    <y_coordinate>80</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>4</x_coordinate>
+    <y_coordinate>80</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>64</x_coordinate>
+    <y_coordinate>80</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>255</red>
+    <green>255</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>66</x_coordinate>
+    <y_coordinate>80</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>68</x_coordinate>
+    <y_coordinate>80</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>0</x_coordinate>
+    <y_coordinate>96</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>255</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>2</x_coordinate>
+    <y_coordinate>96</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>4</x_coordinate>
+    <y_coordinate>96</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>64</x_coordinate>
+    <y_coordinate>96</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>255</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>66</x_coordinate>
+    <y_coordinate>96</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>68</x_coordinate>
+    <y_coordinate>96</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>0</x_coordinate>
+    <y_coordinate>112</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>255</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+    <x_coordinate>2</x_coordinate>
+    <y_coordinate>112</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>4</x_coordinate>
+    <y_coordinate>112</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>64</x_coordinate>
+    <y_coordinate>112</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>255</green>
+    <blue>255</blue>
+    <alpha>255</alpha>
+    <x_coordinate>66</x_coordinate>
+    <y_coordinate>112</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>68</x_coordinate>
+    <y_coordinate>112</y_coordinate>
+   </color_entry>
+  </color_list>
+ </IndexedPaletteProfile>
+ <IndexedPaletteProfile>
   <name>Tuscan Right</name>
   <width>320</width>
   <height>1</height>
-  <interpolate_colors>true</interpolate_colors>
+  <interpolate_colors>Linear</interpolate_colors>
   <wrap_colors>true</wrap_colors>
   <default_color>
    <red>0</red>
@@ -266,10 +675,10 @@
   </color_list>
  </IndexedPaletteProfile>
  <IndexedPaletteProfile>
-  <name>Mono</name>
-  <width>128</width>
-  <height>128</height>
-  <interpolate_colors>true</interpolate_colors>
+  <name>RGB Waves</name>
+  <width>192</width>
+  <height>1</height>
+  <interpolate_colors>Sinusoidal</interpolate_colors>
   <wrap_colors>true</wrap_colors>
   <default_color>
    <red>0</red>
@@ -278,7 +687,7 @@
   </default_color>
   <color_list>
    <color_entry>
-    <red>0</red>
+    <red>255</red>
     <green>0</green>
     <blue>0</blue>
     <alpha>255</alpha>
@@ -286,11 +695,19 @@
     <y_coordinate>0</y_coordinate>
    </color_entry>
    <color_entry>
-    <red>255</red>
+    <red>0</red>
     <green>255</green>
+    <blue>0</blue>
+    <alpha>255</alpha>
+    <x_coordinate>63</x_coordinate>
+    <y_coordinate>0</y_coordinate>
+   </color_entry>
+   <color_entry>
+    <red>0</red>
+    <green>0</green>
     <blue>255</blue>
     <alpha>255</alpha>
-    <x_coordinate>2</x_coordinate>
+    <x_coordinate>127</x_coordinate>
     <y_coordinate>0</y_coordinate>
    </color_entry>
    <color_entry>
@@ -298,7 +715,7 @@
     <green>0</green>
     <blue>0</blue>
     <alpha>255</alpha>
-    <x_coordinate>4</x_coordinate>
+    <x_coordinate>31</x_coordinate>
     <y_coordinate>0</y_coordinate>
    </color_entry>
    <color_entry>
@@ -306,15 +723,7 @@
     <green>0</green>
     <blue>0</blue>
     <alpha>255</alpha>
-    <x_coordinate>64</x_coordinate>
-    <y_coordinate>0</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>255</red>
-    <green>255</green>
-    <blue>255</blue>
-    <alpha>255</alpha>
-    <x_coordinate>66</x_coordinate>
+    <x_coordinate>94</x_coordinate>
     <y_coordinate>0</y_coordinate>
    </color_entry>
    <color_entry>
@@ -322,344 +731,8 @@
     <green>0</green>
     <blue>0</blue>
     <alpha>255</alpha>
-    <x_coordinate>68</x_coordinate>
+    <x_coordinate>158</x_coordinate>
     <y_coordinate>0</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>0</x_coordinate>
-    <y_coordinate>16</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>255</green>
-    <blue>255</blue>
-    <alpha>255</alpha>
-    <x_coordinate>2</x_coordinate>
-    <y_coordinate>16</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>4</x_coordinate>
-    <y_coordinate>16</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>64</x_coordinate>
-    <y_coordinate>16</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>255</green>
-    <blue>255</blue>
-    <alpha>255</alpha>
-    <x_coordinate>66</x_coordinate>
-    <y_coordinate>16</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>68</x_coordinate>
-    <y_coordinate>16</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>0</x_coordinate>
-    <y_coordinate>32</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>255</blue>
-    <alpha>255</alpha>
-    <x_coordinate>2</x_coordinate>
-    <y_coordinate>32</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>4</x_coordinate>
-    <y_coordinate>32</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>64</x_coordinate>
-    <y_coordinate>32</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>255</blue>
-    <alpha>255</alpha>
-    <x_coordinate>66</x_coordinate>
-    <y_coordinate>32</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>68</x_coordinate>
-    <y_coordinate>32</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>0</x_coordinate>
-    <y_coordinate>48</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>255</red>
-    <green>0</green>
-    <blue>255</blue>
-    <alpha>255</alpha>
-    <x_coordinate>2</x_coordinate>
-    <y_coordinate>48</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>4</x_coordinate>
-    <y_coordinate>48</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>64</x_coordinate>
-    <y_coordinate>48</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>255</red>
-    <green>0</green>
-    <blue>255</blue>
-    <alpha>255</alpha>
-    <x_coordinate>66</x_coordinate>
-    <y_coordinate>48</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>68</x_coordinate>
-    <y_coordinate>48</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>0</x_coordinate>
-    <y_coordinate>64</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>255</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>2</x_coordinate>
-    <y_coordinate>64</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>4</x_coordinate>
-    <y_coordinate>64</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>64</x_coordinate>
-    <y_coordinate>64</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>255</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>66</x_coordinate>
-    <y_coordinate>64</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>68</x_coordinate>
-    <y_coordinate>64</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>0</x_coordinate>
-    <y_coordinate>80</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>255</red>
-    <green>255</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>2</x_coordinate>
-    <y_coordinate>80</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>4</x_coordinate>
-    <y_coordinate>80</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>64</x_coordinate>
-    <y_coordinate>80</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>255</red>
-    <green>255</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>66</x_coordinate>
-    <y_coordinate>80</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>68</x_coordinate>
-    <y_coordinate>80</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>0</x_coordinate>
-    <y_coordinate>96</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>255</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>2</x_coordinate>
-    <y_coordinate>96</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>4</x_coordinate>
-    <y_coordinate>96</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>64</x_coordinate>
-    <y_coordinate>96</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>255</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>66</x_coordinate>
-    <y_coordinate>96</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>68</x_coordinate>
-    <y_coordinate>96</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>0</x_coordinate>
-    <y_coordinate>112</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>255</green>
-    <blue>255</blue>
-    <alpha>255</alpha>
-    <x_coordinate>2</x_coordinate>
-    <y_coordinate>112</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>4</x_coordinate>
-    <y_coordinate>112</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>64</x_coordinate>
-    <y_coordinate>112</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>255</green>
-    <blue>255</blue>
-    <alpha>255</alpha>
-    <x_coordinate>66</x_coordinate>
-    <y_coordinate>112</y_coordinate>
-   </color_entry>
-   <color_entry>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
-    <alpha>255</alpha>
-    <x_coordinate>68</x_coordinate>
-    <y_coordinate>112</y_coordinate>
    </color_entry>
   </color_list>
  </IndexedPaletteProfile>
@@ -667,7 +740,7 @@
   <name>The Gamut</name>
   <width>128</width>
   <height>1</height>
-  <interpolate_colors>true</interpolate_colors>
+  <interpolate_colors>Linear</interpolate_colors>
   <wrap_colors>true</wrap_colors>
   <default_color>
    <red>0</red>
@@ -745,7 +818,7 @@
   <name>Steel</name>
   <width>60</width>
   <height>1</height>
-  <interpolate_colors>true</interpolate_colors>
+  <interpolate_colors>Linear</interpolate_colors>
   <wrap_colors>true</wrap_colors>
   <default_color>
    <red>0</red>
@@ -807,7 +880,7 @@
   <name>Classic RGB Palette</name>
   <width>192</width>
   <height>1</height>
-  <interpolate_colors>true</interpolate_colors>
+  <interpolate_colors>Linear</interpolate_colors>
   <wrap_colors>true</wrap_colors>
   <default_color>
    <red>0</red>
@@ -845,7 +918,7 @@
   <name>Fade RGB to CMY Palette</name>
   <width>192</width>
   <height>96</height>
-  <interpolate_colors>true</interpolate_colors>
+  <interpolate_colors>Linear</interpolate_colors>
   <wrap_colors>true</wrap_colors>
   <default_color>
    <red>0</red>
@@ -1065,6 +1138,14 @@
   <lens_profile>Sphere</lens_profile>
  </MasterProfile>
  <MasterProfile>
+  <name>RGB Waves</name>
+  <width>1024</width>
+  <height>1024</height>
+  <timer_millis>50</timer_millis>
+  <background_profile>BackgroundProfile_IwHOxcQm7Lrmn3LkmoKD</background_profile>
+  <lens_profile>Sphere</lens_profile>
+ </MasterProfile>
+ <MasterProfile>
   <name>Fade RGB to CMY</name>
   <width>1024</width>
   <height>1024</height>
@@ -1098,27 +1179,15 @@
  </MasterProfile>
  <random_master_profiles>true</random_master_profiles>
  <gpl_accepted>true</gpl_accepted>
- <master_profile_history_size>5</master_profile_history_size>
+ <master_profile_history_size>3</master_profile_history_size>
  <master_profile_history>
   <history_entry>
-   <name>Fade RGB to CMY</name>
+   <name>Classic RGB</name>
    <location>0</location>
   </history_entry>
   <history_entry>
-   <name>Classic RGB</name>
+   <name>Waves</name>
    <location>1</location>
-  </history_entry>
-  <history_entry>
-   <name>The Gamut</name>
-   <location>2</location>
-  </history_entry>
-  <history_entry>
-   <name>Steel</name>
-   <location>3</location>
-  </history_entry>
-  <history_entry>
-   <name>Tuscan Right</name>
-   <location>4</location>
   </history_entry>
  </master_profile_history>
  <selected_master_profile_list>
@@ -1135,20 +1204,24 @@
    <location>2</location>
   </selected_entry>
   <selected_entry>
-   <name>Fade RGB to CMY</name>
+   <name>RGB Waves</name>
    <location>3</location>
   </selected_entry>
   <selected_entry>
-   <name>The Gamut</name>
+   <name>Fade RGB to CMY</name>
    <location>4</location>
   </selected_entry>
   <selected_entry>
-   <name>Steel</name>
+   <name>The Gamut</name>
    <location>5</location>
   </selected_entry>
   <selected_entry>
-   <name>Classic RGB</name>
+   <name>Steel</name>
    <location>6</location>
+  </selected_entry>
+  <selected_entry>
+   <name>Classic RGB</name>
+   <location>7</location>
   </selected_entry>
  </selected_master_profile_list>
 </PlasmaLenz_Configuration>

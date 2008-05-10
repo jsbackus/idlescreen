@@ -58,6 +58,8 @@ public slots:
 	void defaultColorClicked(bool checked = false);
 	void resizeClicked(bool checked = false);
 	void interpClicked(bool checked = false);
+	void linearClicked(bool checked = false);
+	void sineClicked(bool checked = false);
 	void wrapClicked(bool checked = false);
 
 signals:
@@ -93,6 +95,10 @@ private:
 
 	QSpinBox* _xDimBox;
 	QSpinBox* _yDimBox;
+
+	QRadioButton* _linearButton;
+	QRadioButton* _sineButton;
+	InterpType _lastInterpType;
 };
 
 

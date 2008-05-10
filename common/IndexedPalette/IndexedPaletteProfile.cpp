@@ -29,7 +29,7 @@ IndexedPaletteProfile::IndexedPaletteProfile() {
 
 	//set defaults
 	_name = "New Palette";
-	_bInterpolateColors = false;
+	_interpColorMethod = none;
 	_bWrapColors = false;
 	_width = 0;
 	_height = 0;
@@ -75,7 +75,7 @@ IndexedPaletteProfile* IndexedPaletteProfile::load(QDomNode &node) {
 
 	tempElem = node.firstChildElement("interpolate_colors");
 	if(!tempElem.isNull()) {
-		retVal->_bInterpolateColors = stringToBool(tempElem.text());
+		retVal->_interpColorMethod = IndexedPalette::stringToInterpType(tempElem.text().toStdString());
 	}
 
 	tempElem = node.firstChildElement("wrap_colors");
@@ -200,7 +200,7 @@ QDomNode IndexedPaletteProfile::save(QDomDocument* doc) {
 	retVal.appendChild(tempElem);
 
 	//interpolate colors?
-	tempNode = doc->createTextNode(boolToString(_bInterpolateColors));
+	tempNode = doc->createTextNode(QString::fromAscii(IndexedPalette::InterpTypeToString(_interpColorMethod).data()));
 	tempElem = doc->createElement("interpolate_colors");
 	tempElem.appendChild(tempNode);
 	retVal.appendChild(tempElem);
@@ -305,9 +305,7 @@ IndexedPalette* IndexedPaletteProfile::createPalette() {
 		retVal->setColor(tmpStruct.x, tmpStruct.y,tmpStruct.r, tmpStruct.g, tmpStruct.b, tmpStruct.a);
 	}
 
-	if(_bInterpolateColors) {
-		retVal->interpolate(_bWrapColors);
-	}
+	retVal->interpolate(_bWrapColors, _interpColorMethod);
 
 	return retVal;
 }
@@ -520,12 +518,12 @@ int IndexedPaletteProfile::getHeight() {
 /*
  * Get/set interpolate colors
  */
-void IndexedPaletteProfile::setInterpolateColors(bool bInterpolateColors) {
-	_bInterpolateColors = bInterpolateColors;
+void IndexedPaletteProfile::setInterpolateColors(InterpType interpColorMethod) {
+	_interpColorMethod = interpColorMethod;
 }
 
-bool IndexedPaletteProfile::getInterpolateColors() {
-	return _bInterpolateColors;
+InterpType IndexedPaletteProfile::getInterpolateColors() {
+	return _interpColorMethod;
 }
 
 /*
@@ -552,7 +550,7 @@ QString IndexedPaletteProfile::getXMLTagName() {
 IndexedPaletteProfile& IndexedPaletteProfile::operator=(IndexedPaletteProfile& other) {
 
 	_name = other._name;
-	_bInterpolateColors = other._bInterpolateColors;
+	_interpColorMethod = other._interpColorMethod;
 	_bWrapColors = other._bWrapColors;
 	_width = other._width;
 	_height = other._height;

@@ -22,6 +22,12 @@
  * 
  */
 
+#include <math.h>
+
+#ifndef PI
+#define PI 3.14159265f
+#endif
+
 #include "IndexedPalette.h"
 
 /**
@@ -172,7 +178,7 @@ void IndexedPalette::getColor(int x, int y, int* buff, int length) {
  * Traverses the palette linearily interpolating between the
  * colors that are specified.  Will wrap if requested.
  */
-void IndexedPalette::interpolate(bool bWrap) {
+void IndexedPalette::interpolate(bool bWrap, InterpType interp) {
 	int last = -1;
 
 	if(bWrap) {
@@ -185,7 +191,7 @@ void IndexedPalette::interpolate(bool bWrap) {
 		if(y>0) {
 			for(int x=0;x<_width;x++) {
 				if(_palette[(x+y*_width)*4 + 3] > 0) {
-					lerpColors(y, _height, x, false, &_palette[x*4] );
+					interpColors(y, _height, x, false, interp, &_palette[x*4]);
 				}
 			}
 		}
@@ -199,7 +205,7 @@ void IndexedPalette::interpolate(bool bWrap) {
 					x--;
 				}
 				if(x>0) {
-					lerpColors(x, _width, y, true, &_palette[y*_width*4]);
+					interpColors(x, _width, y, true, interp, &_palette[y*_width*4]);
 				}
 			}
 		}
@@ -213,7 +219,7 @@ void IndexedPalette::interpolate(bool bWrap) {
 			last = 0;
 			for(int x=1; x<_width; x++) {
 				if(_palette[(x+y*_width)*4 + 3] > 0) {
-					lerpColors(last, x, y, true);
+					interpColors(last, x, y, true, interp);
 					last = x;
 				}
 			}
@@ -226,7 +232,7 @@ void IndexedPalette::interpolate(bool bWrap) {
 		for(int y = 0; y<_height; y++) {
 			if(_palette[(x+y*_width)*4 + 3] > 0) {
 				if(last >= 0) {
-					lerpColors(last, y, x, false);
+					interpColors(last, y, x, false, interp);
 				}
 				last = y;
 			}
@@ -236,15 +242,29 @@ void IndexedPalette::interpolate(bool bWrap) {
 }
 
 /**
- * Lerps between the two endpoints on the specified row or column.
- * The results are put into the appropriate buffer.  If bLerpRow is
+ * Interpolates between the two endpoints on the specified row or column.
+ * The results are put into the appropriate buffer.  If bInterpRow is
  * true, then rowcolumn = column, and the results go into
- * _lerpWidthBuff.
+ * _interpWidthBuff.
  */
+void IndexedPalette::interpColors(int start, int stop, int rowcolumn, bool bInterpRow, InterpType interpMethod, GLubyte* wrapColor) {
+	// look at the value of interpMethod and call the correct helper method
+	switch(interpMethod) {
+		case sine:
+			sineInterpColors(start, stop, rowcolumn, bInterpRow, wrapColor);
+			break;
+		case linear:
+			lerpColors(start, stop, rowcolumn, bInterpRow, wrapColor);
+			break;
+		case none:
+		default:
+			break;
+	}
+}
 
-//, GLubyte targetColor
-void IndexedPalette::lerpColors(int start, int stop, int rowcolumn, bool bLerpRow, GLubyte* wrapColor) {
-	//*** NOTE: bLerpRow means iterate over X!!!
+// use sinusoidal interpolation
+void IndexedPalette::sineInterpColors(int start, int stop, int rowcolumn, bool bInterpRow, GLubyte* wrapColor) {
+	//*** NOTE: bInterpRow means iterate over X!!!
 
 	if(stop - start < 2)
 		return;
@@ -253,7 +273,44 @@ void IndexedPalette::lerpColors(int start, int stop, int rowcolumn, bool bLerpRo
 
 	//calculates the stepVals used in lerping
 	for(int j = 0; j<4;j++) {
-		if( bLerpRow ) {
+		if( bInterpRow ) {
+			if(wrapColor != NULL) {
+				stepVals[j] = float(wrapColor[j] - _palette[(start + rowcolumn*_width)*4 + j]);
+			} else {
+				stepVals[j] = float(_palette[(stop + rowcolumn*_width)*4 + j] - _palette[(start + rowcolumn*_width)*4 + j]);
+			}
+		} else {
+			if(wrapColor != NULL) {
+				stepVals[j] = float(wrapColor[j] - _palette[(rowcolumn + start *_width)*4 + j]);
+			} else {
+				stepVals[j] = float(_palette[(rowcolumn + stop*_width)*4 + j] - _palette[(rowcolumn + start *_width)*4 + j]);
+			}
+		}
+	}
+
+	for(int i=start; i<stop; i++) {
+		for(j = 0; j<4; j++) {
+			if( bInterpRow ) {				
+				_palette[(i + rowcolumn*_width)*4+j] = GLubyte( int(sin(float(i - start)*PI/(2.0*float(stop-start)))*stepVals[j]) + _palette[(start+rowcolumn*_width)*4+j]);
+			} else {
+				_palette[(rowcolumn + i*_width)*4+j] = GLubyte( int(sin(float(i - start)*PI/(2.0*float(stop-start)))*stepVals[j]) + _palette[(rowcolumn+start*_width)*4+j]);
+			}
+		}
+	}
+}
+
+// use linear interpolation
+void IndexedPalette::lerpColors(int start, int stop, int rowcolumn, bool bInterpRow, GLubyte* wrapColor) {
+	//*** NOTE: bInterpRow means iterate over X!!!
+
+	if(stop - start < 2)
+		return;
+
+	float stepVals[4];
+
+	//calculates the stepVals used in lerping
+	for(int j = 0; j<4;j++) {
+		if( bInterpRow ) {
 			if(wrapColor != NULL) {
 				stepVals[j] = float(wrapColor[j] - _palette[(start + rowcolumn*_width)*4 + j]) / float(stop-start);
 			} else {
@@ -270,11 +327,9 @@ void IndexedPalette::lerpColors(int start, int stop, int rowcolumn, bool bLerpRo
 
 	for(int i=start; i<stop; i++) {
 		for(j = 0; j<4; j++) {
-			if( bLerpRow ) {
-				//_lerpWidthBuff[(i + rowcolumn*_width)*4+j] = GLubyte( int(float(i - start)*stepVals[j]) + _palette[(start+rowcolumn*_width)*4+j]);
+			if( bInterpRow ) {				
 				_palette[(i + rowcolumn*_width)*4+j] = GLubyte( int(float(i - start)*stepVals[j]) + _palette[(start+rowcolumn*_width)*4+j]);
 			} else {
-				//_lerpHeightBuff[(rowcolumn + i*_width)*4+j] = GLubyte( int(float(i - start)*stepVals[j]) + _palette[(rowcolumn+start*_width)*4+j]);
 				_palette[(rowcolumn + i*_width)*4+j] = GLubyte( int(float(i - start)*stepVals[j]) + _palette[(rowcolumn+start*_width)*4+j]);
 			}
 		}
@@ -314,5 +369,41 @@ IndexedPalette& IndexedPalette::operator=(IndexedPalette& other) {
 	}
 
 	return *this;
+}
+
+/**
+ * Converts InterpType to/from QString.
+ */
+string IndexedPalette::InterpTypeToString(InterpType interpType) {
+	string retVal;
+	switch(interpType) {
+		case sine:
+			retVal = string("Sinusoidal");
+			break;
+		case linear:
+			retVal = string("Linear");
+			break;
+		case none:
+		default:
+			retVal = string("None");
+			break;
+	}
+	return retVal;
+}
+
+InterpType IndexedPalette::stringToInterpType(string str) {
+	InterpType retVal;
+
+	if(str == string("Linear") ) {
+		retVal = linear;
+	} else if(str == string("Sinusoidal") ) {
+		retVal = sine;
+	} else if(str == string("true") ) {
+		retVal = linear;
+	} else {
+		retVal = none;
+	}
+
+	return retVal;
 }
 

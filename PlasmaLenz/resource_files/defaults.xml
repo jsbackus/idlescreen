@@ -15,7 +15,7 @@
   <name>Classic RGB Palette</name>
   <width>192</width>
   <height>1</height>
-  <interpolate_colors>true</interpolate_colors>
+  <interpolate_colors>Linear</interpolate_colors>
   <wrap_colors>true</wrap_colors>
   <default_color>
    <red>0</red>

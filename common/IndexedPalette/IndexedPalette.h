@@ -40,9 +40,17 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include <string>
+
+using namespace std;
+
+// enum of interpolation types
+enum InterpType { none, linear, sine };
+
 class IndexedPalette {
 
 public:
+
 	/**
 	 * Constructor
 	 */
@@ -90,7 +98,7 @@ public:
 	 * Traverses the palette linearily interpolating between the
 	 * colors that are specified.  Will wrap if requested.
 	 */
-	void interpolate(bool bWrap);
+	void interpolate(bool bWrap, InterpType interp = linear);
 
 	/**
 	 * Sets the specified entry to the specified color.
@@ -102,14 +110,25 @@ public:
 	 */
 	IndexedPalette& operator=(IndexedPalette& other);
 
+	/**
+	 * Converts InterpType to/from string.
+	 */
+	static string InterpTypeToString(InterpType interpType);
+	static InterpType stringToInterpType(string str);
+	
+
 private:
 	/**
-	 * Lerps between the two endpoints on the specified row or column.
-	 * The results are put into the appropriate buffer.  If bLerpRow is
+	 * Interpolates between the two endpoints on the specified row or column.
+	 * The results are put into the appropriate buffer.  If bInterpRow is
 	 * true, then rowcolumn = column, and the results go into
-	 * _lerpWidthBuff.
+	 * _interpWidthBuff.
 	 */
-	void lerpColors(int start, int stop, int rowcolumn, bool bLerpRow, GLubyte* wrapColor = NULL);
+	void interpColors(int start, int stop, int rowcolumn, bool bInterpRow, InterpType interpMethod = linear, GLubyte* wrapColor = NULL);
+	// use linear interpolation
+	void lerpColors(int start, int stop, int rowcolumn, bool bInterpRow, GLubyte* wrapColor);
+	// use sinusoidal interpolation
+	void sineInterpColors(int start, int stop, int rowcolumn, bool bInterpRow, GLubyte* wrapColor);
 
 	int _width, _height;
 	GLubyte* _palette;

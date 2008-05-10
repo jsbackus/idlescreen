@@ -47,6 +47,7 @@
 #include <QtXml/QDomNode>
 #include <QtXml/QDomDocument>
 #include <QColor>
+#include <QRadioButton>
 
 #include "IndexedPalette.h"
 
@@ -121,8 +122,8 @@ public:
 	/*
 	 * Get/set interpolate colors
 	 */
-	void setInterpolateColors(bool bInterpolateColors);
-	bool getInterpolateColors();
+	void setInterpolateColors(InterpType interpColorMethod);
+	InterpType getInterpolateColors();
 
 	/*
 	 * get/set wrap colors
@@ -143,7 +144,8 @@ public:
 private:
 	QList<color_data_struct> _colorList;
 	QString _name;
-	bool _bInterpolateColors;
+	//bool _bInterpolateColors;
+	InterpType _interpColorMethod;
 	bool _bWrapColors;
 	int _width;
 	int _height;

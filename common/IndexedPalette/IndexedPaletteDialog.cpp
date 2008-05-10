@@ -52,6 +52,8 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 	_colorScrollWidget = NULL;
 	_colorWidget = NULL;
 	_prgDlg = NULL;
+	_linearButton = NULL;
+	_sineButton = NULL;
 	_prgCount = 0;
 
 	if(palProfile == NULL) {
@@ -152,11 +154,24 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 	//interp colors region
 	QGroupBox* interpBox = new QGroupBox(tr("Interpolate Colors"));
 	interpBox->setCheckable(true);
-	interpBox->setChecked(_palProfile.getInterpolateColors());
+	_lastInterpType = _palProfile.getInterpolateColors();
+	interpBox->setChecked(_lastInterpType != none);
 	//interpBox->setToolTip(tr("Enabling this will randomize the order in which the screen savers will run."));
 	QObject::connect(interpBox, SIGNAL(clicked(bool)), this, SLOT(interpClicked(bool)));
 
-	QHBoxLayout* interpBoxLayout = new QHBoxLayout();
+	//QHBoxLayout* interpBoxLayout = new QHBoxLayout();
+	QVBoxLayout* interpBoxLayout = new QVBoxLayout();
+
+	_linearButton = new QRadioButton(tr("Linear"));
+	_linearButton->setChecked(_lastInterpType == linear);
+	interpBoxLayout->addWidget(_linearButton);
+	QObject::connect(_linearButton, SIGNAL(toggled(bool)), this, SLOT(linearClicked(bool)));
+	
+	_sineButton = new QRadioButton(tr("Sinusoidal"));
+	_sineButton->setChecked(_lastInterpType == sine);
+	interpBoxLayout->addWidget(_sineButton);
+	QObject::connect(_sineButton, SIGNAL(toggled(bool)), this, SLOT(sineClicked(bool)));
+
 	QCheckBox* wrapBox = new QCheckBox(tr("Wrap Colors"));
 	wrapBox->setCheckable(true);
 	wrapBox->setChecked(_palProfile.getWrapColors());
@@ -355,8 +370,23 @@ void IndexedPaletteDialog::defaultColorClicked(bool checked) {
 }
 
 void IndexedPaletteDialog::interpClicked(bool checked) {
-	_palProfile.setInterpolateColors(checked);
+	_palProfile.setInterpolateColors(checked ? _lastInterpType : none);
 	updatePreviewIcon();
+}
+void IndexedPaletteDialog::linearClicked(bool checked) {
+	if(checked) {
+		_lastInterpType = linear;
+		_palProfile.setInterpolateColors(_lastInterpType);
+		updatePreviewIcon();
+	}
+}
+
+void IndexedPaletteDialog::sineClicked(bool checked) {
+	if(checked) {
+		_lastInterpType = sine;
+		_palProfile.setInterpolateColors(_lastInterpType);
+		updatePreviewIcon();
+	}
 }
 
 void IndexedPaletteDialog::wrapClicked(bool checked) {
