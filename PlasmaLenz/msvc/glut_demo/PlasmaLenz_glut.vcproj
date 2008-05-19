@@ -17,14 +17,14 @@
 			ConfigurationType="0">
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="%QTDIR%\bin\qmake
+				BuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_glut.pro
 nmake debug
 "
-				ReBuildCommandLine="%QTDIR%\bin\qmake
+				ReBuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_glut.pro
 nmake debug-clean
 nmake debug
 "
-				CleanCommandLine="%QTDIR%\bin\qmake
+				CleanCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_glut.pro
 nmake debug-clean
 "
 				Output="debug\PlasmaLenz_glut.exe"/>
@@ -36,13 +36,13 @@ nmake debug-clean
 			ConfigurationType="0">
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="%QTDIR%\bin\qmake
+				BuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_glut.pro
 nmake release
 "
-				ReBuildCommandLine="%QTDIR%\bin\qmake
+				ReBuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_glut.pro
 namke release-clean
 nmake release"
-				CleanCommandLine="%QTDIR%\bin\qmake
+				CleanCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_glut.pro
 nmake release-clean
 "
 				Output="release\PlasmaLenz_glut.exe"/>
@@ -70,7 +70,7 @@ nmake release-clean
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 		</Filter>
 		<File
-			RelativePath=".\PlasmaLenz_glut.pro">
+			RelativePath="..\..\project_files\PlasmaLenz_glut.pro">
 		</File>
 	</Files>
 	<Globals>

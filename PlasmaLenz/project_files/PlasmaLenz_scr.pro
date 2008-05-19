@@ -1,8 +1,9 @@
 TEMPLATE	= app
-CONFIG		+= qt warn_on
+win32:CONFIG		+= qt warn_on
+unix:CONFIG	+= qt x11 warn_on
 QT			+=	xml
 
-SOURCES		=	../../../common/core/glut_demo.cpp ../../../common/core/win_misc_funcs.cpp
+SOURCES		=	../../../common/core/win_main.cpp ../../../common/core/win_misc_funcs.cpp
 
 SOURCES		+=	../../../common/IndexedPalette/IndexedPalette.cpp
 SOURCES		+=	../../../common/IndexedPalette/IndexedPaletteDialog.cpp
@@ -69,13 +70,16 @@ HEADERS		+=	../../../common/2d_bgnd_w_lens/lens_engine/LensManager.h
 HEADERS		+=	../../../common/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h
 
 HEADERS		+=	../../src/PlasmaFractalBackgroundProfile.h ../../src/PlasmaFractal.h
-HEADERS		+=	../../resource_files/resource.h
 HEADERS		+=	../../src/AboutDialog.h
+HEADERS		+=	../../resource_files/resource.h
 HEADERS		+=	../../src/ProfileEditDialog.h
 
-TARGET		= PlasmaLenz_glut
+TARGET		= PlasmaLenz
 RC_FILE		= ../../resource_files/win_resource.rc
 RESOURCES	= ../../resource_files/qt_resource.qrc
 
 win32:LIBS	+= user32.lib shell32.lib Advapi32.lib gdi32.lib scrnsavw.lib opengl32.lib glu32.lib comctl32.lib
 //win32:LIBS	+=  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib scrnsavw.lib opengl32.lib glu32.lib comctl32.lib
+
+unix:DESTDIR	= ../../..
+unix:LIBS	+= GL GLU X11 Xmu Xi m
