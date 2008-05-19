@@ -62,6 +62,8 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 
 	_oldName = targetName;
 	if(targetName != "") {
+//!!! NOTE: gcc doesn't like this.  Has to do with the
+//overloaded operator= statement in MasterProfile.
 		_mp = _confMgr->getProfile(targetName);
 	}
 
@@ -497,7 +499,8 @@ void ProfileEditDialog::addAccepted(void) {
 			message += pal.getName();
 			message += "' already exists.  Please choose a new name.";
 			QMessageBox::warning(this, 0, message, QMessageBox::Ok);
-			pal.setName(QString(""));
+			QString param("");
+			pal.setName(param);
 
 			//attempt to edit
 			//editPalette(pal, true);

@@ -87,8 +87,8 @@ protected:
 	int _height;
 	
 	// constants
-	static const ICON_WIDTH = 32;
-	static const ICON_HEIGHT = 32;
+	static const int ICON_WIDTH = 32;
+	static const int ICON_HEIGHT = 32;
 
 	QColor _definedBGColor;
 	QColor _undefinedBGColor;

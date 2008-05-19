@@ -169,7 +169,8 @@ void PaletteSelectWidget::editClicked(bool checked) {
 
 		//first, check for existence.
 		if(_confMgr->doesPaletteExist(selected)) {
-			editPalette(_confMgr->getPaletteProfile(selected), false);
+			IndexedPaletteProfile param = _confMgr->getPaletteProfile(selected);
+			editPalette(param, false);
 		}
 	}
 	tmp = NULL;
@@ -333,3 +334,4 @@ void PaletteSelectWidget::editPalette(IndexedPaletteProfile& pal, bool bWasAddRe
 		_palOldName = "";
 	}
 }
+

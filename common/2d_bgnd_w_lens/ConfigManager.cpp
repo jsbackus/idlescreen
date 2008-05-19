@@ -314,7 +314,7 @@ bool ConfigManager::exportToFile(QString filename, bool bSaveMiscInfo) {
 
 	//store palette profiles..
 	keys = _paletteHash.keys();
-	for(i=0; i<keys.size();i++) {
+	for(int i=0; i<keys.size();i++) {
 		root.appendChild(_paletteHash.value(keys.at(i))->save(&doc));
 	}
 
@@ -326,7 +326,7 @@ bool ConfigManager::exportToFile(QString filename, bool bSaveMiscInfo) {
 
 	//store master profiles..
 	keys = _profiles.keys();
-	for(i=0; i<keys.size();i++) {
+	for(int i=0; i<keys.size();i++) {
 		root.appendChild(_profiles.value(keys.at(i))->save(&doc));
 	}
 
@@ -351,12 +351,14 @@ void ConfigManager::loadMiscInfo(QDomNode &node) {
 
 	tempElem = node.firstChildElement("random_master_profiles");
 	if(!tempElem.isNull()) {
-		_bRandomProfiles = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		_bRandomProfiles = stringToBool(param);
 	}
 
 	tempElem = node.firstChildElement("gpl_accepted");
 	if(!tempElem.isNull()) {
-		_bGPLAccepted = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		_bGPLAccepted = stringToBool(param);
 	}
 
 	tempElem = node.firstChildElement("master_profile_history_size");

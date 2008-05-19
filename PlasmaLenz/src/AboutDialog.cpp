@@ -32,7 +32,9 @@
 #include <QLabel>
 
 #include "AboutDialog.h"
-#include "../../../common/gpl_related/gpldialog.h"
+#include "gpl_related/gpldialog.h"
+
+//#include "../../../common/gpl_related/gpldialog.h"
 
 AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f) {
 	QDialog(parent, f);

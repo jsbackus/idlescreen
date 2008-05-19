@@ -289,7 +289,7 @@ void IndexedPalette::sineInterpColors(int start, int stop, int rowcolumn, bool b
 	}
 
 	for(int i=start; i<stop; i++) {
-		for(j = 0; j<4; j++) {
+		for(int j = 0; j<4; j++) {
 			if( bInterpRow ) {				
 				_palette[(i + rowcolumn*_width)*4+j] = GLubyte( int(sin(float(i - start)*PI/(2.0*float(stop-start)))*stepVals[j]) + _palette[(start+rowcolumn*_width)*4+j]);
 			} else {
@@ -326,7 +326,7 @@ void IndexedPalette::lerpColors(int start, int stop, int rowcolumn, bool bInterp
 	}
 
 	for(int i=start; i<stop; i++) {
-		for(j = 0; j<4; j++) {
+		for(int j = 0; j<4; j++) {
 			if( bInterpRow ) {				
 				_palette[(i + rowcolumn*_width)*4+j] = GLubyte( int(float(i - start)*stepVals[j]) + _palette[(start+rowcolumn*_width)*4+j]);
 			} else {
@@ -362,7 +362,7 @@ IndexedPalette& IndexedPalette::operator=(IndexedPalette& other) {
 	empty(_width, _height);
 
 	//copy buffers
-	for(i=0;i<_height*_width*4;i++) {
+	for(int i=0;i<_height*_width*4;i++) {
 		_palette[i] = other._palette[i];
 		_lerpWidthBuff[i] = other._lerpWidthBuff[i];
 		_lerpHeightBuff[i] = other._lerpHeightBuff[i];

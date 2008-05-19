@@ -25,7 +25,9 @@
 #include <QtXml/QDomElement>
 #include <QtXml/QDomText>
 
-#include "../../common/utility/misc_funcs.h"
+//#include "../../common/utility/misc_funcs.h"
+
+#include "utility/misc_funcs.h"
 #include "PlasmaFractalBackgroundProfile.h"
 #include "PlasmaFractal.h"
 
@@ -88,7 +90,8 @@ BackgroundProfile* PlasmaFractalBackgroundProfile::load(QDomNode &node) {
 
 	tempElem = node.firstChildElement("anmiate_palette");
 	if(!tempElem.isNull()) {
-		retVal->_bAnimatePalette = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		retVal->_bAnimatePalette = stringToBool(param);
 	}
 
 	tempElem = node.firstChildElement("palette_x_speed");
@@ -109,7 +112,8 @@ BackgroundProfile* PlasmaFractalBackgroundProfile::load(QDomNode &node) {
 
 	tempElem = node.firstChildElement("clamp_color");
 	if(!tempElem.isNull()) {
-		retVal->_bClampColorIndex = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		retVal->_bClampColorIndex = stringToBool(param);
 	}
 
 	tempElem = node.firstChildElement("palette");

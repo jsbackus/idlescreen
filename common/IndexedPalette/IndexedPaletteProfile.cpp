@@ -80,7 +80,8 @@ IndexedPaletteProfile* IndexedPaletteProfile::load(QDomNode &node) {
 
 	tempElem = node.firstChildElement("wrap_colors");
 	if(!tempElem.isNull()) {
-		retVal->_bWrapColors = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		retVal->_bWrapColors = stringToBool(param);
 	}
 
 	QDomElement colorElem = node.firstChildElement("default_color");
@@ -560,7 +561,7 @@ IndexedPaletteProfile& IndexedPaletteProfile::operator=(IndexedPaletteProfile& o
 	}
 
 	//deep copy of list
-	for(i=0; i<other._colorList.size();i++){
+	for(int i=0; i<other._colorList.size();i++){
 		color_data_struct tmpColor = other._colorList.at(i);
 		_colorList.append(tmpColor);
 	}

@@ -335,7 +335,7 @@ void LensObject::renderLens(int posX, int posY, int sizeX, int sizeY, int* field
 						float mag = 0.0;
 						float color[3];
 
-						for(k=0;k<3;k++) {
+						for(int k=0;k<3;k++) {
 							float imageColor = float(buff[k])/float(255.0);
 							color[k] =  imageColor * float(1.0 -  _outlineTint[3]) + _outlineTint[k]*_outlineTint[3];
 							mag += color[k]*color[k];
@@ -343,7 +343,7 @@ void LensObject::renderLens(int posX, int posY, int sizeX, int sizeY, int* field
 						// Really should normalize the color, but it
 						// doesn't look as good.
 						mag = sqrt(mag);
-						for(k=0;k<3;k++) {
+						for(int k=0;k<3;k++) {
 							//buff[k] = GLubyte((color[k]/mag)*255.0);
 							buff[k] = GLubyte((color[k])*255.0);
 						}
@@ -351,7 +351,7 @@ void LensObject::renderLens(int posX, int posY, int sizeX, int sizeY, int* field
 
 					//complement if needed
 					if(_bOutlineComplementColors) {
-						for(k=0;k<3;k++) {
+						for(int k=0;k<3;k++) {
 							buff[k] = 255 - buff[k];
 						}
 					}
@@ -364,7 +364,7 @@ void LensObject::renderLens(int posX, int posY, int sizeX, int sizeY, int* field
 							//float mag = 0.0;
 							float color[3];
 
-							for(k=0;k<3;k++) {
+							for(int k=0;k<3;k++) {
 								float imageColor = float(buff[k])/float(255.0);
 								color[k] =  imageColor * float(1.0 -  _tint[3]) + _tint[k]*_tint[3];
 								//mag += color[k]*color[k];
@@ -372,7 +372,7 @@ void LensObject::renderLens(int posX, int posY, int sizeX, int sizeY, int* field
 							// Really should normalize the color, but it
 							// doesn't look as good.
 							//mag = sqrt(mag);
-							for(k=0;k<3;k++) {
+							for(int k=0;k<3;k++) {
 								//buff[k] = GLubyte((color[k]/mag)*255.0);
 								buff[k] = GLubyte((color[k])*255.0);
 							}
@@ -380,7 +380,7 @@ void LensObject::renderLens(int posX, int posY, int sizeX, int sizeY, int* field
 
 						//complement if needed
 						if(_bComplementColors) {
-							for(k=0;k<3;k++) {
+							for(int k=0;k<3;k++) {
 								buff[k] = 255 - buff[k];
 							}
 						}

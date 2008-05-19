@@ -48,7 +48,12 @@
 #include <ctime>
 #include <GL/gl.h>
 #include <GL/glu.h>
+
+#ifdef _M_IX86
 #include <glut.h>
+#else
+#include <GL/glut.h>
+#endif
 
 #include <QString>
 #include <QStringList>
@@ -82,7 +87,7 @@ char* configFile;
 long lastTimeStamp;
 int frameCount;
 
-void main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	frameCount = 0;
 	lastTimeStamp = time(NULL);
@@ -117,6 +122,8 @@ void main(int argc, char* argv[])
 
 	//throw down on some open gl
 	glutMainLoop();
+
+	return 0;
 }
 
 void init(void)

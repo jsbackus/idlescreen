@@ -76,7 +76,8 @@ LensProfile* SphericalLensProfile::load(QDomNode &node) {
 
 	tempElem = node.firstChildElement("random_size");
 	if(!tempElem.isNull()) {
-		retVal->_bRandSize = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		retVal->_bRandSize = stringToBool(param);
 	}
 
 	tempElem = node.firstChildElement("instances_max");

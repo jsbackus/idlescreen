@@ -172,27 +172,32 @@ void LensProfile::loadBase(QDomNode &node) {
 
 	tempElem = node.firstChildElement("random_tint");
 	if(!tempElem.isNull()) {
-		_bRandTint = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		_bRandTint = stringToBool(param);
 	}
 
 	tempElem = node.firstChildElement("use_primary_tint");
 	if(!tempElem.isNull()) {
-		_bUseTint = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		_bUseTint = stringToBool(param);
 	}
 
 	tempElem = node.firstChildElement("primary_tint_is_complement");
 	if(!tempElem.isNull()) {
-		_bUseComplement = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		_bUseComplement = stringToBool(param);
 	}
 
 	tempElem = node.firstChildElement("use_outline_tint");
 	if(!tempElem.isNull()) {
-		_bUseOutlineTint = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		_bUseOutlineTint = stringToBool(param);
 	}
 
 	tempElem = node.firstChildElement("outline_tint_is_complement");
 	if(!tempElem.isNull()) {
-		_bUseOutlineComplement = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		_bUseOutlineComplement = stringToBool(param);
 	}
 
 	tempElem = node.firstChildElement("min_speed");
@@ -213,7 +218,8 @@ void LensProfile::loadBase(QDomNode &node) {
 
 	tempElem = node.firstChildElement("random_speed");
 	if(!tempElem.isNull()) {
-		_bRandSpeed = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		_bRandSpeed = stringToBool(param);
 	}
 
 	tempElem = node.firstChildElement("min_angle");
@@ -234,12 +240,14 @@ void LensProfile::loadBase(QDomNode &node) {
 
 	tempElem = node.firstChildElement("random_angle");
 	if(!tempElem.isNull()) {
-		_bRandAngle = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		_bRandAngle = stringToBool(param);
 	}
 
 	tempElem = node.firstChildElement("random_side");
 	if(!tempElem.isNull()) {
-		_bRandSide = stringToBool(tempElem.text());
+		QString param = tempElem.text();
+		_bRandSide = stringToBool(param);
 	}
 
 	_numSides = 0;

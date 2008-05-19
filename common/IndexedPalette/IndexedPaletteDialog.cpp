@@ -302,7 +302,8 @@ IndexedPaletteProfile IndexedPaletteDialog::getPalette(void) {
 }
 
 void IndexedPaletteDialog::okClicked(bool checked) {
-	_palProfile.setName(_nameEdit->text());
+	QString param = _nameEdit->text();
+	_palProfile.setName(param);
 	emit paletteUpdated();
 	accept();
 }

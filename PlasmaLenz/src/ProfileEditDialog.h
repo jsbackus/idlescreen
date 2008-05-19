@@ -41,11 +41,17 @@
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 
-#include "../../common/2d_bgnd_w_lens/ConfigManager.h"
-#include "../../common/2d_bgnd_w_lens/MasterProfile.h"
-#include "../../common/2d_bgnd_w_lens/BackgroundProfile.h"
+//#include "../../common/2d_bgnd_w_lens/ConfigManager.h"
+//#include "../../common/2d_bgnd_w_lens/MasterProfile.h"
+//#include "../../common/2d_bgnd_w_lens/BackgroundProfile.h"
+//#include "PlasmaFractalBackgroundProfile.h"
+//#include "../../../common/IndexedPalette/IndexedPaletteDialog.h"
+
+#include "2d_bgnd_w_lens/ConfigManager.h"
+#include "2d_bgnd_w_lens/MasterProfile.h"
+#include "2d_bgnd_w_lens/BackgroundProfile.h"
 #include "PlasmaFractalBackgroundProfile.h"
-#include "../../../common/IndexedPalette/IndexedPaletteDialog.h"
+#include "IndexedPalette/IndexedPaletteDialog.h"
 
 class ProfileEditDialog : public QDialog {
 

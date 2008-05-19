@@ -31,16 +31,21 @@
  * palette.
  */
 
-#ifndef __PLASMAFRACTAL_H__
-#define __PLASMAFRACTAL_H__
 #include <stdlib.h>
 #include <ctime>
 
 using namespace std;
 
-#include "../../common/Plasma/PlasmaAlgorithm.h"
-#include "../../common/2d_bgnd_w_lens/globaldefs.h"
-#include "../../common/2d_bgnd_w_lens/IndexedPaletteBackground.h"
+#ifndef __PLASMAFRACTAL_H__
+#define __PLASMAFRACTAL_H__
+
+//#include "../../common/Plasma/PlasmaAlgorithm.h"
+//#include "../../common/2d_bgnd_w_lens/globaldefs.h"
+//#include "../../common/2d_bgnd_w_lens/IndexedPaletteBackground.h"
+
+#include "plasma/PlasmaAlgorithm.h"
+#include "2d_bgnd_w_lens/globaldefs.h"
+#include "2d_bgnd_w_lens/IndexedPaletteBackground.h"
 
 class PlasmaFractal : public IndexedPaletteBackground {
 
