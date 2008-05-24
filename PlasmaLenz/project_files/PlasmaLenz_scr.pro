@@ -94,4 +94,5 @@ win32:LIBS	+= user32.lib shell32.lib Advapi32.lib gdi32.lib scrnsavw.lib opengl3
 
 unix:DESTDIR	= ../../bin
 unix:OBJECTS_DIR = ../compiled_objects
-unix:LIBS	+= GL GLU X11 Xmu Xi m
+unix:MOC_DIR = ../compiled_objects
+unix:LIBS	+= -lGL -lGLU -lX11 -lXmu -lXi -lm

@@ -22,6 +22,11 @@
  * 
  */
 
+// debug
+//#include <iostream>
+//using namespace std;
+//#include <QMessageBox>
+
 #include <QCoreApplication>
 #include <QApplication>
 #include <QFile>
@@ -29,9 +34,6 @@
 #include <QTextStream>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
-
-// debug
-//#include <QMessageBox>
 
 #include "../utility/misc_funcs.h"
 #include "../core/win_misc_funcs.h"
@@ -201,7 +203,6 @@ void ConfigManager::deleteAllSettings() {
 
 
 bool ConfigManager::importFromFile(QString filename, bool bLoadMiscInfo) {
-
 	QDomDocument doc(getDomNodeQString());
 	QFile file(filename);
 	if (!file.open(QIODevice::ReadOnly))
@@ -211,7 +212,6 @@ bool ConfigManager::importFromFile(QString filename, bool bLoadMiscInfo) {
 		return false;
 	}
 	file.close();
-
 	QDomElement root = doc.documentElement();
 
 	//load background profiles
@@ -626,7 +626,9 @@ Background* ConfigManager::getNewBackground() {
  * Called when in scr mode to choose the active profile.
  */
 void ConfigManager::chooseActiveProfile() {
-	//setActiveProfile("Image SCR");
+  // make sure we have something to work with.
+  if(_profiles.size() <= 0)
+    exit(1);
 
 	//set the current choice to the last choice made
 	int current;
@@ -846,7 +848,7 @@ void ConfigManager::addProfile(MasterProfile& profile) {
 /**
  * Retrieves a copy of the specified profile.
  */
-MasterProfile ConfigManager::getProfile(QString name) {
+MasterProfile& ConfigManager::getProfile(QString name) {
 	MasterProfile* retVal = _profiles.value(name);
 
 	if(retVal != NULL)

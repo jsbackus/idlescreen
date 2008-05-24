@@ -216,7 +216,7 @@ public:
 	/**
 	 * Retrieves a copy of the specified profile.
 	 */
-	MasterProfile getProfile(QString name);
+	MasterProfile& getProfile(QString name);
 
 	/**
 	 * Replaces the profile with the specified name with the

@@ -213,6 +213,9 @@ void initFunc(char* filename) {
 
 	//set up the config manager
 	_configManager = new ConfigManager();
+	if(_configManager == NULL) {
+	  exit(1);
+	}
 	if(filename == NULL) {
 		_configManager->load();
 	} else {
