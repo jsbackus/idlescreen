@@ -177,3 +177,4 @@ void timerFunc(HDC & hDC)
 	glFinish();
 	SwapBuffers(hDC);		//swap buffers
 }
+

@@ -14,7 +14,9 @@ win32:RESOURCE_PATH = ../../resource_files
 
 INCLUDEPATH = $$COMMON_PATH $$SOURCE_PATH $$RESOURCE_PATH
 
-SOURCES		=	$$COMMON_PATH/core/win_main.cpp $$COMMON_PATH/core/win_misc_funcs.cpp
+win32:SOURCES	=	$$COMMON_PATH/core/win_main.cpp
+unix:SOURCES    =       $$COMMON_PATH/core/unix_main.cpp
+SOURCES         +=      $$COMMON_PATH/core/win_misc_funcs.cpp
 
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPalette.cpp
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteDialog.cpp
