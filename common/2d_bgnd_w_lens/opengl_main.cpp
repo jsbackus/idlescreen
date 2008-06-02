@@ -256,3 +256,22 @@ void initFunc(char* filename) {
 	//set up the background
 	backgroundObj = _configManager->getNewBackground();
 }
+
+/**
+ * Fills the provided buffer with up to maxLen characters of
+ * the null-terminated human-readable program name.  Returns
+ * the number of characters actually placed in buff.
+ */
+int getProgName(char* buff, int maxLen) {
+  if(_configManager != NULL && buff != NULL) {
+    int size = _configManager->getProgName().toLocal8Bit().size();
+    char* str = _configManager->getProgName().toLocal8Bit().data();
+    size = size > maxLen-1 ? maxLen-1 : size;
+    for(int i=0; i<size; i++) {
+      buff[i] = str[i];
+    }
+    buff[size] = 0x00;
+    return size;
+  }
+  return -1;
+}

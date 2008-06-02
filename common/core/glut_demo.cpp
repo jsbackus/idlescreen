@@ -98,17 +98,20 @@ int main(int argc, char* argv[])
 	capturePath = QString("./");
 	captureExt = ".BMP";
 	configFile = NULL;
+	char title[256];
+	
 
 	// process command-line arguments and set up path for capture
 	handleArgs(argc, argv);
 
 	//set up any data structures
 	initFunc(configFile);
+	getProgName(&title[0], 256);
 
 	//initialize & set up glut
 	glutInit( &argc, argv );
 	glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGB );
-	window_id = glutCreateWindow( "Plasma Lens GLUT Demo - Jeff Backus" );
+	window_id = glutCreateWindow( title );
 	//glutReshapeWindow(600,400);		//default window size
 	glutFullScreen();
 

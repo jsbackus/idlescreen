@@ -86,6 +86,7 @@ HEADERS		+=	$$SOURCE_PATH/PlasmaFractalBackgroundProfile.h $$SOURCE_PATH/PlasmaF
 HEADERS		+=	$$RESOURCE_PATH/resource.h
 HEADERS		+=	$$SOURCE_PATH/AboutDialog.h
 HEADERS		+=	$$SOURCE_PATH/ProfileEditDialog.h
+unix:HEADERS    +=      $$COMMON_PATH/include/vroot.h
 
 TARGET		= PlasmaLenz
 RC_FILE		= $$RESOURCE_PATH/win_resource.rc

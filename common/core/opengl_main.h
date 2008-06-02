@@ -70,5 +70,12 @@ extern void exitFunc(void);
  */
 extern long getTimerMillis();
 
+/**
+ * Fills the provided buffer with up to maxLen characters of
+ * the null-terminated human-readable program name.  Returns
+ * the number of characters actually placed in buff.
+ */
+extern int getProgName(char* buff, int maxLen);
+
 #endif
 

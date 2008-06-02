@@ -1077,3 +1077,11 @@ ConfigManager* ConfigManager::createPreview(int width, int height, LensProfile* 
 QString ConfigManager::getDomNodeQString() {
 	return getAppConfigName() + QString("_Configuration");
 }
+
+/**
+ * Gets the human-readable name of the program.
+ */
+QString ConfigManager::getProgName() {
+  return getAppConfigName();
+}
+

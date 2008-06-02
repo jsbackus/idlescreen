@@ -300,6 +300,11 @@ public:
 	//it is intended for to be used in generating the preview widget.
 	ConfigManager* createPreview(int width = 64, int height = 64, LensProfile* lensProfile = NULL, BackgroundProfile* backgroundProfile = NULL, int timerMillis = 50);
 
+	/**
+	 * Gets the human-readable name of the program.
+	 */
+	QString getProgName();
+
 	//*** End Misc ***
 
 protected:

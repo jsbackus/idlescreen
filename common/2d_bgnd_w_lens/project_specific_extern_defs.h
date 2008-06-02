@@ -60,3 +60,4 @@ extern LensProfile** getLensTypes(int* numProfiles);
  * document root.
  */
 extern QString getAppConfigName();
+

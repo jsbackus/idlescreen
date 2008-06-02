@@ -91,3 +91,4 @@ LensProfile** getLensTypes(int* numProfiles) {
 QString getAppConfigName(){
 	return QString("PlasmaLenz");
 }
+
