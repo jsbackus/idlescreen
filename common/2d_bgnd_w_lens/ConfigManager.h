@@ -287,7 +287,7 @@ public:
 	 * Returns a copy of the specified palette profile.  Caller should
 	 * check for existence first with doesPaletteExist();
 	 */
-	IndexedPaletteProfile getPaletteProfile(QString name);
+	IndexedPaletteProfile getPaletteProfile(const QString& name);
 	//*** End Palette Related ***
 
 	//*** Begin Misc ***

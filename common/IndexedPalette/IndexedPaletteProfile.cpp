@@ -548,7 +548,7 @@ QString IndexedPaletteProfile::getXMLTagName() {
 /*
  * Overloaded assignment operator
  */
-IndexedPaletteProfile& IndexedPaletteProfile::operator=(IndexedPaletteProfile& other) {
+IndexedPaletteProfile& IndexedPaletteProfile::operator=(const IndexedPaletteProfile& other) {
 
 	_name = other._name;
 	_interpColorMethod = other._interpColorMethod;

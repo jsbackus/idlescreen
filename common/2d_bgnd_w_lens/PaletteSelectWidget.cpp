@@ -118,15 +118,7 @@ void PaletteSelectWidget::addClicked(bool checked) {
 	if(_confMgr == NULL || _list == NULL)
 		return;
 
-	_palDlg = new IndexedPaletteDialog(NULL, this);
-	if(_palDlg != NULL) {
-		QObject::connect(_palDlg, SIGNAL(paletteUpdated()), this, SLOT(addAccepted()));
-		_palDlg->exec();
-
-		//clean up
-		delete _palDlg;
-		_palDlg = NULL;
-	}
+	editPalette(QString(""), false);
 }
 
 void PaletteSelectWidget::copyClicked(bool checked) {
@@ -191,10 +183,9 @@ void PaletteSelectWidget::editClicked(bool checked) {
 	if(tmp != NULL) {
 		QString selected = tmp->text();
 
-		//first, check for existence.
+		//check for existence and edit if so
 		if(_confMgr->doesPaletteExist(selected)) {
-			IndexedPaletteProfile param = _confMgr->getPaletteProfile(selected);
-			editPalette(param, false);
+		  editPalette(selected, true);
 		}
 	}
 	tmp = NULL;
@@ -244,118 +235,81 @@ int PaletteSelectWidget::findItem(QString name) {
 	return -1;
 }
 
-void PaletteSelectWidget::addAccepted(void) {
-	if(_confMgr == NULL || _list == NULL)
-		return;
-
-	//check to see if the name of the new palette is
-	//already in the list.  If so, go into edit mode.
-	if(_palDlg != NULL) {
-		IndexedPaletteProfile pal = _palDlg->getPalette();
-
-		//first make sure the name is valid.  If so, check to see if it is currently
-		//in the hash.  If not, add it.
-		if(pal.getName() == "") {
-			//give the user a warning dialog box
-			QMessageBox::warning(this, 0, "Please enter a valid name.", QMessageBox::Ok);
-
-			//attempt to edit
-			editPalette(pal, true);
-		} else if(_confMgr->doesPaletteExist(pal.getName())) {
-			//give the user a warning dialog box
-			QString message(tr("A palette with name '"));
-			message += pal.getName();
-			message += "' already exists.  Please choose a new name.";
-			QMessageBox::warning(this, 0, message, QMessageBox::Ok);
-
-			//attempt to edit
-			editPalette(pal, true);
-		} else {
-			//nope, not in the list.  Add it!
-			_confMgr->addPalette(pal);
-			_list->addItem(pal.getName());
-		}
-	}
-}
-
-void PaletteSelectWidget::editAccepted(void) {
-	if(_confMgr == NULL || _list == NULL)
-		return;
-
-	if(_palDlg != NULL) {
-		IndexedPaletteProfile pal = _palDlg->getPalette();
-
-		//check to make sure the name is valid.
-		if(pal.getName() == "") {
-			//give the user a warning dialog box
-			QMessageBox::warning(this, 0, "Please enter a valid name.", QMessageBox::Ok);
-
-			//restore old name and attempt to edit
-			pal.setName(_palOldName);
-			editPalette(pal, false);
-			return;
-		}
-
-		//check to see if the name has changed and if so, whether the new name is in the list already
-		if( (_palOldName == "" || _palOldName != pal.getName()) && _confMgr->doesPaletteExist(pal.getName())) {
-			//give the user a warning dialog box
-			QString message(tr("A palette with name '"));
-			message += pal.getName();
-			message += "' already exists.  Please choose a new name.";
-			QMessageBox::warning(this, 0, message, QMessageBox::Ok);
-
-			//attempt to edit
-			editPalette(pal, false);
-			return;
-		}
-
-		//if the old name is valid, replace.  otherwise insert.
-		if(_palOldName != "") {
-			_confMgr->replacePalette(_palOldName,pal);
-		} else {
-			_confMgr->addPalette(pal);
-		}
-
-		//if the old name and new name are different, search the list
-		//widget, remove the old and add the new
-		if(_palOldName != "" && _palOldName != pal.getName()) {
-			int i=0;
-			int count = _list->count();
-			QListWidgetItem* tmpItem = _list->item(0);
-			while(tmpItem != NULL && tmpItem->text() != _palOldName && i < count) {
-				i++;
-				tmpItem = _list->item(i);
-			}
-			if(tmpItem != NULL && tmpItem->text() == _palOldName) {
-				_list->takeItem(i);
-				_list->addItem(pal.getName());
-			}
-		}
-	}
-}
-
 //attempts to edit the specified palette.
-void PaletteSelectWidget::editPalette(IndexedPaletteProfile& pal, bool bWasAddRename) {
-	//store the current name, in case the name has changed.  If this is 
-	//a forced rename, don't store the current name.
-	if(bWasAddRename) {
-		_palOldName = "";
-	} else {
-		_palOldName = pal.getName();
-	}
+void PaletteSelectWidget::editPalette(const QString& palName, bool bReplace) {
+  if(_confMgr == NULL || _list == NULL)
+    return;
+  
+  QString oldPalName = palName;
+  
+  bool bDone = false;
+  bool bFirstPass = true;
+  
+  IndexedPaletteDialog* palDlg = NULL;
+  IndexedPaletteProfile tmpProfile;
+  if(bReplace) {
+    tmpProfile =  _confMgr->getPaletteProfile(palName);
+  }
 
-	//attempt to create the dialog
-	_palDlg = new IndexedPaletteDialog(&pal,this);
-	if(_palDlg != NULL) {
-		QObject::connect(_palDlg, SIGNAL(paletteUpdated()), this, SLOT(editAccepted()));
-		_palDlg->exec();
-
-		//clean up
-		delete _palDlg;
-		_palDlg = NULL;
+  while(!bDone) {
+    // display the palette editor dialog using either a new
+    // object or the one requested for edit.
+    if(bFirstPass && !bReplace) {
+      palDlg = new IndexedPaletteDialog(NULL,this);
+    } else {
+      palDlg = new IndexedPaletteDialog(&tmpProfile,this);
+    }
+    bFirstPass = false;
+    if(palDlg != NULL) {
+      // if the user clicked ok, then try to update the palette
+      if(palDlg->exec() == QDialog::Accepted) {
+	tmpProfile = palDlg->getPalette();
+	
+	// check the name to make sure it is valid and not
+	// already in the list.
+	QString newName = tmpProfile.getName();
+	if(newName == "") {
+	  //give the user a warning dialog box
+	  QMessageBox::warning(this, 0, "Please enter a valid name.", QMessageBox::Ok);
+	} else if(oldPalName != newName && _confMgr->doesPaletteExist(newName)) {
+	  //give the user a warning dialog box
+	  QString message(tr("A palette with name '"));
+	  message += newName;
+	  message += "' already exists.  Please choose a new name.";
+	  QMessageBox::warning(this, 0, message, QMessageBox::Ok);
 	} else {
-		//problem.  clear the current name
-		_palOldName = "";
+	  // name is valid, so try to insert or replace based on bReplace
+	  if(bReplace) {
+	    _confMgr->replacePalette(oldPalName, tmpProfile);
+	  } else {
+	    _confMgr->addPalette(tmpProfile);
+	  }
+
+	  // if we are replacing, remove old name first, then
+	  // insert the new name.
+	  if(oldPalName != "" && oldPalName != newName) {
+	    int i=0;
+	    int count = _list->count();
+	    QListWidgetItem* tmpItem = _list->item(0);
+	    while(tmpItem != NULL && tmpItem->text() != oldPalName && i < count) {
+	      i++;
+	      tmpItem = _list->item(i);
+	    }
+	    if(tmpItem != NULL && tmpItem->text() == oldPalName) {
+	      _list->takeItem(i);
+	    }
+	  }
+	  _list->addItem(newName);
+	  bDone = true;
 	}
+      } else {
+	bDone = true;
+      }
+      //clean up
+      delete _palDlg;
+      _palDlg = NULL;
+    } else {
+      bDone = true;
+    }
+  }
 }
-

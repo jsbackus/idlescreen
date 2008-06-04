@@ -790,7 +790,7 @@ bool ConfigManager::replacePalette(QString oldPaletteName, IndexedPaletteProfile
  * Returns a copy of the specified palette profile.  Caller should
  * check for existence first with doesPaletteExist();
  */
-IndexedPaletteProfile ConfigManager::getPaletteProfile(QString name) {
+IndexedPaletteProfile ConfigManager::getPaletteProfile(const QString& name) {
 	IndexedPaletteProfile* retVal = _paletteHash.value(name);
 
 	if(retVal != NULL)

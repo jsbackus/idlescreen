@@ -68,9 +68,6 @@ public slots:
 	void editClicked(bool checked = false);
 	void removeClicked(bool checked = false);
 
-	void addAccepted(void);
-	void editAccepted(void);
-
 signals:
 	void selectionChanged(QString newName);
 
@@ -82,7 +79,7 @@ private:
 	int findItem(QString name);
 
 	//attempts to edit the specified palette.
-	void editPalette(IndexedPaletteProfile& pal, bool bWasAddRename = false);
+	void editPalette(const QString& palName, bool bReplace = false);
 
 	ConfigManager* _confMgr;
 

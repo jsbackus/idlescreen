@@ -139,7 +139,7 @@ public:
 	/*
 	 * Overloaded assignment operator
 	 */
-	IndexedPaletteProfile& operator=(IndexedPaletteProfile& other);
+	IndexedPaletteProfile& operator=(const IndexedPaletteProfile& other);
 
 private:
 	QList<color_data_struct> _colorList;
