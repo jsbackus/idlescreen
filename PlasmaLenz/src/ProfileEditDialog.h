@@ -40,6 +40,7 @@
 #include <QLineEdit>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
+#include <QSlider>
 
 //#include "../../common/2d_bgnd_w_lens/ConfigManager.h"
 //#include "../../common/2d_bgnd_w_lens/MasterProfile.h"
@@ -93,7 +94,8 @@ private:
 	MasterProfile _mp;
 
 	//PlasmaFractalBackgroundProfile related
-	QDoubleSpinBox* _coarsenessBox;
+	QSlider* _coarsenessBox;
+	static const float _coarsenessAdjust = 100.0;
 	QComboBox* _paletteBox;
 	bool _bAnimatePalette;
 	QDoubleSpinBox* _paletteXSpeedBox;

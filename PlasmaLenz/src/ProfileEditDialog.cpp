@@ -230,6 +230,8 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	_paletteXSpeedBox->setToolTip(tempToolTip);
 	animPalLayout->addWidget(_paletteXSpeedBox);
 
+	animPalLayout->addStretch(0);
+
 	tempWidget = new QLabel(tr("Y Speed:"));
 	tempToolTip = tr("This is how fast the palette will change in the Y (secondary) direction.");
 	tempWidget->setToolTip(tempToolTip);
@@ -252,22 +254,29 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 
 	QHBoxLayout* ccLayout = new QHBoxLayout();
 
-	tempWidget = new QLabel(tr("Coarsness Factor:"));
+	tempWidget = new QLabel(tr("Less Volatile"));
 	tempToolTip = tr("This quantity determines how coarse or volatile the fractal is.  Higher numbers will produce more variation.");
 	tempWidget->setToolTip(tempToolTip);
 	ccLayout->addWidget(tempWidget);
 
-	_coarsenessBox = new QDoubleSpinBox();
-	_coarsenessBox->setDecimals(2);
-	_coarsenessBox->setMinimum(0.01);
-	_coarsenessBox->setSingleStep(0.01);
+	_coarsenessBox = new QSlider(Qt::Horizontal);
+	_coarsenessBox->setTickInterval(0.10*_coarsenessAdjust);
+	//_coarsenessBox->setTickPosition(QSlider::TicksBelow);
+	_coarsenessBox->setMinimum(0.01*_coarsenessAdjust);
+	_coarsenessBox->setMaximum(6.00*_coarsenessAdjust);
 	if(plasmaProfile != NULL) {
-		_coarsenessBox->setValue(plasmaProfile->getCoarseness());
+		_coarsenessBox->setValue(plasmaProfile->getCoarseness()*_coarsenessAdjust);
 	} else {
-		_coarsenessBox->setValue(0.50);
+		_coarsenessBox->setValue(4.50*_coarsenessAdjust);
 	}
 	_coarsenessBox->setToolTip(tempToolTip);
 	ccLayout->addWidget(_coarsenessBox);
+
+	tempWidget = new QLabel(tr("More Volatile"));
+	tempWidget->setToolTip(tempToolTip);
+	ccLayout->addWidget(tempWidget);
+	
+	ccLayout->addStretch(0);
 
 	_clampColorBox = new QCheckBox(tr("Clamp color on overflow"));
 	if(plasmaProfile != NULL) {
@@ -385,7 +394,7 @@ void ProfileEditDialog::okClicked(bool checked) {
 	PlasmaFractalBackgroundProfile tmpProfile;
 	tmpProfile.setAnimatePalette(_bAnimatePalette);
 	tmpProfile.setClampColorIndex(_clampColorBox->isChecked());
-	tmpProfile.setCoarseness(_coarsenessBox->value());
+	tmpProfile.setCoarseness(((float)_coarsenessBox->value())/_coarsenessAdjust);
 	tmpProfile.setGenStepsPerTick(2048);
 	tmpProfile.setPaletteXSpeed(_paletteXSpeedBox->value());
 	tmpProfile.setPaletteYSpeed(_paletteYSpeedBox->value());
