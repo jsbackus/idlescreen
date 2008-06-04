@@ -114,4 +114,5 @@ private:
 
 	QString _windowTitle;
 };
+
 #endif

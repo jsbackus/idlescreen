@@ -317,7 +317,7 @@ void ConfigWidget::deleteMPClicked(bool checked) {
 		//now remove the master profile from selected list, if it is in there.
 		int j=0;
 		bool bDone = false;
-		while(!bDone) {
+		while(!bDone && j<_mpSelList->count()) {
 			tmp = _mpSelList->item(j);
 			if(tmp->text() == name) {
 				bDone = true;
@@ -327,8 +327,6 @@ void ConfigWidget::deleteMPClicked(bool checked) {
 			}
 			
 			j++;
-			if(j>= _mpSelList->count())
-				bDone = true;
 		}
 	}
 }
@@ -497,7 +495,7 @@ void ConfigWidget::profileNameChange(QString oldName, QString newName) {
 			//insert the new one in the same position.
 			int j=0;
 			bool bDone = false;
-			while(!bDone) {
+			while(!bDone && j < _mpAvailList->count()) { 
 				QListWidgetItem* tmp = _mpAvailList->item(j);
 				if(tmp->text() == oldName) {
 					bDone = true;
@@ -511,8 +509,23 @@ void ConfigWidget::profileNameChange(QString oldName, QString newName) {
 				}
 			
 				j++;
-				if(j>= _mpSelList->count())
+			}
+			// repeat on the list of selected items
+			j=0;
+			bDone = false;
+			while(!bDone &&j<_mpSelList->count()) {
+				QListWidgetItem* tmp = _mpSelList->item(j);
+				if(tmp->text() == oldName) {
 					bDone = true;
+					//remove
+					_mpSelList->takeItem(j);
+					delete tmp;
+					tmp = NULL;
+
+					//insert
+					_mpSelList->insertItem(j, newName);
+				}
+				j++;
 			}
 		}
 	}
