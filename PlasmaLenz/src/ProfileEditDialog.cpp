@@ -438,15 +438,16 @@ void ProfileEditDialog::okClicked(bool checked) {
 		return;		
 	}
 
+	//Check to see if the name is already in use.
+	if(_oldName != newName &&_confMgr->doesProfileExist(newName)) {
+	  QString message(tr("A profile with name '"));
+	  message += newName;
+	  message += tr("' already exists.  Please choose a new name.");
+	  QMessageBox::warning(this, _windowTitle, message, QMessageBox::Ok);
+	  return;
+	}
+	
 	if(_oldName == "") {
-		//we're adding.  Check to see if the name is already in use.
-		if(_confMgr->doesProfileExist(newName)) {
-			QString message(tr("A profile with name '"));
-			message += newName;
-			message += tr("' already exists.  Please choose a new name.");
-			QMessageBox::warning(this, _windowTitle, message, QMessageBox::Ok);
-			return;
-		}
 		//add it!
 		_confMgr->addProfile(_mp);
 	} else {
@@ -458,16 +459,13 @@ void ProfileEditDialog::okClicked(bool checked) {
 		emit profileNameChange(_oldName, newName);
 	}
 	emit accepted();
-	emit finished(0);
+	//emit finished(0);
 	close();
 }
 
 void ProfileEditDialog::cancelClicked(bool checked) {
-	emit finished(1);
-	close();
-}
-void ProfileEditDialog::done(int r) {
-	emit finished(r);
+  //emit finished(1);
+  emit rejected();
 	close();
 }
 

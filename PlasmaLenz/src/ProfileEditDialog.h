@@ -66,7 +66,6 @@ public slots:
 	//ok is responsible for updating the ConfigManager
 	void okClicked(bool checked = false);
 	void cancelClicked(bool checked = false);
-	void done(int r = 0);
 
 	void addPalClicked(bool checked = false);
 	void editPalClicked(bool checked = false);
