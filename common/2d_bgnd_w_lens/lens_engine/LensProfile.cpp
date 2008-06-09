@@ -98,7 +98,7 @@ int LensProfile::getMaxNumLenses() {
 /*
  * Get/set the name of this profile.
  */
-void LensProfile::setName(QString &name) {
+void LensProfile::setName(const QString &name) {
 	_name = name;
 }
 
@@ -571,7 +571,12 @@ LensProfile* LensProfile::clone() {
 
 // deep copies the specified target
 void LensProfile::baseCopy(LensProfile& other) {
-	*_pal = *other._pal;
+  if(other._pal != NULL) {
+    _pal = new IndexedPalette();
+    *_pal = *other._pal;
+  } else {
+    _pal = NULL;
+  }
 
 	_name = other._name;
 	_palName = other._palName;
@@ -599,7 +604,6 @@ void LensProfile::baseCopy(LensProfile& other) {
 	_lastSide = other._lastSide;
 	_bRandSide = other._bRandSide;
 	_bInitialized = other._bInitialized;
-
 }
 
 /*

@@ -116,12 +116,12 @@ public:
 	/**
 	 * Adds a new lens profile to the hash.
 	 */
-	void addLensProfile(LensProfile& lensProfile);
+	void addLensProfile(LensProfile* lensProfile);
 
 	/**
 	 * Retrieves a copy of the specified lens profile.
 	 */
-	LensProfile getLensProfile(QString name);
+	LensProfile* getLensProfile(QString name);
 
 	/**
 	 * Replaces the profile with the specified name with the

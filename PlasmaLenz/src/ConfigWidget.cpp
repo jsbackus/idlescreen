@@ -22,6 +22,12 @@
  * 
  */
 
+//begin debug
+//#include <iostream>
+//using namespace std;
+#include "2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h"
+//end debug
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -581,8 +587,11 @@ void ConfigWidget::importClicked(bool checked) {
 		// since the respective add routines will check before appending
 		// to the lists.
 		if(!_manager->doesProfileExist(tmpMp.getName())) {
-			LensProfile tmpLens = tmpMgr->getLensProfile(tmpMp.getLensProfileName());
+		  LensProfile* tmpLens = tmpMgr->getLensProfile(tmpMp.getLensProfileName());
 			_manager->addLensProfile(tmpLens);
+			//debug?
+			tmpLens = NULL;
+			//end debug
 			PlasmaFractalBackgroundProfile* tmpBkgnd = (PlasmaFractalBackgroundProfile*)tmpMgr->getBackgroundProfile(tmpMp.getBackgroundProfileName());
 			IndexedPaletteProfile tmpPal = tmpMgr->getPaletteProfile(tmpBkgnd->getPaletteName());
 			_manager->addPalette(tmpPal);
@@ -635,8 +644,11 @@ void ConfigWidget::exportClicked(bool checked) {
 	// it requires (including IndexedPaletteProfiles).
 	for(int i = 0; i<bkgnds.size(); i++) {
 		MasterProfile tmpMp = _manager->getProfile(bkgnds.at(i));
-		LensProfile tmpLens = _manager->getLensProfile(tmpMp.getLensProfileName());
+		LensProfile* tmpLens = _manager->getLensProfile(tmpMp.getLensProfileName());
 		tmpMgr->addLensProfile(tmpLens);
+		//debug?
+		tmpLens = NULL;
+		//debug?
 		PlasmaFractalBackgroundProfile* tmpBkgnd = (PlasmaFractalBackgroundProfile*)_manager->getBackgroundProfile(tmpMp.getBackgroundProfileName());
 		IndexedPaletteProfile tmpPal = _manager->getPaletteProfile(tmpBkgnd->getPaletteName());
 		tmpMgr->addPalette(tmpPal);

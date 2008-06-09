@@ -90,7 +90,7 @@ public:
 	/*
 	 * Get/set the name of this profile.
 	 */
-	void setName(QString &name);
+	void setName(const QString &name);
 	QString getName();
 
 	/*

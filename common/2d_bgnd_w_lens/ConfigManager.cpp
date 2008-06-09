@@ -26,6 +26,7 @@
 //#include <iostream>
 //using namespace std;
 //#include <QMessageBox>
+//#include "lens_engine/SphericalLensProfile.h"
 
 #include <QCoreApplication>
 #include <QApplication>
@@ -181,7 +182,7 @@ void ConfigManager::deleteAllSettings() {
 	}
 	keys = _lensHash.keys();
 	for(int i=0; i<keys.size();i++) {
-		LensProfile* tmpPtr = _lensHash.take(keys.at(i));
+	  LensProfile* tmpPtr = _lensHash.take(keys.at(i));
 		delete tmpPtr;
 		tmpPtr = NULL;
 	}
@@ -321,7 +322,7 @@ bool ConfigManager::exportToFile(QString filename, bool bSaveMiscInfo) {
 	//store lens profiles..
 	keys = _lensHash.keys();
 	for(int i=0; i<keys.size();i++) {
-		root.appendChild(_lensHash.value(keys.at(i))->save(&doc));
+	  root.appendChild(_lensHash.value(keys.at(i))->save(&doc));
 	}
 
 	//store master profiles..
@@ -569,7 +570,7 @@ int ConfigManager::getTextureHeight() {
  */
 void ConfigManager::initializeLenses(screen_struct* screenObj) {
 	if(_currentProfile != NULL) {
-		_currentLensProfile = _lensHash.value(_currentProfile->getLensProfileName());
+	  _currentLensProfile = _lensHash.value(_currentProfile->getLensProfileName());
 		if(_currentLensProfile != NULL) {
 			_currentLensProfile->initialize(&_paletteHash, screenObj);
 		}
@@ -600,9 +601,9 @@ LensObject* ConfigManager::getNewLens() {
 		return NULL;
 
 	LensProfile* lensProfile = _lensHash.value(_currentProfile->getLensProfileName());
-
+	
 	if(lensProfile != NULL) {
-		return _lensHash.value(_currentProfile->getLensProfileName())->getNewLensObject();
+	  return _lensHash.value(_currentProfile->getLensProfileName())->getNewLensObject();
 	} else {
 		return NULL;
 	}
@@ -1010,30 +1011,24 @@ bool ConfigManager::removeLensProfile(QString name) {
 /**
  * Adds a new lens profile to the hash.
  */
-void ConfigManager::addLensProfile(LensProfile& lensProfile) {
-	//check for preexisting profile name.
-	if(!doesLensProfileExist(lensProfile.getName())) {
-		//if not, create a new profile off of the heap to add to the hash.
-// !!! NOTE: There is a bug here such that only the base class gets cloned and added !!!
-//QMessageBox::information(NULL, lensProfile.getLensType(), lensProfile.getName(), QMessageBox::Ok);
-		LensProfile* newProfile = lensProfile.clone();
-//QMessageBox::information(NULL, newProfile->getLensType(), newProfile->getName(), QMessageBox::Ok);
-		_lensHash.insert(lensProfile.getName(), newProfile);
-	}
+void ConfigManager::addLensProfile(LensProfile* lensProfile) {
+  // check for preexisting profile name and add to the list
+  // if new.
+  if(!doesLensProfileExist(lensProfile->getName())) {
+    _lensHash.insert(lensProfile->getName(), lensProfile);
+  }
 }
 
 /**
  * Retrieves a copy of the specified lens profile.
  */
-LensProfile ConfigManager::getLensProfile(QString name) {
-	LensProfile* retVal = _lensHash.value(name);
+LensProfile* ConfigManager::getLensProfile(QString name) {
+  LensProfile* retVal = _lensHash.value(name);
 
-	if(retVal != NULL)
-		return *retVal;
+  if(retVal != NULL)
+    return retVal->clone();
 
-	//if the specified lens profile isn't in the hash, return a new one.
-	LensProfile newProfile;
-	return newProfile;
+    return NULL;
 }
 
 /**
@@ -1051,9 +1046,9 @@ bool ConfigManager::replaceLensProfile(QString oldLensProfileName, LensProfile& 
 	//now check to see if the old profile name is in the list.  if so, replace, otherwise add.
 	if(doesLensProfileExist(oldLensProfileName)) {
 		removeLensProfile(oldLensProfileName);
-		addLensProfile(newLensProfile);
+		addLensProfile(&newLensProfile);
 	} else {
-		addLensProfile(newLensProfile);
+		addLensProfile(&newLensProfile);
 	}
 
 	return true;

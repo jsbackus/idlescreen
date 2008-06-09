@@ -55,6 +55,7 @@ public:
 	 * Returns the maximum number of lenses this profile will allow.
 	 */
 	virtual int getMaxNumLenses();
+	void setMaxNumLenses(int num);
 
 	/*
 	 * Creates a new object with this object's settings.
