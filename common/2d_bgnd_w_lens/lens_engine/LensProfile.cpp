@@ -30,10 +30,10 @@ LensProfile::LensProfile() {
 
 	_name = "Empty";
 	_palName = "";
-	_outlineWidth = 1;
+	_outlineWidth = 2;
 
 	_bRandTint = false;
-	_bUseComplement = true;
+	_bUseComplement = false;
 	_bUseTint = false;
 	_bUseOutlineComplement = true;
 	_bUseOutlineTint = false;
@@ -48,9 +48,12 @@ LensProfile::LensProfile() {
 	_bRandAngle = true;
 
 	_sides[0] = Bottom;
+	_sides[1] = Top;
+	_sides[2] = Left;
+	_sides[3] = Right;
 	_lastSide = 0;
-	_numSides = 1;
-	_bRandSide = false;
+	_numSides = 4;
+	_bRandSide = true;
 
 	_bInitialized = false;
 	_pal = NULL;

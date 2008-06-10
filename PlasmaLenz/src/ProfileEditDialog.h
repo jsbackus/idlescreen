@@ -107,7 +107,9 @@ private:
 	bool _bFinishedAddEdit;
 
 	// lens related
-
+	QSlider* _lensSizeSlider;
+	QSlider* _lensVarSlider;
+	QSpinBox* _numLenses;
 
 	ConfigManager* _confMgr;
 

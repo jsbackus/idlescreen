@@ -31,7 +31,8 @@
 #include <QMessageBox>
 
 #include "ProfileEditDialog.h"
-#include "../../common/utility/misc_funcs.h"
+#include "2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h"
+#include "utility/misc_funcs.h"
 
 ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr, QWidget* parent, Qt::WindowFlags f) {
 	QDialog(parent, f);
@@ -47,6 +48,9 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	_clampColorBox = NULL;
 	_palDlg = NULL;
 	_bFinishedAddEdit = true;
+	_lensSizeSlider = NULL;
+	_lensVarSlider = NULL;
+	_numLenses = NULL;
 
 	_confMgr = confMgr;
 
@@ -62,8 +66,6 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 
 	_oldName = targetName;
 	if(targetName != "") {
-//!!! NOTE: gcc doesn't like this.  Has to do with the
-//overloaded operator= statement in MasterProfile.
 		_mp = _confMgr->getProfile(targetName);
 	}
 
@@ -293,6 +295,149 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	tempWidget = NULL;
 
 	// Begin SphericalLensProfile related
+	/*
+	 	QSlider* _lensSizeSlider;
+	QSlider* _lensVarSlider;
+	QSpinBox* _numLenses;
+	*/
+
+	_numLenses = new QSpinBox();
+	if(_numLenses == NULL)
+	  return;
+	_numLenses->setMinimum(0);
+	_numLenses->setMaximum(100);
+	_lensSizeSlider = new QSlider(Qt::Horizontal);
+	if(_lensSizeSlider == NULL)
+	  return;
+	_lensVarSlider = new QSlider(Qt::Horizontal);
+	if(_lensVarSlider == NULL)
+	  return;
+	_lensSizeSlider->setMinimum(1);
+	_lensSizeSlider->setMaximum(50);
+	_lensVarSlider->setMinimum(0);
+	_lensVarSlider->setMaximum(100);
+	_lensSizeSlider->setTickInterval(1);
+	_lensVarSlider->setTickInterval(1);
+
+	QString lensProfileName = _mp.getLensProfileName();
+
+	if(!lensProfileName.isEmpty()) {
+	  SphericalLensProfile* lp = (SphericalLensProfile*)_confMgr->getLensProfile(lensProfileName);
+
+	  _numLenses->setValue(lp->getMaxNumLenses());
+	  float maxR = lp->getMaxRadius();
+	  float avgR = (lp->getMinRadius()+maxR)/2.0;
+	  _lensSizeSlider->setValue(avgR*100.0);
+	  _lensVarSlider->setValue( (maxR-avgR)*100.0/avgR);
+	} else {
+	  _numLenses->setValue(0);
+	  _lensSizeSlider->setValue(1);
+	  _lensVarSlider->setValue(0);
+	}
+
+	QHBoxLayout* tmpHBox = NULL;
+	QVBoxLayout* tmpVBox = NULL;
+	QGroupBox* lensBox = new QGroupBox(tr("Lenses"));
+	if(lensBox == NULL)
+	  return;
+	QHBoxLayout* lensLayout = new QHBoxLayout();
+	if(lensLayout == NULL)
+	  return;
+
+	tempToolTip = tr("Determines the maximum number of lenses on screen at one time.");
+	tempWidget = new QLabel(tr("Number:"));
+	tempWidget->setToolTip(tempToolTip);
+	lensLayout->addWidget(tempWidget);
+	tempWidget = NULL;
+	_numLenses->setToolTip(tempToolTip);
+	lensLayout->addWidget(_numLenses);
+
+	lensLayout->addStretch(0);
+	
+	tmpVBox = new QVBoxLayout();
+	if(tmpVBox == NULL)
+	  return;
+	tmpHBox = new QHBoxLayout();
+	if(tmpHBox == NULL)
+	  return;
+
+	tempToolTip = tr("Determines the average size of the lenses");
+	tempWidget = new QLabel(tr("Size"));
+	if(tempWidget == NULL)
+	  return;
+	tempWidget->setToolTip(tempToolTip);
+	tmpHBox->addWidget(tempWidget);
+	tempWidget = NULL;
+
+	tmpHBox->addStretch(0);
+	
+	tempWidget = new QLabel(tr("Min"));
+	if(tempWidget == NULL)
+	  return;
+	tempWidget->setToolTip(tempToolTip);
+	tmpHBox->addWidget(tempWidget);
+	tempWidget = NULL;
+
+	_lensSizeSlider->setToolTip(tempToolTip);
+	tmpHBox->addWidget(_lensSizeSlider);
+
+	tempWidget = new QLabel(tr("Max"));
+	if(tempWidget == NULL)
+	  return;
+	tempWidget->setToolTip(tempToolTip);
+	tmpHBox->addWidget(tempWidget);
+	tempWidget = NULL;
+
+	tempWidget = new QWidget();
+	tempWidget->setLayout(tmpHBox);
+	tmpVBox->addWidget(tempWidget);
+	tempWidget = NULL;
+	tmpHBox = NULL;
+
+	tmpHBox = new QHBoxLayout();
+	if(tmpHBox == NULL)
+	  return;
+
+	tempToolTip = tr("Determines the amount of size variation");
+	tempWidget = new QLabel(tr("Variation"));
+	if(tempWidget == NULL)
+	  return;
+	tempWidget->setToolTip(tempToolTip);
+	tmpHBox->addWidget(tempWidget);
+	tempWidget = NULL;
+
+	tmpHBox->addStretch(0);
+	
+	tempWidget = new QLabel(tr("Min"));
+	if(tempWidget == NULL)
+	  return;
+	tempWidget->setToolTip(tempToolTip);
+	tmpHBox->addWidget(tempWidget);
+	tempWidget = NULL;
+
+	_lensVarSlider->setToolTip(tempToolTip);
+	tmpHBox->addWidget(_lensVarSlider);
+
+	tempWidget = new QLabel(tr("Max"));
+	if(tempWidget == NULL)
+	  return;
+	tempWidget->setToolTip(tempToolTip);
+	tmpHBox->addWidget(tempWidget);
+	tempWidget = NULL;
+
+	tempWidget = new QWidget();
+	tempWidget->setLayout(tmpHBox);
+	tmpVBox->addWidget(tempWidget);
+	tempWidget = NULL;
+	tmpHBox = NULL;
+
+	tempWidget = new QWidget();
+	tempWidget->setLayout(tmpVBox);
+	lensLayout->addWidget(tempWidget);
+	tempWidget = NULL;
+
+	lensBox->setLayout(lensLayout);
+	mainLayout->addWidget(lensBox);
 
 	//OK and Cancel buttons
 	QHBoxLayout* botButtonsLayout = new QHBoxLayout();
@@ -370,6 +515,18 @@ ProfileEditDialog::~ProfileEditDialog() {
 		delete _palDlg;
 		_palDlg = NULL;
 	}
+	if(_lensSizeSlider != NULL) {
+	  delete _lensSizeSlider;
+	  _lensSizeSlider = NULL;
+	}
+	if(_lensVarSlider != NULL) {
+	  delete _lensVarSlider;
+	  _lensVarSlider = NULL;
+	}
+	if(_numLenses != NULL) {
+	  delete _numLenses;
+	  _numLenses = NULL;
+	}
 }
 
 void ProfileEditDialog::okClicked(bool checked) {
@@ -417,7 +574,32 @@ void ProfileEditDialog::okClicked(bool checked) {
 	_mp.setBackgroundProfileName(tempName);
 
 	// LensProfile related
-	_mp.setLensProfileName("Sphere");
+	SphericalLensProfile tmpSphere;
+	tmpSphere.setMaxNumLenses(_numLenses->value());
+	float avgR = _lensSizeSlider->value();
+	float rangeR = _lensVarSlider->value();
+	float minR = avgR * (1.00 - rangeR/100.0);
+	float maxR = avgR * (1.00 + rangeR/100.0);
+	tmpSphere.setRadius(minR/100.0, maxR/100.0, (rangeR > 0.00));
+	tempName = _mp.getLensProfileName();
+
+	//!!! NOTE: There is a bug that causes a core dump in this code!
+	if(tempName == "" || !_confMgr->doesLensProfileExist(tempName)) {
+		// generate a random LensProfile name that doesn't exist.
+		while(tempName == "" || _confMgr->doesLensProfileExist(tempName)) {
+			tempName = QString("LensProfile_")+randStr(20);
+		}
+		tmpSphere.setName(tempName);
+
+		LensProfile* tL = tmpSphere.clone();
+		_confMgr->addLensProfile(tL);
+	} else {
+		tmpSphere.setName(tempName);
+		LensProfile* tL = tmpSphere.clone();
+		_confMgr->replaceLensProfile(tempName,*tL);		
+	}
+	_mp.setLensProfileName(tempName);
+	// !!! end note
 
 	// master profile related
 	_mp.setTimerMillis(_timerBox->value());

@@ -279,3 +279,37 @@ SphericalLensProfile& SphericalLensProfile::operator=(SphericalLensProfile& othe
 
 	return *this;
 }
+
+/**
+ * Gets/sets the radius (specified as a percentage
+ * of the screen).
+ */
+float SphericalLensProfile::getMinRadius() {
+  return _minRadius;
+}
+
+float SphericalLensProfile::getMaxRadius() {
+  return _maxRadius;
+}
+
+void SphericalLensProfile::setMinRadius(float r) {
+  _minRadius = r;
+}
+
+void SphericalLensProfile::setMaxRadius(float r) {
+  _maxRadius = r;
+}
+
+void SphericalLensProfile::setRadius(float min, float max, bool bRand) {
+  _minRadius = min;
+  _maxRadius = max;
+  _bRandSize = bRand;
+}
+
+bool SphericalLensProfile::getRandRadius() {
+  return _bRandSize;
+}
+
+void SphericalLensProfile::setRandRadius(bool bRand) {
+  _bRandSize = bRand;
+}

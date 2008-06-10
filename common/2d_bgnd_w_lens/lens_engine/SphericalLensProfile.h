@@ -67,6 +67,18 @@ public:
 	 */
 	SphericalLensProfile& operator=(SphericalLensProfile& other);
 
+	/**
+	 * Gets/sets the radius (specified as a percentage
+	 * of the screen).
+	 */
+	float getMinRadius();
+	float getMaxRadius();
+	void setMinRadius(float r);
+	void setMaxRadius(float r);
+	void setRadius(float min, float max, bool bRand);
+	bool getRandRadius();
+	void setRandRadius(bool bRand);
+
 private:
 	float _minRadius;
 	float _maxRadius;
