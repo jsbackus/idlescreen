@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
 	handleArgs(argc, argv);
 
 	//set up any data structures
-	initFunc(configFile);
+	initFunc(argc, argv, configFile);
 	getProgName(&title[0], 256);
 
 	//initialize & set up glut

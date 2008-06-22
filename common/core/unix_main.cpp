@@ -418,7 +418,7 @@ int main(int argc, char* argv[]) {
 
 	processArgs(argc, argv);
 
-	initFunc(); // added by jsb
+	initFunc(argc, argv, NULL); // added by jsb
 	// set up the timer
 	frameTime = (int)getTimerMillis() * 1000;
 

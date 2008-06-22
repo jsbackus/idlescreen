@@ -43,7 +43,7 @@
  * argument the name of the config file to load.  If NULL, loads
  * from the default location.
  */
-extern void initFunc(char* filename = NULL);
+extern void initFunc(int argc=0, char** argv=NULL, char* filename = NULL);
 
 /**
  * Sets up the OpenGL viewport.  Takes as an argument the height and width

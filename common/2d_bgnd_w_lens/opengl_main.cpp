@@ -195,12 +195,12 @@ long getTimerMillis() {
  * argument the name of the config file to load.  If NULL, loads
  * from the default location.
  */
-void initFunc(char* filename) {
+void initFunc(int argc, char** argv, char* filename) {
 	bDontSave = false;
 
 	/** NOTE!!! You have to use a QApplication (somewhere) to load plugins! **/
-	int argc=0;
-	QApplication app(argc, NULL);
+	//int argc=0;
+	QApplication app(argc, argv);
 
 	//seed the random number generator.
 	srand((unsigned)time( NULL ));
