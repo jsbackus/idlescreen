@@ -24,8 +24,8 @@
 
 #ifdef _M_IX86
 #include <windows.h>
-#else
-#include <stream.h>
+//#else
+//#include <stream.h>
 #endif
 
 #include <stdlib.h>

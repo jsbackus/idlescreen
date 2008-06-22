@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
+#include <unistd.h> //for usleep
 
 #include <X11/X.h>
 #include <X11/Xlib.h>

@@ -36,7 +36,8 @@
 #ifdef _M_IX86
 #include <windows.h>
 #else
-#include <stream.h>
+//#include <stream.h>
+#include <stdlib.h>
 #endif
 
 #include <GL/gl.h>
