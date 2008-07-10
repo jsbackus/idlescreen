@@ -94,7 +94,7 @@ private:
 
 	//PlasmaFractalBackgroundProfile related
 	QSlider* _coarsenessBox;
-	static const float _coarsenessAdjust = 100.0;
+	float _coarsenessAdjust;
 	QComboBox* _paletteBox;
 	bool _bAnimatePalette;
 	QDoubleSpinBox* _paletteXSpeedBox;

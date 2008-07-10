@@ -37,6 +37,7 @@
 ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr, QWidget* parent, Qt::WindowFlags f) {
 	QDialog(parent, f);
 
+	_coarsenessAdjust = 100.0;
 	_nameBox = NULL;
 	_timerBox = NULL;
 	_screenXBox = NULL;
