@@ -1,7 +1,7 @@
 # Globals
 !define VERSION_MAJOR "0"
-!define VERSION_MINOR "2"
-!define VERSION "${VERSION_MAJOR}.${VERSION_MINOR}"
+!define VERSION_MINOR "3"
+!define VERSION "${VERSION_MAJOR}.${VERSION_MINOR}_Alpha"
 Name "Idle Screen Installer ${VERSION}"
 OutFile "idlescreen_${VERSION}.exe"
 SetCompressor /FINAL lzma
@@ -118,10 +118,10 @@ Section "Qt Libraries"
   File "${QTDIR}\lib\QtXml4.dll"
 
   # plug ins
-  File "${QTDIR}\plugins\imageformats\qgif1.dll"
-  File "${QTDIR}\plugins\imageformats\qjpeg1.dll"
-  File "${QTDIR}\plugins\imageformats\qmng1.dll"
-  File "${QTDIR}\plugins\imageformats\qsvg1.dll"
+  File "${QTDIR}\plugins\imageformats\qgif?.dll"
+  File "${QTDIR}\plugins\imageformats\qjpeg?.dll"
+  File "${QTDIR}\plugins\imageformats\qmng?.dll"
+  File "${QTDIR}\plugins\imageformats\qsvg?.dll"
 SectionEnd
 
 SectionGroup "Screen Savers"
