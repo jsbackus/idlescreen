@@ -17,7 +17,9 @@
 			ConfigurationType="0">
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+				BuildCommandLine="set PATH=%PATH%;C:\MinGW\bin
+rc /fo&quot;Debug\scr.res&quot; ..\..\resource_files\win_resource.rc
+%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
 nmake debug
 "
 				ReBuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
@@ -36,13 +38,17 @@ nmake debug-clean
 			ConfigurationType="0">
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+				BuildCommandLine="rc /fo&quot;Release\scr.res&quot; ..\..\resource_files\win_resource.rc
+%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
 nmake release
 "
-				ReBuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+				ReBuildCommandLine="del /F Release\*.res
+%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
 namke release-clean
+rc /fo&quot;Release\scr.res&quot; ..\..\resource_files\win_resource.rc
 nmake release"
 				CleanCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+del /F Release\*.res
 nmake release-clean
 "
 				Output="release\PlasmaLenz.exe"/>
