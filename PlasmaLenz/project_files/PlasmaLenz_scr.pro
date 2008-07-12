@@ -47,7 +47,7 @@ SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.cpp
 
 SOURCES		+=	$$SOURCE_PATH/ConfigWidget.cpp $$SOURCE_PATH/PlasmaFractal.cpp
 SOURCES		+=	$$SOURCE_PATH/PlasmaFractalBackgroundProfile.cpp $$SOURCE_PATH/project_specific_externs.cpp
-SOURCES		+=	$$SOURCE_PATH/AboutDialog.cpp
+SOURCES		+=	$$COMMON_PATH/utility/AboutDialog.cpp
 SOURCES		+=	$$SOURCE_PATH/ProfileEditDialog.cpp
 
 HEADERS		=	$$COMMON_PATH/core/win_misc_funcs.h
@@ -84,7 +84,7 @@ HEADERS		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h
 
 HEADERS		+=	$$SOURCE_PATH/PlasmaFractalBackgroundProfile.h $$SOURCE_PATH/PlasmaFractal.h
 HEADERS		+=	$$RESOURCE_PATH/resource.h
-HEADERS		+=	$$SOURCE_PATH/AboutDialog.h
+HEADERS		+=	$$COMMON_PATH/utility/AboutDialog.h
 HEADERS		+=	$$SOURCE_PATH/ProfileEditDialog.h
 unix:HEADERS    +=      $$COMMON_PATH/include/vroot.h
 

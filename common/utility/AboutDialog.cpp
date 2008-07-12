@@ -36,7 +36,7 @@
 
 //#include "../../../common/gpl_related/gpldialog.h"
 
-AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f) {
+AboutDialog::AboutDialog(QString appName, QString versionStr, QWidget* parent, Qt::WindowFlags f) {
 	QDialog(parent, f);
 
 	setWindowTitle(tr("About"));
@@ -50,15 +50,17 @@ AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f) {
 	QVBoxLayout* layout = new QVBoxLayout();
 
 	// text
-	tempLabel = new QLabel("FractalLenz is part of:");
+	tempLabel = new QLabel(appName);
 	layout->addWidget(tempLabel);
-	tempLabel = new QLabel("The Idle Screen Project");
+	tempLabel = new QLabel("Version: "+versionStr);
+	layout->addWidget(tempLabel);
+	tempLabel = new QLabel("Part of the Idle Screen Project");
 	layout->addWidget(tempLabel);
 	tempLabel = new QLabel("http://idlescreen.googlepages.com");
 	layout->addWidget(tempLabel);
 	tempLabel = new QLabel("");
 	layout->addWidget(tempLabel);
-	tempLabel = new QLabel("(c) Jeff Backus and the Idle Screen Project");
+	tempLabel = new QLabel("(c) 2008 Jeff Backus and the Idle Screen Project");
 	layout->addWidget(tempLabel);
 
 

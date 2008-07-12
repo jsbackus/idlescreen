@@ -22,6 +22,10 @@
  * 
  */
 
+/**
+ * This file contains project specific definitions, including version number.
+ */
+
 #include <QString>
 
 #include "../../common/2d_bgnd_w_lens/BackgroundProfile.h"
@@ -90,5 +94,21 @@ LensProfile** getLensTypes(int* numProfiles) {
  */
 QString getAppConfigName(){
 	return QString("PlasmaLenz");
+}
+
+/**
+ * Returns the full name of the screen saver to be used in
+ * places such as title bars of dialog boxes and the About
+ * dialog box.
+ */
+QString getAppFullName() {
+	return QString("PlasmaLenz");
+}
+
+/**
+ * Returns the version string for the screen saver.
+ */
+QString getAppVersion() {
+	return QString("0.04 Alpha");
 }
 

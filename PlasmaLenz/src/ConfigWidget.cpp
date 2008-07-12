@@ -47,8 +47,9 @@
 #include "../../common/2d_bgnd_w_lens/PaletteEditor.h"
 #include "../../common/utility/ImportExportDialog.h"
 #include "../../common/utility/misc_funcs.h"
+#include "../../common/utility/AboutDialog.h"
+#include "../../common/2d_bgnd_w_lens/project_specific_extern_defs.h"
 #include "ProfileEditDialog.h"
-#include "AboutDialog.h"
 
 //constructor & destructor
 ConfigWidget::ConfigWidget(QWidget* parent, Qt::WindowFlags f) {
@@ -252,12 +253,7 @@ void ConfigWidget::randomClicked(bool checked) {
 }
 
 void ConfigWidget::aboutClicked(bool checked) {
-/*
-	_about->exec();
-*/
-	//temporary!
-	//QMessageBox::information(this, tr("About"), "Not implemented yet.", QMessageBox::Ok);
-	AboutDialog* dlg = new AboutDialog();
+	AboutDialog* dlg = new AboutDialog(getAppFullName(), getAppVersion());
 	if(dlg != NULL) {
 		dlg->exec();
 		delete dlg;

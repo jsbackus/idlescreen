@@ -61,3 +61,15 @@ extern LensProfile** getLensTypes(int* numProfiles);
  */
 extern QString getAppConfigName();
 
+/**
+ * Returns the full name of the screen saver to be used in
+ * places such as title bars of dialog boxes and the About
+ * dialog box.
+ */
+extern QString getAppFullName();
+
+/**
+ * Returns the version string for the screen saver.
+ */
+extern QString getAppVersion();
+

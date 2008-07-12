@@ -62,7 +62,10 @@ nmake release-clean
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="..\..\src\AboutDialog.cpp">
+				RelativePath="..\..\..\common\utility\AboutDialog.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\common\utility\AboutDialog.h">
 			</File>
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\Background.cpp">
@@ -177,9 +180,6 @@ nmake release-clean
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
-			<File
-				RelativePath="..\..\src\AboutDialog.h">
-			</File>
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\Background.h">
 			</File>
