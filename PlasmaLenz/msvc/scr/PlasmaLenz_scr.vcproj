@@ -297,7 +297,7 @@ nmake release-clean
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 			<File
-				RelativePath="..\resource_files\app_icon.ico">
+				RelativePath="..\..\resource_files\app_icon.ico">
 			</File>
 			<File
 				RelativePath="..\resource_files\win_resource.rc">
