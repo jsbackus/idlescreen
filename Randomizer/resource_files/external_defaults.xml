@@ -1,0 +1,12 @@
+<!DOCTYPE Randomizer_Configuration>
+<Randomizer_Configuration>
+ <gpl_accepted>false</gpl_accepted>
+ <search_path>c:\windows\system32</search_path>
+ <timer_minutes>15</timer_minutes>
+ <timer_enabled>true</timer_enabled>
+ <random_enabled>true</random_enabled>
+ <blank_desktop>true</blank_desktop>
+ <scr_history_size>5</scr_history_size>
+ <scr_history/>
+</Randomizer_Configuration>
+

@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="redirector"
+	Name="Randomizer_redirector"
 	ProjectGUID="{FB9A1B36-98B9-4741-B460-9FB505D5FEDF}"
 	Keyword="Win32Proj">
 	<Platforms>

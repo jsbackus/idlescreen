@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="redirector"
+	Name="PlasmaLenz_redirector"
 	ProjectGUID="{EA7E874D-D7ED-4DAC-B8F8-75917A53A1E2}"
 	Keyword="Win32Proj">
 	<Platforms>

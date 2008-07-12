@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.10"
+	Name="installer"
+	ProjectGUID="{AED959B9-7BBF-45E7-B6B9-3F38891AA663}"
+	Keyword="MakeFileProj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="Debug"
+			IntermediateDirectory="Debug"
+			ConfigurationType="0">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="set PATH=%NSISPATH%;%PATH
+makensis /DQTDIR=%QTDIR% installer.nsi"
+				ReBuildCommandLine="del /F *.exe
+set PATH=%NSISPATH%;%PATH
+makensis /DQTDIR=%QTDIR% installer.nsi"
+				CleanCommandLine="del /F *.exe"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="Release"
+			IntermediateDirectory="Release"
+			ConfigurationType="0">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="set PATH=%NSISPATH%;%PATH
+makensis /DQTDIR=%QTDIR% installer.nsi"
+				ReBuildCommandLine="del /F *.exe
+set PATH=%NSISPATH%;%PATH
+makensis /DQTDIR=%QTDIR% installer.nsi"
+				CleanCommandLine="del /F *.exe"/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+			<File
+				RelativePath=".\installer_icon.ico">
+			</File>
+		</Filter>
+		<File
+			RelativePath=".\installer.nsi">
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

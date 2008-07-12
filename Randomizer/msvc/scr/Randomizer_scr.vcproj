@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="scr"
+	Name="Randomizer_scr"
 	ProjectGUID="{9B523112-6FA5-4533-A01C-88AD94E5C856}"
 	Keyword="MakeFileProj">
 	<Platforms>

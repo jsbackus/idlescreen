@@ -1,6 +1,6 @@
 # Globals
 !define VERSION_MAJOR "0"
-!define VERSION_MINOR "3"
+!define VERSION_MINOR "4"
 !define VERSION "${VERSION_MAJOR}.${VERSION_MINOR}_Alpha"
 Name "Idle Screen Installer ${VERSION}"
 OutFile "idlescreen_${VERSION}.exe"
@@ -141,6 +141,23 @@ Section "PlasmaLenz"
   # registry entry for the redirector
   WriteRegStr SHCTX "Software\IdleScreen\Redirector" "PlasmaLenz" "$TARGET_DIR\bin\PlasmaLenz.scr"
 SectionEnd
+
+Section "Randomizer"
+  # main scr file
+  SetOutPath "$TARGET_DIR\bin"
+  File /oname=Randomizer.scr "..\Randomizer\msvc\scr\release\Randomizer.exe"
+
+  # redirector file
+  SetOutPath "$REDIRECTOR_TARGET"
+  File /oname=Randomizer.scr "..\Randomizer\msvc\redirector\Release\redirector.exe"
+
+  # machine defaults file
+  SetOutPath "$TARGET_DIR\defaults"
+  File /oname=Randomizer.xml "..\Randomizer\resource_files\external_defaults.xml"
+
+  # registry entry for the redirector
+  WriteRegStr SHCTX "Software\IdleScreen\Redirector" "Randomizer" "$TARGET_DIR\bin\Randomizer.scr"
+SectionEnd
 SectionGroupEnd
 
 #SectionGroup "Tools/Utilities"
@@ -171,6 +188,7 @@ Section "Uninstall"
 
   # delete files and directories
   Delete $REDIRECTOR_TARGET\PlasmaLenz.scr
+  Delete $REDIRECTOR_TARGET\Redirector.scr
   Delete "$INSTDIR\doc\*"
   RMDir $INSTDIR\doc
   Delete "$INSTDIR\bin\*"

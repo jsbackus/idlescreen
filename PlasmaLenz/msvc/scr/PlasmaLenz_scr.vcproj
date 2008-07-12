@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="scr"
+	Name="PlasmaLenz_scr"
 	ProjectGUID="{40673460-AD38-42EA-BB87-65AAD770DD20}"
 	Keyword="MakeFileProj">
 	<Platforms>
