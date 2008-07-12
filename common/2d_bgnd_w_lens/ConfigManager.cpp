@@ -470,7 +470,7 @@ void ConfigManager::saveMiscInfo(QDomDocument* doc, QDomElement* root) {
 	int i;
 	int curHisSize = _profileHistoryList.size();
 	int count = (curHisSize < _profileHistorySize) ? curHisSize : _profileHistorySize;
-	for(i=0;i<_profileHistoryList.size(); i++) {
+	for(i=0;i<count; i++) {
 		entryElem = doc->createElement("history_entry");
 		//path
 		tempNode = doc->createTextNode(_profileHistoryList.at(i));

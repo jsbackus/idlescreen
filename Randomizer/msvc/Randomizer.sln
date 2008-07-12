@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scr", "scr\Randomizer_scr.vcproj", "{9B523112-6FA5-4533-A01C-88AD94E5C856}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "redirector", "redirector\redirector.vcproj", "{FB9A1B36-98B9-4741-B460-9FB505D5FEDF}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{FB9A1B36-98B9-4741-B460-9FB505D5FEDF}.Debug.ActiveCfg = Debug|Win32
+		{FB9A1B36-98B9-4741-B460-9FB505D5FEDF}.Debug.Build.0 = Debug|Win32
+		{FB9A1B36-98B9-4741-B460-9FB505D5FEDF}.Release.ActiveCfg = Release|Win32
+		{FB9A1B36-98B9-4741-B460-9FB505D5FEDF}.Release.Build.0 = Release|Win32
+		{9B523112-6FA5-4533-A01C-88AD94E5C856}.Debug.ActiveCfg = Debug|Win32
+		{9B523112-6FA5-4533-A01C-88AD94E5C856}.Debug.Build.0 = Debug|Win32
+		{9B523112-6FA5-4533-A01C-88AD94E5C856}.Release.ActiveCfg = Release|Win32
+		{9B523112-6FA5-4533-A01C-88AD94E5C856}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
