@@ -68,6 +68,51 @@ void ConfigWidget::setup(void) {
 
 	QVBoxLayout* mainLayout = new QVBoxLayout();
 
+	// above the lists section
+	QHBoxLayout* aboveListsLayout = new QHBoxLayout();
+
+	tempButton = new QPushButton(tr("&Search Paths..."));
+	tempButton->setToolTip(tr("This button opens the dialog for setting the paths to search."));
+	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(searchPathsClicked(bool)));
+	aboveListsLayout->addWidget(tempButton);
+	tempButton = NULL;
+
+	aboveListsLayout->addStretch(0);
+
+	QCheckBox* tmpChkBox = new QCheckBox(tr("Hide Desktop"));
+	tmpChkBox->setChecked(_manager->getBlankDesktop());
+	QObject::connect(tmpChkBox, SIGNAL(clicked(bool)), this, SLOT(hideClicked(bool)));
+	aboveListsLayout->addWidget(tmpChkBox);
+	tmpChkBox = NULL;
+
+	QVBoxLayout* timerLayout = new QVBoxLayout();
+	
+	QGroupBox* timerBox = new QGroupBox(tr("Enable Timer"));
+	timerBox->setCheckable(true);
+	timerBox->setChecked(_manager->useTimer());
+	timerBox->setToolTip(tr("Enabling this will change screen savers according to the timer interval.  Disables history lookup when using random."));
+	QObject::connect(timerBox, SIGNAL(clicked(bool)), this, SLOT(enableTimerClicked(bool)));
+
+	QHBoxLayout* timerIntervalLayout = new QHBoxLayout();
+	QLabel* timerLabel = new QLabel(tr("Timer Interval"));
+	timerLabel->setToolTip(tr("The number of minutes to wait before switching screen savers."));
+	timerIntervalLayout->addWidget(timerLabel);
+
+	_timerIntervalBox = new QSpinBox();
+	_timerIntervalBox->setRange(1,1000);
+	_timerIntervalBox->setSingleStep(1);
+	_timerIntervalBox->setValue(_manager->getTimerMinutes());
+	_timerIntervalBox->setToolTip(tr("The number of minutes to wait before switching screen savers."));
+	timerIntervalLayout->addWidget(_timerIntervalBox);
+
+	timerBox->setLayout(timerIntervalLayout);
+	aboveListsLayout->addWidget(timerBox);
+
+	tempWidget = new QWidget();
+	tempWidget->setLayout(aboveListsLayout);
+	mainLayout->addWidget(tempWidget);
+	tempWidget = NULL;
+
 	// Scr List boxes and buttons in between
 	_avail = new QListWidget();
 	_avail->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -117,14 +162,8 @@ void ConfigWidget::setup(void) {
 	mainLayout->addWidget(tempWidget);
 	tempWidget = NULL;
 
-	// search path, Preview and Settings buttons and random checkbox
+	// Preview and Settings buttons and random checkbox
 	QHBoxLayout* belowListsLayout = new QHBoxLayout();
-
-	tempButton = new QPushButton(tr("&Search Paths..."));
-	tempButton->setToolTip(tr("This button opens the dialog for setting the paths to search."));
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(searchPathsClicked(bool)));
-	belowListsLayout->addWidget(tempButton);
-	tempButton = NULL;
 
 	tempButton = new QPushButton(tr("Preview"));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(previewClicked(bool)));
@@ -137,29 +176,6 @@ void ConfigWidget::setup(void) {
 	tempButton = NULL;
 
 	belowListsLayout->addStretch(0);
-
-	QVBoxLayout* timerLayout = new QVBoxLayout();
-	
-	QGroupBox* timerBox = new QGroupBox(tr("Enable Timer"));
-	timerBox->setCheckable(true);
-	timerBox->setChecked(_manager->useTimer());
-	timerBox->setToolTip(tr("Enabling this will change screen savers according to the timer interval.  Disables history lookup when using random."));
-	QObject::connect(timerBox, SIGNAL(clicked(bool)), this, SLOT(enableTimerClicked(bool)));
-
-	QHBoxLayout* timerIntervalLayout = new QHBoxLayout();
-	QLabel* timerLabel = new QLabel(tr("Timer Interval"));
-	timerLabel->setToolTip(tr("The number of minutes to wait before switching screen savers."));
-	timerIntervalLayout->addWidget(timerLabel);
-
-	_timerIntervalBox = new QSpinBox();
-	_timerIntervalBox->setRange(1,1000);
-	_timerIntervalBox->setSingleStep(1);
-	_timerIntervalBox->setValue(_manager->getTimerMinutes());
-	_timerIntervalBox->setToolTip(tr("The number of minutes to wait before switching screen savers."));
-	timerIntervalLayout->addWidget(_timerIntervalBox);
-
-	timerBox->setLayout(timerIntervalLayout);
-	belowListsLayout->addWidget(timerBox);
 
 	QVBoxLayout* randomLayout = new QVBoxLayout();
 
@@ -183,6 +199,7 @@ void ConfigWidget::setup(void) {
 
 	randomBox->setLayout(historyLayout);
 	belowListsLayout->addWidget(randomBox);
+
 	tempWidget = new QWidget();
 	tempWidget->setLayout(belowListsLayout);
 	mainLayout->addWidget(tempWidget);
@@ -490,3 +507,6 @@ void ConfigWidget::enableTimerClicked(bool checked) {
 	_manager->enableTimer(checked);
 }
 
+void ConfigWidget::hideClicked(bool checked) {
+	_manager->setBlankDesktop(checked);
+}

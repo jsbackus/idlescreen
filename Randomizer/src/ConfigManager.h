@@ -103,6 +103,10 @@ public:
 	void setGPLAccepted(bool bAccepted = false);
 	bool getGPLAccepted();
 
+	// get/set whether to hide the desktop or not
+	void setBlankDesktop(bool bBlank = true);
+	bool getBlankDesktop();
+
 private:
 	// used to get the name and path of the config files
 	QString getMainConfigFile();

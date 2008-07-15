@@ -98,6 +98,7 @@ void SaverRunner::scrFinished(int exitCode, QProcess::ExitStatus exitStatus) {
 		//let the app manager know we're done
 		emit done();
 	} else {
+		emit changing();
 		startNewSCR();
 	}
 }

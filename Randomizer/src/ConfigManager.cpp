@@ -421,3 +421,11 @@ bool ConfigManager::exportToFile(QString filename) {
 	return true;
 }
 
+// get/set whether to hide the desktop or not
+void ConfigManager::setBlankDesktop(bool bBlank) {
+	_bBlankDesktop = bBlank;
+}
+
+bool ConfigManager::getBlankDesktop() {
+	return _bBlankDesktop;
+}

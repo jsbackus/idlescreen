@@ -79,6 +79,7 @@ public slots:
 	void enableTimerClicked(bool checked = false);
 	void previewClicked(bool checked = false);
 	void settingsClicked(bool checked = false);
+	void hideClicked(bool checked = false);
 
 signals:
 	void dialogFinished(void);

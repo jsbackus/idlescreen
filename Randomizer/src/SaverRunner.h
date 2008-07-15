@@ -89,6 +89,11 @@ signals:
 	//void stopScr();
 
 	/**
+	 * Emitted when the screen saver is changing.
+	 */
+	void changing();
+
+	/**
 	 * Emitted when finished.
 	 */
 	void done();

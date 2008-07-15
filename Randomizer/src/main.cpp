@@ -114,20 +114,31 @@ int runScr(ConfigManager* manager, QStringList args) {
 
 	QApplication app(argc, NULL);
 
-	/*
-	//blank screen behind.  Does not work for dual-screen.
-	QGraphicsScene* scene = new QGraphicsScene();;
-	scene->setBackgroundBrush(Qt::black);
-	QGraphicsView* view = new QGraphicsView(scene);
-	QMainWindow* mainWindow = new QMainWindow(NULL, Qt::FramelessWindowHint);
-	mainWindow->setCentralWidget(view);
-	mainWindow->showMaximized();
-	*/
+	// blank screen behind screen savers to hide the desktop and windows,
+	// if enabled
+	QMainWindow* vail = NULL;
+	if(manager->getBlankDesktop()) {
+		QGraphicsScene* scene = new QGraphicsScene();;
+		scene->setBackgroundBrush(Qt::black);
+		QGraphicsView* view = new QGraphicsView(scene);
+		vail = new QMainWindow(NULL, Qt::FramelessWindowHint);
+		if(vail == NULL) {
+			app.quit();
+		}
+		vail->setCentralWidget(view);
+		vail->setGeometry(-1,-1,10000,10000);
+		vail->show();
+	}
 
-	//start screensaver
+	//set up screen saver runner
 	SaverRunner* runner = new SaverRunner();
 	runner->startSCR(manager, args);
 	QObject::connect(runner, SIGNAL(done()), &app, SLOT(quit()));
+	if(vail != NULL) {
+		// if we're using desktop blanking, we want to be sure the vail is
+		// the foremost window
+		QObject::connect(runner, SIGNAL(changing()), vail, SLOT(raise()));
+	}
 
 	//start thread so that we can use timers & QProcess
 	runner->start();
