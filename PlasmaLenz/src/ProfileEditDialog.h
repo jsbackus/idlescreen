@@ -72,15 +72,14 @@ public slots:
 	void editPalClicked(bool checked = false);
 	void animatePalClicked(bool checked = false);
 
-	void addAccepted(void);
-	void editAccepted(void);
-
 signals:
 	void profileNameChange(QString oldName, QString newName);
 
 private:
 	//attempts to edit the specified palette.
-	void editPalette(IndexedPaletteProfile* pal, bool bWasAddRename = false);
+	//void editPalette(IndexedPaletteProfile* pal, bool bWasAddRename = false);
+	//attempts to edit the specified palette.
+	void editPalette(const QString& palName, bool bReplace = false);
 
 	// populates the palette name selection combo box
 	void populatePalList(QString selected);
@@ -101,11 +100,9 @@ private:
 	QDoubleSpinBox* _paletteXSpeedBox;
 	QDoubleSpinBox* _paletteYSpeedBox;
 	QCheckBox* _clampColorBox;
-//	PlasmaFractalBackgroundProfile _plasma;
 
 	IndexedPaletteDialog* _palDlg;
 	QString _palOldName;
-	bool _bFinishedAddEdit;
 
 	// lens related
 	QSlider* _lensSizeSlider;
