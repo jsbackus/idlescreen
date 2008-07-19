@@ -81,6 +81,8 @@ void ConfigWidget::setup(void) {
 
 	QCheckBox* tmpChkBox = new QCheckBox(tr("Hide Desktop"));
 	tmpChkBox->setChecked(_manager->getBlankDesktop());
+	tmpChkBox->setToolTip(tr("When enabled, a black window is opened to hide the contents of the")+"\n"
+							+tr("desktop between screensaver changes."));
 	QObject::connect(tmpChkBox, SIGNAL(clicked(bool)), this, SLOT(hideClicked(bool)));
 	aboveListsLayout->addWidget(tmpChkBox);
 	tmpChkBox = NULL;
@@ -90,7 +92,8 @@ void ConfigWidget::setup(void) {
 	QGroupBox* timerBox = new QGroupBox(tr("Enable Timer"));
 	timerBox->setCheckable(true);
 	timerBox->setChecked(_manager->useTimer());
-	timerBox->setToolTip(tr("Enabling this will change screen savers according to the timer interval.  Disables history lookup when using random."));
+	timerBox->setToolTip(tr("Enabling this will change screen savers according to the timer interval.")+"\n"
+							+tr("Disables history lookup when using random."));
 	QObject::connect(timerBox, SIGNAL(clicked(bool)), this, SLOT(enableTimerClicked(bool)));
 
 	QHBoxLayout* timerIntervalLayout = new QHBoxLayout();
@@ -124,7 +127,8 @@ void ConfigWidget::setup(void) {
 	QVBoxLayout* buttonLayout = new QVBoxLayout();
 
 	tempButton = new QPushButton(">>");
-	tempButton->setToolTip(tr("Click to add the items selected in the list of available screen savers to the list of selected screen savers."));
+	tempButton->setToolTip(tr("Click to add the items selected in the list of available screen savers")+"\n"
+								+tr("to the list of selected screen savers."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(addClicked(bool)));
 	buttonLayout->addWidget(tempButton);
 	tempButton = NULL;
@@ -166,11 +170,15 @@ void ConfigWidget::setup(void) {
 	QHBoxLayout* belowListsLayout = new QHBoxLayout();
 
 	tempButton = new QPushButton(tr("Preview"));
+	tempButton->setToolTip(tr("This button runs the currently selected screen saver in the list on")+"\n"
+							  +tr("the left.  When multiple screen savers are selected, only runs the first."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(previewClicked(bool)));
 	belowListsLayout->addWidget(tempButton);
 	tempButton = NULL;
 
 	tempButton = new QPushButton(tr("Settings"));
+	tempButton->setToolTip(tr("This button opens the config dialog box for the currently selected screen saver")+"\n"
+								+tr("on the left.  When multiple screen savers are selected, only configures the first."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(settingsClicked(bool)));
 	belowListsLayout->addWidget(tempButton);
 	tempButton = NULL;
