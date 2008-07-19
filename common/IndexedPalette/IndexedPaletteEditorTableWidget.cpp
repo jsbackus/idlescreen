@@ -46,6 +46,12 @@ IndexedPaletteEditorTableWidget::IndexedPaletteEditorTableWidget(int width, int 
 
 	// create widget object
 	_widget = new QTableWidget(1,1);
+	QString tempToolTip; // on separate lines to keep some remote formatting sanity with the tool tip.
+	tempToolTip = tr("To insert a new color cell into a group of undefined colors, double-click on the group.")+"\n"
+					+tr("To define or change a color, double-click on the single color cell to open the")+"\n"
+					+tr("color chooser.  Right-clicking on a cell will bring up a menu of available actions.");
+	_widget->setToolTip(tempToolTip);
+
 	connect(_widget, SIGNAL(cellClicked(int, int)), this, SLOT(cellClicked(int, int)));
 	connect(_widget, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(cellDoubleClicked(int, int)));
 	connect(_widget, SIGNAL(cellPressed(int, int)), this, SLOT(cellPressed(int, int)));
@@ -259,8 +265,7 @@ void IndexedPaletteEditorTableWidget::changeSize(int width, int height) {
 	_height = height;
 
 	if(_widget == NULL) {
-		if(_widget == NULL)
-			return;
+		return;
 	} else {
 		// clear the widget otherwise
 		_widget->clear();

@@ -53,6 +53,7 @@ public slots:
 	void okClicked(bool checked = false);
 	void cancelClicked(bool checked = false);
 	void revertClicked(bool checked = false);
+	void helpClicked(bool checked = false);
 
 	void colorChanged(int x, int y, QRgb* color);
 	void defaultColorClicked(bool checked = false);
@@ -99,6 +100,7 @@ private:
 	QRadioButton* _linearButton;
 	QRadioButton* _sineButton;
 	InterpType _lastInterpType;
+	QString _windowTitle;
 };
 
 

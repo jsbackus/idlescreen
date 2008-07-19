@@ -22,6 +22,7 @@
  * 
  */
 
+#include <QMessageBox>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -44,7 +45,8 @@
 
 IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QWidget* parent, Qt::WindowFlags f) {
 	QDialog(parent, f);
-	setWindowTitle(tr("Palette Editor"));
+	_windowTitle = tr("Palette Editor");
+	setWindowTitle(_windowTitle);
 	setWindowModality(Qt::WindowModal);
 	QIcon icon(":/app_icon.png");
 	setWindowIcon(icon);
@@ -78,6 +80,7 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 	QWidget* tempWidget = NULL;
 	QPushButton* tempButton = NULL;
 	QVBoxLayout* mainLayout = new QVBoxLayout();
+	QString tempToolTip;
 
 	//top region
 	QHBoxLayout* topRegion = new QHBoxLayout();
@@ -86,14 +89,21 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 
 	//name section and change default color
 	QHBoxLayout* nameRegion = new QHBoxLayout();
+	tempToolTip = tr("The name of the palette.");
 	QLabel* tmpLabel = new QLabel(tr("Palette Name:"));
+	tmpLabel->setToolTip(tempToolTip);
 	nameRegion->addWidget(tmpLabel);
 	tmpLabel = NULL;
 
 	_nameEdit = new QLineEdit(_palProfile.getName());
+	_nameEdit->setToolTip(tempToolTip);
 	nameRegion->addWidget(_nameEdit);
 
 	tempButton = new QPushButton(tr("Default Color"));
+	tempButton->setDefault(false);
+	tempButton->setAutoDefault(false);
+	tempToolTip = tr("The default color is used for all undefined colors, unless interpolation is enabled.");
+	tempButton->setToolTip(tempToolTip);
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(defaultColorClicked(bool)));
 	nameRegion->addWidget(tempButton);
 	tempButton = NULL;
@@ -107,36 +117,44 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 	QHBoxLayout* dimsRegion = new QHBoxLayout();
 
 	tmpLabel = new QLabel(tr("Dimensions:"));
-	//tmpLabel->setToolTip(tr("The number of minutes to wait before switching screen savers."));
+	tempToolTip = tr("The height and width of the palette in colors.");
+	tmpLabel->setToolTip(tempToolTip);
 	dimsRegion->addWidget(tmpLabel);
 
 	dimsRegion->addStretch(0);
 
-	tmpLabel = new QLabel(tr("X"));
-	//tmpLabel->setToolTip(tr("The number of minutes to wait before switching screen savers."));
+	tempToolTip = tr("The width of the palette.");
+	tmpLabel = new QLabel(tr("Width"));
+	tmpLabel->setToolTip(tempToolTip);
 	dimsRegion->addWidget(tmpLabel);
 
 	_xDimBox = new QSpinBox();
 	_xDimBox->setRange(1,1024);
 	_xDimBox->setSingleStep(1);
 	_xDimBox->setValue(_palProfile.getWidth());
-	//_xDimBox->setToolTip(tr("The number of minutes to wait before switching screen savers."));
+	_xDimBox->setToolTip(tempToolTip);
 	dimsRegion->addWidget(_xDimBox);
 
 	dimsRegion->addStretch(0);
 
-	tmpLabel = new QLabel(tr("Y"));
-	//tmpLabel->setToolTip(tr("The number of minutes to wait before switching screen savers."));
+	tempToolTip = tr("The height of the palette.");
+	tmpLabel = new QLabel(tr("Height"));
+	tmpLabel->setToolTip(tempToolTip);
 	dimsRegion->addWidget(tmpLabel);
 
 	_yDimBox = new QSpinBox();
 	_yDimBox->setRange(1,1024);
 	_yDimBox->setSingleStep(1);
 	_yDimBox->setValue(_palProfile.getHeight());
-	//_yDimBox->setToolTip(tr("The number of minutes to wait before switching screen savers."));
+	_yDimBox->setToolTip(tempToolTip);
 	dimsRegion->addWidget(_yDimBox);
 
 	tempButton = new QPushButton(tr("Resize"));
+	tempButton->setDefault(false);
+	tempButton->setAutoDefault(false);
+	tempToolTip = tr("Changes the dimensions of the palette.  If the new dimensions are smaller than")+"\n"
+					+tr("the current dimensions, colors may be lost!");
+	tempButton->setToolTip(tempToolTip);
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(resizeClicked(bool)));
 	dimsRegion->addWidget(tempButton);
 	tempButton = NULL;
@@ -156,7 +174,8 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 	interpBox->setCheckable(true);
 	_lastInterpType = _palProfile.getInterpolateColors();
 	interpBox->setChecked(_lastInterpType != none);
-	//interpBox->setToolTip(tr("Enabling this will randomize the order in which the screen savers will run."));
+	tempToolTip = tr("When enabled, interpolation will be used to determine undefined colors.");
+	interpBox->setToolTip(tempToolTip);
 	QObject::connect(interpBox, SIGNAL(clicked(bool)), this, SLOT(interpClicked(bool)));
 
 	//QHBoxLayout* interpBoxLayout = new QHBoxLayout();
@@ -164,17 +183,23 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 
 	_linearButton = new QRadioButton(tr("Linear"));
 	_linearButton->setChecked(_lastInterpType == linear);
+	tempToolTip = tr("Use linear interpolation.");
+	_linearButton->setToolTip(tempToolTip);
 	interpBoxLayout->addWidget(_linearButton);
 	QObject::connect(_linearButton, SIGNAL(toggled(bool)), this, SLOT(linearClicked(bool)));
 	
 	_sineButton = new QRadioButton(tr("Sinusoidal"));
 	_sineButton->setChecked(_lastInterpType == sine);
+	tempToolTip = tr("Use sin(t) interpolation.");
+	_sineButton->setToolTip(tempToolTip);
 	interpBoxLayout->addWidget(_sineButton);
 	QObject::connect(_sineButton, SIGNAL(toggled(bool)), this, SLOT(sineClicked(bool)));
 
 	QCheckBox* wrapBox = new QCheckBox(tr("Wrap Colors"));
 	wrapBox->setCheckable(true);
 	wrapBox->setChecked(_palProfile.getWrapColors());
+	tempToolTip = tr("When endpoint colors are not defined, the interpolator will \"wrap around\" when checked.");
+	wrapBox->setToolTip(tempToolTip);
 	QObject::connect(wrapBox, SIGNAL(clicked(bool)), this, SLOT(wrapClicked(bool)));
 	interpBoxLayout->addWidget(wrapBox);
 	interpBox->setLayout(interpBoxLayout);
@@ -194,24 +219,39 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 	mainLayout->addWidget(_colorWidget->getWidget());
 
 	//preview area
+	tempToolTip = tr("This view shows how the will palette look when in use.");
 	tmpLabel = new QLabel("Preview:");
+	tmpLabel->setToolTip(tempToolTip);
 	mainLayout->addWidget(tmpLabel);
 	tmpLabel = NULL;
 
 	_previewZoom = 4;
 	_previewLabel = new QLabel();
+	_previewLabel->setToolTip(tempToolTip);
 	_previewLabel->setPixmap(_previewPixmap);
 	updatePreviewIcon();
 
 	QScrollArea* previewScrollArea = new QScrollArea();
 	previewScrollArea->setWidget(_previewLabel);
+	previewScrollArea->setToolTip(tempToolTip);
 	mainLayout->addWidget(previewScrollArea);
 
 	//Revert, OK, and Cancel buttons
 	QHBoxLayout* botButtonsLayout = new QHBoxLayout();
 	
+	tempButton = new QPushButton(tr("&Help"));
+	tempButton->setDefault(false);
+	tempButton->setAutoDefault(false);
+	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(helpClicked(bool)));
+	botButtonsLayout->addWidget(tempButton);
+	tempButton = NULL;
+
 	tempButton = new QPushButton(tr("&Revert"));
 	tempButton->setEnabled(false);
+	tempButton->setDefault(false);
+	tempButton->setAutoDefault(false);
+	tempToolTip = tr("Undoes all changes made since the dialog box opened.");
+	tempButton->setToolTip(tempToolTip);
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(revertClicked(bool)));
 	botButtonsLayout->addWidget(tempButton);
 	tempButton = NULL;
@@ -221,10 +261,13 @@ IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QW
 	tempButton = new QPushButton(tr("&OK"));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(okClicked(bool)));
 	tempButton->setDefault(true);
+	tempButton->setAutoDefault(true);
 	botButtonsLayout->addWidget(tempButton);
 	tempButton = NULL;
 
 	tempButton = new QPushButton(tr("&Cancel"));
+	tempButton->setDefault(false);
+	tempButton->setAutoDefault(false);
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(cancelClicked(bool)));
 	botButtonsLayout->addWidget(tempButton);
 	tempButton = NULL;
@@ -474,4 +517,7 @@ void IndexedPaletteDialog::resizeClicked(bool checked) {
 		delete _prgDlg;
 		_prgDlg = NULL;
 	}
+}
+void IndexedPaletteDialog::helpClicked(bool checked) {
+	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
 }

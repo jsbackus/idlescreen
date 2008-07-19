@@ -33,7 +33,7 @@ IndexedPaletteEditorTableWidgetItem::IndexedPaletteEditorTableWidgetItem(const Q
 	// see Qt::ItemFlags for more info
 	setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-	_definedBGColor = QColor(255,255,255,255);
+	_definedBGColor = QColor(226,225,209,255);
 	_undefinedBGColor = QColor(213, 208, 193,255);
 
 	_bEmpty = true;

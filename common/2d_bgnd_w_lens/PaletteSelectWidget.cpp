@@ -46,26 +46,30 @@ PaletteSelectWidget::PaletteSelectWidget(ConfigManager* confMgr, QWidget* parent
 
 	_list = new QListWidget();
 	_list->setSelectionMode(QAbstractItemView::SingleSelection);
-	_list->setToolTip(tr("This is the list of available Palette profiles."));
+	_list->setToolTip(tr("This is the list of available palette profiles."));
 	mainLayout->addWidget(_list);
 
 	QHBoxLayout* bkgndBtnLayout = new QHBoxLayout();
 	tempButton = new QPushButton(tr("New"));
+	tempButton->setToolTip(tr("Create a new palette from scratch."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(addClicked(bool)));
 	bkgndBtnLayout->addWidget(tempButton);
 	tempButton = NULL;
 
 	tempButton = new QPushButton(tr("Duplicate"));
+	tempButton->setToolTip(tr("Create a new palette by copying the currently selected palette."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(copyClicked(bool)));
 	bkgndBtnLayout->addWidget(tempButton);
 	tempButton = NULL;
 
 	tempButton = new QPushButton(tr("Edit"));
+	tempButton->setToolTip(tr("Edit the currently selected palette."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(editClicked(bool)));
 	bkgndBtnLayout->addWidget(tempButton);
 	tempButton = NULL;
 
 	tempButton = new QPushButton(tr("Delete"));
+	tempButton->setToolTip(tr("Permanently remove the currently selected palette."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(removeClicked(bool)));
 	bkgndBtnLayout->addWidget(tempButton);
 	tempButton = NULL;

@@ -121,6 +121,7 @@ void ConfigWidget::setup(void) {
 	QHBoxLayout* midButtonsLayout = new QHBoxLayout();
 
 	tempButton = new QPushButton(tr("Palette Editor"));
+	tempButton->setToolTip(tr("Opens the palette editor."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(paletteEditorClicked(bool)));
 	midButtonsLayout->addWidget(tempButton);
 	tempButton = NULL;
@@ -128,11 +129,13 @@ void ConfigWidget::setup(void) {
 	midButtonsLayout->addStretch(0);
 
 	tempButton = new QPushButton(tr("Import Settings"));
+	tempButton->setToolTip(tr("Imports settings from a file."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(importClicked(bool)));
 	midButtonsLayout->addWidget(tempButton);
 	tempButton = NULL;
 
 	tempButton = new QPushButton(tr("Export Settings"));
+	tempButton->setToolTip(tr("Exports settings to a file."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(exportClicked(bool)));
 	midButtonsLayout->addWidget(tempButton);
 	tempButton = NULL;
@@ -363,32 +366,35 @@ QWidget* ConfigWidget::genMPWidget() {
 
 	_mpAvailList = new QListWidget();
 	_mpAvailList->setSelectionMode(QAbstractItemView::ExtendedSelection);
-	_mpAvailList->setToolTip(tr("This is the list of available master configuration profiles."));
+	_mpAvailList->setToolTip(tr("This is the list of available configuration profiles."));
 
 	listsLayout->addWidget(_mpAvailList);
 
 	QVBoxLayout* listButtonLayout = new QVBoxLayout();
 
 	tempButton = new QPushButton(">>");
-	tempButton->setToolTip(tr("Click to add the items selected in the list of available master configuration profiles to the list of selected screen savers."));
+	tempButton->setToolTip(tr("Click to add the items selected in the list of available configuration profiles")+"\n"
+							+tr("to the list of selected configuration profiles."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(addListClicked(bool)));
 	listButtonLayout->addWidget(tempButton);
 	tempButton = NULL;
 
 	tempButton = new QPushButton("<<");
-	tempButton->setToolTip(tr("Click to remove the selected items in the list of selected master configuration profiles."));
+	tempButton->setToolTip(tr("Click to remove the selected items in the list of selected configuration profiles."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(removeListClicked(bool)));
 	listButtonLayout->addWidget(tempButton);
 	tempButton = NULL;
 	
 	tempButton = new QPushButton(tr("Up"));
-	tempButton->setToolTip(tr("Click to move the selected item in the list of selected master configuration profiles up in the order."));
+	tempButton->setToolTip(tr("Click to move the selected item in the list of selected configuration profiles up in")+"\n"
+							+tr("the order."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(upListClicked(bool)));
 	listButtonLayout->addWidget(tempButton);
 	tempButton = NULL;
 
 	tempButton = new QPushButton(tr("Down"));
-	tempButton->setToolTip(tr("Click to move the selected item in the list of selected master configuration profiles down in the order."));
+	tempButton->setToolTip(tr("Click to move the selected item in the list of selected configuration profiles")+"\n"
+							+tr("down in the order."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(downListClicked(bool)));
 	listButtonLayout->addWidget(tempButton);
 	tempButton = NULL;
@@ -400,7 +406,7 @@ QWidget* ConfigWidget::genMPWidget() {
 
 	_mpSelList = new QListWidget();
 	_mpSelList->setSelectionMode(QAbstractItemView::ExtendedSelection);
-	_mpSelList->setToolTip(tr("This is the list of currently selected master configuration profiles."));
+	_mpSelList->setToolTip(tr("This is the list of currently selected configuration profiles."));
 	listsLayout->addWidget(_mpSelList);
 
 	tempWidget = new QWidget();
@@ -412,19 +418,19 @@ QWidget* ConfigWidget::genMPWidget() {
 	QHBoxLayout* bottomButtonLayout = new QHBoxLayout();
 
 	tempButton = new QPushButton(tr("New"));
-	tempButton->setToolTip(tr("Click to add a new master configuration profile."));
+	tempButton->setToolTip(tr("Click to add a new configuration profile."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(addMPClicked(bool)));
 	bottomButtonLayout->addWidget(tempButton);
 	tempButton = NULL;
 
 	tempButton = new QPushButton(tr("Edit"));
-	tempButton->setToolTip(tr("Click to edit the currently selected master configuration profile."));
+	tempButton->setToolTip(tr("Click to edit the currently selected configuration profile."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(editMPClicked(bool)));
 	bottomButtonLayout->addWidget(tempButton);
 	tempButton = NULL;
 
 	tempButton = new QPushButton(tr("Delete"));
-	tempButton->setToolTip(tr("Click to remove the currently selected master configuration profile."));
+	tempButton->setToolTip(tr("Click to permanently remove the currently selected configuration profile."));
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(deleteMPClicked(bool)));
 	bottomButtonLayout->addWidget(tempButton);
 	tempButton = NULL;
@@ -435,19 +441,19 @@ QWidget* ConfigWidget::genMPWidget() {
 	QGroupBox* randomBox = new QGroupBox(tr("Choose &Randomly"));
 	randomBox->setCheckable(true);
 	randomBox->setChecked(_manager->isRandomProfile());
-	randomBox->setToolTip(tr("Enabling this will randomize the order in which the master profiles will run."));
+	randomBox->setToolTip(tr("Enabling this will randomize the order in which the configuration profiles will run."));
 	QObject::connect(randomBox, SIGNAL(clicked(bool)), this, SLOT(randomClicked(bool)));
 
 	QHBoxLayout* historyLayout = new QHBoxLayout();
 	QLabel* historyLabel = new QLabel(tr("Size of History"));
-	historyLabel->setToolTip(tr("The number of times before a master profile can run again."));
+	historyLabel->setToolTip(tr("The number of times before a configuration profile can run again."));
 	historyLayout->addWidget(historyLabel);
 
 	_historyBox = new QSpinBox();
 	_historyBox->setRange(0,10);
 	_historyBox->setSingleStep(1);
 	_historyBox->setValue(_manager->getProfileHistorySize());
-	_historyBox->setToolTip(tr("The number of times before a master profile can run again."));
+	_historyBox->setToolTip(tr("The number of times before a configuration profile can run again."));
 	historyLayout->addWidget(_historyBox);
 
 	randomBox->setLayout(historyLayout);
@@ -553,7 +559,7 @@ void ConfigWidget::importClicked(bool checked) {
 
 	// populate dialog box
 	QStringList bkgnds = tmpMgr->getAvailableProfiles();
-	dlg.addSubItems("Background Profiles", bkgnds, true);
+	dlg.addSubItems("Configuration Profiles", bkgnds, true);
 
 	QStringList palettes = tmpMgr->getPaletteNames();
 	dlg.addSubItems("Palettes", palettes, true);
@@ -564,7 +570,7 @@ void ConfigWidget::importClicked(bool checked) {
 		tmpMgr = NULL;
 		return;
 	}
-	bkgnds = dlg.getSubItems("Background Profiles", true);
+	bkgnds = dlg.getSubItems("Configuration Profiles", true);
 	palettes = dlg.getSubItems("Palettes", true);
 
 	// first, add in the palettes, since they don't
@@ -603,7 +609,7 @@ void ConfigWidget::exportClicked(bool checked) {
 
 	// populate dialog box
 	QStringList bkgnds = _manager->getAvailableProfiles();
-	dlg.addSubItems("Background Profiles", bkgnds, true);
+	dlg.addSubItems("Configuration Profiles", bkgnds, true);
 
 	QStringList palettes = _manager->getPaletteNames();
 	dlg.addSubItems("Palettes", palettes, true);
@@ -611,7 +617,7 @@ void ConfigWidget::exportClicked(bool checked) {
 	// show dialog and get lists of checked items
 	if(dlg.exec() == 0)
 		return;
-	bkgnds = dlg.getSubItems("Background Profiles", true);
+	bkgnds = dlg.getSubItems("Configuration Profiles", true);
 	palettes = dlg.getSubItems("Palettes", true);
 
 	// get file name to export to

@@ -76,16 +76,24 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	QVBoxLayout* mainLayout = new QVBoxLayout();
 	QString tempToolTip;
 
-	// Begin MasterProfile related
+	// Begin MasterProfile related.
+	// Note: MasterProfiles & BackgroundProfiles are
+	// collectively called "Configuration Profiles"
+	// throughout the program (i.e. that's what the
+	// user sees.)
 
 	//name field
 	QHBoxLayout* nameLayout = new QHBoxLayout();
 
+	tempToolTip = tr("The name of this configuration profile.");
+
 	tempWidget = new QLabel(tr("Name:"));
+	tempWidget->setToolTip(tempToolTip);
 	nameLayout->addWidget(tempWidget);
 	tempWidget = NULL;
 
 	_nameBox = new QLineEdit(_mp.getName());
+	_nameBox->setToolTip(tempToolTip);
 	nameLayout->addWidget(_nameBox);
 
 	tempWidget = new QWidget();
@@ -97,7 +105,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	QHBoxLayout* dimAndTimeLayout = new QHBoxLayout();
 
 	//dimensions group box
-	QGroupBox* dimBox = new QGroupBox(tr("Screen Dimensions"));
+	QGroupBox* dimBox = new QGroupBox(tr("Plasma Dimensions"));
 	QHBoxLayout* dimBoxLayout = new QHBoxLayout();
 
 	_screenXBox = new QComboBox();
@@ -125,16 +133,24 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	_screenXBox->setCurrentIndex(xCurVal);
 	_screenYBox->setCurrentIndex(yCurVal);
 
-	tempWidget = new QLabel(tr("X:"));
+	tempToolTip = tr("The resolution width of the plasma in pixels.  Does not need to match actual")+"\n"
+					+tr("screen resolution.");
+	tempWidget = new QLabel(tr("Width:"));
+	tempWidget->setToolTip(tempToolTip);
 	dimBoxLayout->addWidget(tempWidget);
 	tempWidget = NULL;
+	_screenXBox->setToolTip(tempToolTip);
 	dimBoxLayout->addWidget(_screenXBox);
 
 	dimBoxLayout->addStretch(0);
 
-	tempWidget = new QLabel(tr("Y:"));
+	tempToolTip = tr("The resolution height of the plasma in pixels.  Does not need to match actual")+"\n"
+					+tr("screen resolution.");
+	tempWidget = new QLabel(tr("Height:"));
+	tempWidget->setToolTip(tempToolTip);
 	dimBoxLayout->addWidget(tempWidget);
 	tempWidget = NULL;
+	_screenYBox->setToolTip(tempToolTip);
 	dimBoxLayout->addWidget(_screenYBox);
 
 	dimBox->setLayout(dimBoxLayout);
@@ -144,7 +160,8 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	dimAndTimeLayout->addStretch(0);
 
 	tempWidget = new QLabel(tr("Milliseconds Between Frames:"));
-	tempToolTip = tr("The number of milliseconds between frames.");
+	tempToolTip = tr("The number of milliseconds between frames.  The higher the number, the")+"\n"
+					+tr("slower the animation.");
 	tempWidget->setToolTip(tempToolTip);
 	dimAndTimeLayout->addWidget(tempWidget);
 	tempWidget = NULL;
@@ -178,6 +195,11 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	}
 
 	// palette name combo box + add & edit buttons
+	QGroupBox* palGroupBox = new QGroupBox(tr("Palette"));
+	if(palGroupBox == NULL)
+		return;
+	palGroupBox->setCheckable(false);
+
 	QHBoxLayout* palBoxLayout = new QHBoxLayout();
 
 	_paletteBox = new QComboBox();
@@ -187,25 +209,32 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	} else {
 		populatePalList("");
 	}
+	tempToolTip = tr("The currently selected palette.");
+	_paletteBox->setToolTip(tempToolTip);
 	palBoxLayout->addWidget(_paletteBox);
 
 	palBoxLayout->addStretch(0);
 
 	tempButton = new QPushButton(tr("&Add"));
-	tempButton->setDefault(true);
+	tempButton->setDefault(false);
+	tempButton->setAutoDefault(false);
+	tempToolTip = tr("Add a new palette.");
+	tempButton->setToolTip(tempToolTip);
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(addPalClicked(bool)));
 	palBoxLayout->addWidget(tempButton);
 	tempButton = NULL;
 
 	tempButton = new QPushButton(tr("&Edit"));
-	tempButton->setDefault(true);
+	tempButton->setDefault(false);
+	tempButton->setAutoDefault(false);
+	tempToolTip = tr("Edit the selected palette.");
+	tempButton->setToolTip(tempToolTip);
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(editPalClicked(bool)));
 	palBoxLayout->addWidget(tempButton);
 	tempButton = NULL;
 
-	tempWidget = new QWidget();
-	tempWidget->setLayout(palBoxLayout);
-	mainLayout->addWidget(tempWidget);
+	palGroupBox->setLayout(palBoxLayout);
+	mainLayout->addWidget(palGroupBox);
 	tempWidget = NULL;
 
 	// Palette Animation enable and speeds
@@ -258,7 +287,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	QHBoxLayout* ccLayout = new QHBoxLayout();
 
 	tempWidget = new QLabel(tr("Less Volatile"));
-	tempToolTip = tr("This quantity determines how coarse or volatile the fractal is.  Higher numbers will produce more variation.");
+	tempToolTip = tr("This quantity determines how coarse or volatile the fractal is.  More volatile, the more variation.");
 	tempWidget->setToolTip(tempToolTip);
 	ccLayout->addWidget(tempWidget);
 
@@ -287,7 +316,8 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	} else {
 		_clampColorBox->setChecked(true);
 	}
-	_clampColorBox->setToolTip(tr("When the plasma algorithm generates an invalid color index, it will clamp to the nearest valid color if checked, or wrap around if unchecked."));
+	_clampColorBox->setToolTip(tr("When the plasma algorithm generates an invalid color index, it will clamp")+"\n"
+								+tr("to the nearest valid color if checked, or wrap around if unchecked."));
 	ccLayout->addWidget(_clampColorBox);
 
 	tempWidget = new QWidget();
@@ -296,12 +326,6 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	tempWidget = NULL;
 
 	// Begin SphericalLensProfile related
-	/*
-	 	QSlider* _lensSizeSlider;
-	QSlider* _lensVarSlider;
-	QSpinBox* _numLenses;
-	*/
-
 	_numLenses = new QSpinBox();
 	if(_numLenses == NULL)
 	  return;
@@ -362,7 +386,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	if(tmpHBox == NULL)
 	  return;
 
-	tempToolTip = tr("Determines the average size of the lenses");
+	tempToolTip = tr("Determines the average size of the lenses.");
 	tempWidget = new QLabel(tr("Size"));
 	if(tempWidget == NULL)
 	  return;
@@ -399,7 +423,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	if(tmpHBox == NULL)
 	  return;
 
-	tempToolTip = tr("Determines the amount of size variation");
+	tempToolTip = tr("Determines the amount of size variation.");
 	tempWidget = new QLabel(tr("Variation"));
 	if(tempWidget == NULL)
 	  return;
@@ -440,19 +464,26 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	lensBox->setLayout(lensLayout);
 	mainLayout->addWidget(lensBox);
 
-	//OK and Cancel buttons
+	//Help, OK and Cancel buttons
 	QHBoxLayout* botButtonsLayout = new QHBoxLayout();
 	
+	tempButton = new QPushButton(tr("&Help"));
+	tempButton->setDefault(false);
+	tempButton->setAutoDefault(false);
+	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(helpClicked(bool)));
+	botButtonsLayout->addWidget(tempButton);
+	tempButton = NULL;
+
 	botButtonsLayout->addStretch(0);
 
 	tempButton = new QPushButton(tr("&OK"));
 	tempButton->setDefault(true);
+	tempButton->setAutoDefault(true);
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(okClicked(bool)));
 	botButtonsLayout->addWidget(tempButton);
 	tempButton = NULL;
 
 	tempButton = new QPushButton(tr("&Cancel"));
-	tempButton->setDefault(true);
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(cancelClicked(bool)));
 	botButtonsLayout->addWidget(tempButton);
 	tempButton = NULL;
@@ -704,7 +735,6 @@ void ProfileEditDialog::addAccepted(void) {
 }
 
 void ProfileEditDialog::editPalClicked(bool checked) {
-//	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
 	if(_confMgr == NULL || _paletteBox == NULL)
 		return;
 
@@ -822,5 +852,9 @@ void ProfileEditDialog::populatePalList(QString selected) {
 	// select the currently selected.
 	int idx = _paletteBox->findText(selected);
 	_paletteBox->setCurrentIndex(idx);
+}
+
+void ProfileEditDialog::helpClicked(bool checked) {
+	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
 }
 

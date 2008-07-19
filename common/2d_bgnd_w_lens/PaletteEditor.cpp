@@ -59,7 +59,6 @@ PaletteEditor::PaletteEditor(ConfigManager* confMgr, QWidget* parent, Qt::Window
 	tempLayout->addStretch(0);
 
 	tempButton = new QPushButton(tr("&Close"));
-	tempButton->setToolTip(tr("Close this dialog box."));
 	tempButton->setDefault(true);
 	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(closeClicked(bool)));
 	tempLayout->addWidget(tempButton);

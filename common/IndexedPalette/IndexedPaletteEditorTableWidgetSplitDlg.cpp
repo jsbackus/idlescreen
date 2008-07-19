@@ -50,13 +50,20 @@ IndexedPaletteEditorTableWidgetSplitDlg::IndexedPaletteEditorTableWidgetSplitDlg
 	QLabel* tempLabel = NULL;
 	QHBoxLayout* tmpHLyt = NULL;
 	QVBoxLayout* mainLayout = new QVBoxLayout();
+	QString tempToolTip;
 
 	tempLabel = new QLabel("Insert Cell At:");
+	tempToolTip = tr("Split the group of color cells up, such that there is a single undefined")+"\n"
+					+tr("color at the specified location, and the remaining colors remain")+"\n"
+					+tr("in groups around the specified location.");
+	tempWidget->setToolTip(tempToolTip);
 	mainLayout->addWidget(tempLabel);
 
 	// X
 	tmpHLyt = new QHBoxLayout();
+	tempToolTip = tr("The X coordinate of the single color cell.");
 	tempLabel = new QLabel("X:");
+	tempLabel->setToolTip(tempToolTip);
 	tmpHLyt->addWidget(tempLabel);
 	tmpHLyt->addStretch(0);
 	_xBox = new QSpinBox();
@@ -65,6 +72,7 @@ IndexedPaletteEditorTableWidgetSplitDlg::IndexedPaletteEditorTableWidgetSplitDlg
 	_xBox->setSingleStep(1);
 	_xBox->setRange(startX, stopX);
 	_xBox->setEnabled(startX < stopX);
+	_xBox->setToolTip(tempToolTip);
 	tmpHLyt->addWidget(_xBox);
 
 	tempWidget = new QWidget();
@@ -73,8 +81,10 @@ IndexedPaletteEditorTableWidgetSplitDlg::IndexedPaletteEditorTableWidgetSplitDlg
 	tempWidget = NULL;
 
 	// Y
+	tempToolTip = tr("The Y coordinate of the single color cell.");
 	tmpHLyt = new QHBoxLayout();
 	tempLabel = new QLabel("Y:");
+	tempLabel->setToolTip(tempToolTip);
 	tmpHLyt->addWidget(tempLabel);
 	tmpHLyt->addStretch(0);
 	_yBox = new QSpinBox();
@@ -83,6 +93,7 @@ IndexedPaletteEditorTableWidgetSplitDlg::IndexedPaletteEditorTableWidgetSplitDlg
 	_yBox->setSingleStep(1);
 	_yBox->setRange(startY, stopY);
 	_yBox->setEnabled(startY < stopY);
+	_yBox->setToolTip(tempToolTip);
 	tmpHLyt->addWidget(_yBox);
 
 	tempWidget = new QWidget();
