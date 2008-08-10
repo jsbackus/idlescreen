@@ -1,0 +1,55 @@
+
+@SET_MAKE@
+# These are all provided by autoconf, but not necessarily used.
+srcdir = @srcdir@
+bindir = @bindir@
+datadir = @datadir@
+datarootdir = @datarootdir@
+docdir = @docdir@
+dvidir = @dvidir@
+exec_prefix = @exec_prefix@
+htmldir = @htmldir@
+includedir = @includedir@
+infodir = @infodir@
+libdir = @libdir@
+libexedir = @libexedir@
+localedir = @localedir@
+localstatedir = @localstatedir@
+mandir = @mandir@
+pdfdir = @pdfdir@
+prefix = @prefix@
+psdir = @psdir@
+sbindir = @sbindir@
+sharedstatedir = @sharedstatedir@
+sysconfdir = @sysconfdir@
+
+QMAKE = @qmake@
+DOXYGEN = @doxygen@
+BINTRG = @bintrg@
+OTHRTRG = @othrtrg@
+TRG = $(BINTRG:%=bin/%) $(OTHRTRG)
+
+.PHONY : all clean
+
+all : $(TRG)
+
+bin/PlasmaLenz : PlasmaLenz/project_files/PlasmaLenz_scr.pro
+	cd $(srcdir)/PlasmaLenz/project_files/ && $(QMAKE) PlasmaLenz_scr.pro \
+	-o Makefile.PlasmaLenz_scr && \
+	$(MAKE) -f Makefile.PlasmaLenz_scr
+
+bin/PlasmaLenz_glut : PlasmaLenz/project_files/PlasmaLenz_glut.pro
+	cd $(srcdir)/PlasmaLenz/project_files/ && $(QMAKE) PlasmaLenz_glut.pro \
+	-o Makefile.PlasmaLenz_glut && \
+	$(MAKE) -f Makefile.PlasmaLenz_glut
+
+doc : 
+	cd doc; $(MAKE)
+
+clean :
+	-rm bin/PlasmaLenz bin/PlasmaLenz_glut
+	-cd $(srcdir)/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_scr
+	-cd $(srcdir)/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_glut
+#distclean
+
+#install : 

@@ -1,0 +1,30 @@
+
+@SET_MAKE@
+# These are all provided by autoconf, but not necessarily used.
+srcdir = @srcdir@
+bindir = @bindir@
+datadir = @datadir@
+datarootdir = @datarootdir@
+docdir = @docdir@
+dvidir = @dvidir@
+exec_prefix = @exec_prefix@
+htmldir = @htmldir@
+includedir = @includedir@
+infodir = @infodir@
+libdir = @libdir@
+libexedir = @libexedir@
+localedir = @localedir@
+localstatedir = @localstatedir@
+mandir = @mandir@
+pdfdir = @pdfdir@
+prefix = @prefix@
+psdir = @psdir@
+sbindir = @sbindir@
+sharedstatedir = @sharedstatedir@
+sysconfdir = @sysconfdir@
+
+DOXYGEN = @doxygen@
+
+#.PHONY : all
+
+#all : 
