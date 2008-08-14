@@ -25,6 +25,17 @@ sysconfdir = @sysconfdir@
 
 DOXYGEN = @doxygen@
 
-#.PHONY : all
+.PHONY : all clean distclean
 
-#all : 
+all : 
+	$(DOXYGEN) doxygen.conf
+	cd latex; $(MAKE) -f Makefile
+
+clean: 
+	-rm -rf *~ latex/ html/
+
+distclean:
+	-rm -rf *~ latex/ html/
+	-rm Makefile
+
+#install:

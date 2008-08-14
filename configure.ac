@@ -15,7 +15,7 @@ AC_CONFIG_SRCDIR([idlescreen_msvc.sln])
 AC_PROG_CXX
 
 # check for qmake and check its version
-AC_MSG_CHECKING([for qmake])
+#AC_MSG_CHECKING([for qmake])
 AC_PATH_PROGS(QMAKEBIN, [qmake-qt4 qmake])
 #AC_PATH_PROG(QMAKE, [qmake-qt4], [qmake-qt4],[0])
 #if test $QMAKE == 0 then
@@ -51,6 +51,21 @@ AC_SUBST(othrtrg, [])
 #end temporary
 
 # check for doxygen
+AC_ARG_ENABLE([doxygen], [AC_HELP_STRING([--enable-doxygen],
+		      [build class documentation with Doxygen default=no])],
+#		      [if test "$enableval" = "yes";
+#		      then AC_PATH_PROGS(doxygen, [doxygen])
+#		      fi])
+		      [enable_doxygen=$enableval],
+		      [enable_doxygen=no])
+
+if test "$enable_doxygen" == "yes";
+    then 
+    	 AC_PATH_PROGS(doxygen, [doxygen])
+	 AC_SUBST(othrtrg, [doc])
+    else AC_SUBST(doxygen, [doxygen])
+fi
+#AC_PATH_PROGS(doxygen, [doxygen])
 
 # check for necessary headers
 # NOTE:  Needs updated!
