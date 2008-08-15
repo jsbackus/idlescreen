@@ -43,7 +43,7 @@ AC_ARG_ENABLE([plasmalenz], [AC_HELP_STRING([--enable-plasmalenz],
 if test "$enable_plasmalenz" == "yes";
    then 
    	[qt_targets="$qt_targets PlasmaLenz"]
-	[data_targets="$data_targets PlasmaLenz/resource_files/external_defaults.xml"]
+	[data_targets="$data_targets PlasmaLenz.xml"]
 fi
 
 AC_ARG_ENABLE([plasmalenz-glut], [AC_HELP_STRING([--enable-plasmalenz-glut],
@@ -55,7 +55,7 @@ if test "$enable_plasmalenz_glut" == "yes";
    then
 	[qt_targets="$qt_targets PlasmaLenz_glut"]
    	[enable_glut="yes"]
-	[data_targets="$data_targets PlasmaLenz/resource_files/external_defaults.xml"]
+	[data_targets="$data_targets PlasmaLenz.xml"]
 fi
 
 AC_SUBST(bintrg, $qt_targets)

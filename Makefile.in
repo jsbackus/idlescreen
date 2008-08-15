@@ -34,6 +34,7 @@ BINTRG = @bintrg@
 INSTALL_BINTRG = $(BINTRG:%=bin/%)
 OTHRTRG = @othrtrg@
 DATATRG = @datatrg@
+INSTALL_DATATRG = $(DATATRG:%=config_files/%)
 TRG = $(INSTALL_BINTRG) $(OTHRTRG)
 
 .PHONY : all clean doc
@@ -71,8 +72,8 @@ distclean:
 install : 
 	mkdir -p $(bindir) $(datadir) $(sysconfdir)
 	$(INSTALL_PROGRAM) $(INSTALL_BINTRG) $(bindir)
-	$(INSTALL_DATA) $(DATATRG) $(datadir)
-	$(INSTALL_DATA) $(DATATRG) $(sysconfdir)
+	$(INSTALL_DATA) $(INSTALL_DATATRG) $(datadir)
+	$(INSTALL_DATA) $(INSTALL_DATATRG) $(sysconfdir)
 	-cd doc; $(MAKE) -f Makefile install
 
 #uninstall :

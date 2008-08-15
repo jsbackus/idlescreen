@@ -131,7 +131,7 @@ QString ConfigManager::getExternalDefaultConfigPath() {
 	}
 	retVal += installPath + "/defaults/";
 #else
-	retVal += "/etc/idlescreen/defaults/";
+	retVal += "/etc/idlescreen/";
 #endif
 
 	return retVal;

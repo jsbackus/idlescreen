@@ -136,7 +136,7 @@ Section "PlasmaLenz"
 
   # machine defaults file
   SetOutPath "$TARGET_DIR\defaults"
-  File /oname=PlasmaLenz.xml "..\PlasmaLenz\resource_files\external_defaults.xml"
+  File /oname=PlasmaLenz.xml "..\config_files\PlasmaLenz.xml"
 
   # registry entry for the redirector
   WriteRegStr SHCTX "Software\IdleScreen\Redirector" "PlasmaLenz" "$TARGET_DIR\bin\PlasmaLenz.scr"
@@ -153,7 +153,7 @@ Section "Randomizer"
 
   # machine defaults file
   SetOutPath "$TARGET_DIR\defaults"
-  File /oname=Randomizer.xml "..\Randomizer\resource_files\external_defaults.xml"
+  File /oname=Randomizer.xml "..\config_files\Randomizer.xml"
 
   # registry entry for the redirector
   WriteRegStr SHCTX "Software\IdleScreen\Redirector" "Randomizer" "$TARGET_DIR\bin\Randomizer.scr"
