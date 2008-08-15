@@ -15,47 +15,55 @@ AC_CONFIG_SRCDIR([idlescreen_msvc.sln])
 AC_PROG_CXX
 
 # check for qmake and check its version
-#AC_MSG_CHECKING([for qmake])
 AC_PATH_PROGS(QMAKEBIN, [qmake-qt4 qmake])
-#AC_PATH_PROG(QMAKE, [qmake-qt4], [qmake-qt4],[0])
-#if test $QMAKE == 0 then
-#   AC_PATH_PROG(QMAKE, [qmake], [qmake], [0])
-#   if test $QMAKE == 0 then
-#      AC_MSG_ERROR([Qt 4 is required!  Please visit www.trolltech.com.])
-#   fi
-#fi
-#if which qmake-qt4 > /dev/null
-#then
-	#m4_divert_text(1, [qmake-qt4 --version | grep "Qt version" |sed 's/\Using Qt version \([\.0-9]*\).*/\1/'])
-#	AC_MSG_RESULT([yes])
-#	AC_SUBST(QMAKE, qmake-qt4)
-#else
-#	AC_MSG_RESULT([no])
-#	AC_MSG_CHECKING([for qmake])
-#	if which qmake
-#	then
-#		AC_MSG_RESULT([yes])
-#		AC_SUBST(QMAKE, qmake)
-#	else
-#		AC_MSG_RESULT([no])
-#		AC_MSG_ERROR([Qt 4.0.0 or greater required!])
-#	fi
-#fi
 
-# check Qt version(?)
-AC_SUBST(qmake, $QMAKEBIN)
+#this should check version of Qmake, but it only works in Autoconf >2.62
+#AC_CACHE_CHECK([for Qt], [ac_cv_path_QMAKE],
+#		    [AC_PATH_PROGS_FEATURE_CHECK([QMAKEBIN], [qmake-qt4 qmake],
+#		    [[qmakeout=`$ac_path_QMAKEBIN --version | grep "Qt" | \
+#		    sed 's/.*\([0-9]*\)\.\([0-9]*\)\.\([0-9*]\).*/\1.\2.\3/'`
+#		    test "x$qmakeout" = x0 \
+#		    && ac_cv_path_QMAKEBIN=$ac_path_QMAKEBIN \
+#		    ac_path_QMAKEBIN_found=:]],
+#		    [AC_MSG_ERROR([could not find qmake for Qt 4!])])])
+#AC_SUBST([QMAKEBIN], [$ac_cv_path_QMAKEBIN])
 
-#temporary!!
-AC_SUBST(bintrg, [PlasmaLenz])
-AC_SUBST(othrtrg, [])
-#end temporary
+if test "yes" == "yes";
+   then enable_glut=no
+fi
+
+# enable/disable Qt build targets
+# have to do this first, so that we only check for the GLUT
+# headers if we are compiling anything that uses GLUT.
+AC_ARG_ENABLE([plasmalenz], [AC_HELP_STRING([--enable-plasmalenz],
+		      [build PlasmaLenz screen saver default=yes])],
+		      [enable_plasmalenz=$enableval],
+		      [enable_plasmalenz=yes])
+
+if test "$enable_plasmalenz" == "yes";
+   then 
+   	[qt_targets="$qt_targets PlasmaLenz"]
+	[data_targets="$data_targets PlasmaLenz/resource_files/external_defaults.xml"]
+fi
+
+AC_ARG_ENABLE([plasmalenz-glut], [AC_HELP_STRING([--enable-plasmalenz-glut],
+		      [build PlasmaLenz GLUT demo default=no])],
+		      [enable_plasmalenz_glut=$enableval],
+		      [enable_plasmalenz_glut=no])
+
+if test "$enable_plasmalenz_glut" == "yes";
+   then
+	[qt_targets="$qt_targets PlasmaLenz_glut"]
+   	[enable_glut="yes"]
+	[data_targets="$data_targets PlasmaLenz/resource_files/external_defaults.xml"]
+fi
+
+AC_SUBST(bintrg, $qt_targets)
+AC_SUBST(datatrg, $data_targets)
 
 # check for doxygen
 AC_ARG_ENABLE([doxygen], [AC_HELP_STRING([--enable-doxygen],
 		      [build class documentation with Doxygen default=no])],
-#		      [if test "$enableval" = "yes";
-#		      then AC_PATH_PROGS(doxygen, [doxygen])
-#		      fi])
 		      [enable_doxygen=$enableval],
 		      [enable_doxygen=no])
 
@@ -65,11 +73,28 @@ if test "$enable_doxygen" == "yes";
 	 AC_SUBST(othrtrg, [doc])
     else AC_SUBST(doxygen, [doxygen])
 fi
-#AC_PATH_PROGS(doxygen, [doxygen])
 
 # check for necessary headers
-# NOTE:  Needs updated!
-AC_CHECK_HEADERS([getopt.h bzlib.h])
+
+#math.h
+AC_CHECK_HEADER(math.h,,AC_MSG_ERROR([No math.h found.]))
+#stdio.h
+AC_CHECK_HEADER(stdio.h,,AC_MSG_ERROR([No stdio.h found.]))
+#signal.h
+AC_CHECK_HEADER(signal.h,,AC_MSG_ERROR([No signal.h found.]))
+#time.h
+AC_CHECK_HEADER(time.h,,AC_MSG_ERROR([No time.h found.]))
+#sys/time.h
+AC_CHECK_HEADER(sys/time.h,,AC_MSG_ERROR([No sys/time.h found.]))
+#X11/X.h
+AC_CHECK_HEADER(X11/X.h,,AC_MSG_ERROR([No X11/X.h found.]))
+#X11/Xlib.h
+AC_CHECK_HEADER(X11/Xlib.h,,AC_MSG_ERROR([No X11/Xlib.h found.]))
+#X11/keysym.h
+AC_CHECK_HEADER(X11/keysym.h,,AC_MSG_ERROR([No X11/keysym.h found.]))
+#X11/Intrinsic.h
+AC_CHECK_HEADER(X11/Intrinsic.h,,AC_MSG_ERROR([No X11/Intrinsic.h found.]))
+
 
 # check for OpenGL (taken from configure.in packaged with rss-glx.
 AC_CHECK_HEADER([GL/gl.h])
@@ -101,7 +126,14 @@ if test "x$ac_cv_lib_GLU_gluLookAt" = "xno"; then
 fi
 
 # check for freeglut
-
+if test "$enable_glut" == "yes";
+   then
+	#AC_CHECK_HEADER([GL/glut.h GL/freeglut_std.h],,
+	AC_CHECK_HEADER([GL/glut.h],,
+				   AC_MSG_ERROR([FreeGLUT not found!]))
+	AC_CHECK_HEADER([GL/freeglut_std.h],,
+				   AC_MSG_ERROR([FreeGLUT not found!]))
+fi
 
 AC_PROG_INSTALL
 

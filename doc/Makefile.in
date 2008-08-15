@@ -1,6 +1,7 @@
 
 @SET_MAKE@
 # These are all provided by autoconf, but not necessarily used.
+PACKAGE_TARNAME = @PACKAGE_TARNAME@
 srcdir = @srcdir@
 bindir = @bindir@
 datadir = @datadir@
@@ -8,15 +9,15 @@ datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
-htmldir = @htmldir@
+htmldir = @htmldir@/html
 includedir = @includedir@
 infodir = @infodir@
 libdir = @libdir@
-libexedir = @libexedir@
+libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
-pdfdir = @pdfdir@
+pdfdir = @pdfdir@/pdf
 prefix = @prefix@
 psdir = @psdir@
 sbindir = @sbindir@
@@ -24,6 +25,10 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 
 DOXYGEN = @doxygen@
+INSTALL = @INSTALL@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+
 
 .PHONY : all clean distclean
 
@@ -31,11 +36,17 @@ all :
 	$(DOXYGEN) doxygen.conf
 	cd latex; $(MAKE) -f Makefile
 
-clean: 
+clean : 
 	-rm -rf *~ latex/ html/
 
-distclean:
+distclean :
 	-rm -rf *~ latex/ html/
 	-rm Makefile
 
-#install:
+install :
+	mkdir -p $(pdfdir) $(htmldir)
+	$(INSTALL_DATA) latex/*.pdf $(pdfdir)
+	$(INSTALL_DATA) html/* $(htmldir)
+
+uninstall : 
+	-rm -rf $(docdir)

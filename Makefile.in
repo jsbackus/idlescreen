@@ -1,9 +1,10 @@
 
 @SET_MAKE@
 # These are all provided by autoconf, but not necessarily used.
+PACKAGE_TARNAME = @PACKAGE_TARNAME@
 srcdir = @srcdir@
 bindir = @bindir@
-datadir = @datadir@
+datadir = @datadir@/${PACKAGE_TARNAME}
 datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
@@ -12,7 +13,7 @@ htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 libdir = @libdir@
-libexedir = @libexedir@
+libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
@@ -21,13 +22,19 @@ prefix = @prefix@
 psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
-sysconfdir = @sysconfdir@
+sysconfdir = @sysconfdir@/${PACKAGE_TARNAME}
 
-QMAKE = @qmake@
+INSTALL = @INSTALL@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+
+QMAKE = @QMAKEBIN@
 DOXYGEN = @doxygen@
 BINTRG = @bintrg@
+INSTALL_BINTRG = $(BINTRG:%=bin/%)
 OTHRTRG = @othrtrg@
-TRG = $(BINTRG:%=bin/%) $(OTHRTRG)
+DATATRG = @datatrg@
+TRG = $(INSTALL_BINTRG) $(OTHRTRG)
 
 .PHONY : all clean doc
 
@@ -61,4 +68,11 @@ distclean:
 	-cd doc; $(MAKE) -f Makefile distclean
 	-rm configure Makefile config.status config.log
 
-#install : 
+install : 
+	mkdir -p $(bindir) $(datadir) $(sysconfdir)
+	$(INSTALL_PROGRAM) $(INSTALL_BINTRG) $(bindir)
+	$(INSTALL_DATA) $(DATATRG) $(datadir)
+	$(INSTALL_DATA) $(DATATRG) $(sysconfdir)
+	-cd doc; $(MAKE) -f Makefile install
+
+#uninstall :
