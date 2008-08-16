@@ -120,8 +120,12 @@ QString ConfigManager::getNextScr() {
 	}
 
 	int pick = -1;
-	if(_bRandom) {
-		int numScrs = _scrList.count();
+	int numScrs = _scrList.count();
+	if(_bRandom && numScrs > 1) {
+		// make sure that there are more scrs than the size of the history.
+		if(numScrs < _historyList->getHistoryMaxSize()) {
+			_historyList->setHistoryMaxSize(numScrs-1);
+		}
 		while(pick == -1) {
 			pick = rand()%numScrs;
 			if(_historyList->isInHistory(pick)) {

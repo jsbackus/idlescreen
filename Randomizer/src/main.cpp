@@ -39,7 +39,7 @@ using namespace std;
 #include "SaverRunner.h"
 
 int openConfigDialog(ConfigManager* manager);
-int runScr(ConfigManager* manager, QStringList);
+int runScr(ConfigManager* manager, QStringList, bool bFullScreen=true);
 
 int main(int argc, char** argv) {
 
@@ -65,13 +65,13 @@ int main(int argc, char** argv) {
 	//fullscreen?
 	temp = QString("/s");
 	if(args.count() > 0 && args.at(0).compare(temp, Qt::CaseInsensitive) == 0) {
-		return runScr(&manager, args);
+		return runScr(&manager, args, true);
 	} 
 
 	//thumbnail?
 	temp = QString("/p");
 	if(args.count() > 1 && args.at(0).compare(temp, Qt::CaseInsensitive) == 0) {
-		return runScr(&manager, args);
+		return runScr(&manager, args, false);
 	}
 
 	//do config
@@ -104,7 +104,7 @@ int openConfigDialog(ConfigManager* manager) {
 	return app.exec();
 }
 
-int runScr(ConfigManager* manager, QStringList args) {
+int runScr(ConfigManager* manager, QStringList args, bool bFullScreen) {
 	//make sure that the GPL has been accepted.
 	if(!manager->getGPLAccepted()) {
 		return 0;
@@ -117,7 +117,7 @@ int runScr(ConfigManager* manager, QStringList args) {
 	// blank screen behind screen savers to hide the desktop and windows,
 	// if enabled
 	QMainWindow* vail = NULL;
-	if(manager->getBlankDesktop()) {
+	if(manager->getBlankDesktop() && bFullScreen) {
 		QGraphicsScene* scene = new QGraphicsScene();;
 		scene->setBackgroundBrush(Qt::black);
 		QGraphicsView* view = new QGraphicsView(scene);

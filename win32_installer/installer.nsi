@@ -193,6 +193,8 @@ Section "Uninstall"
   RMDir $INSTDIR\doc
   Delete "$INSTDIR\bin\*"
   RMDir $INSTDIR\bin
+  Delete "$INSTDIR\defaults\*"
+  RMDir $INSTDIR\defaults
   Delete "$INSTDIR\$UNINST_NAME"
   Delete "$INSTDIR\*"  #don't know why this is necessary...
   RMDir $INSTDIR
