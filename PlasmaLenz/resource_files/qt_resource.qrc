@@ -3,5 +3,6 @@
 	<file alias="defaults.xml">defaults.xml</file>
 	<file alias="app_icon.png">app_icon.png</file>
 	<file alias="gplv2.txt">../../common/gpl_related/gplv2.txt</file>
+	<file alias="help/index.html">html/index.html</file>
 </qresource>
 </RCC>

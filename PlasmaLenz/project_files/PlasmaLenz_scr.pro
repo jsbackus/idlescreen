@@ -28,6 +28,7 @@ SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteEditorTableWidgetSplitDlg
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteProfile.cpp
 SOURCES		+=	$$COMMON_PATH/utility/misc_funcs.cpp
 SOURCES		+=	$$COMMON_PATH/utility/ImportExportDialog.cpp
+SOURCES		+=	$$COMMON_PATH/utility/HelpDialog.cpp
 SOURCES		+=	$$COMMON_PATH/gpl_related/gpldialog.cpp
 SOURCES		+=	$$COMMON_PATH/plasma/PlasmaAlgorithm.cpp
 
@@ -62,6 +63,7 @@ HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteEditorTableWidgetSplitDlg
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteProfile.h
 HEADERS		+=	$$COMMON_PATH/utility/misc_funcs.h
 HEADERS		+=	$$COMMON_PATH/utility/ImportExportDialog.h
+HEADERS		+=	$$COMMON_PATH/utility/HelpDialog.h
 HEADERS		+=	$$COMMON_PATH/gpl_related/gpldialog.h
 HEADERS		+=	$$COMMON_PATH/plasma/PlasmaAlgorithm.h
 HEADERS		+=	$$COMMON_PATH/core/opengl_main.h

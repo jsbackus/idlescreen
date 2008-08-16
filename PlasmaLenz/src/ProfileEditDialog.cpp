@@ -33,6 +33,7 @@
 #include "ProfileEditDialog.h"
 #include "2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h"
 #include "utility/misc_funcs.h"
+#include "utility/HelpDialog.h"
 
 ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr, QWidget* parent, Qt::WindowFlags f) {
 	QDialog(parent, f);
@@ -802,6 +803,12 @@ void ProfileEditDialog::populatePalList(QString selected) {
 }
 
 void ProfileEditDialog::helpClicked(bool checked) {
-	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+	//QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+	HelpDialog* dlg = new HelpDialog();
+	if(dlg != NULL) {
+		dlg->exec();
+		delete dlg;
+		dlg = NULL;
+	}
 }
 

@@ -89,6 +89,9 @@ nmake release-clean
 				RelativePath="..\..\..\common\gpl_related\gpldialog.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\common\utility\HelpDialog.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\common\utility\ImportExportDialog.cpp">
 			</File>
 			<File
@@ -203,6 +206,9 @@ nmake release-clean
 			</File>
 			<File
 				RelativePath="..\..\..\common\gpl_related\gpldialog.h">
+			</File>
+			<File
+				RelativePath="..\..\..\common\utility\HelpDialog.h">
 			</File>
 			<File
 				RelativePath="..\..\..\common\utility\ImportExportDialog.h">
