@@ -44,6 +44,7 @@ if test "$enable_plasmalenz" == "yes";
    then 
    	[qt_targets="$qt_targets PlasmaLenz"]
 	[data_targets="$data_targets PlasmaLenz.xml"]
+	[man_targets="$man_targets PlasmaLenz/man_page/PlasmaLenz.1"]
 fi
 
 AC_ARG_ENABLE([plasmalenz-glut], [AC_HELP_STRING([--enable-plasmalenz-glut],
@@ -56,10 +57,12 @@ if test "$enable_plasmalenz_glut" == "yes";
 	[qt_targets="$qt_targets PlasmaLenz_glut"]
    	[enable_glut="yes"]
 	[data_targets="$data_targets PlasmaLenz.xml"]
+	[man_targets="$man_targets PlasmaLenz/man_page/PlasmaLenz.1"]
 fi
 
 AC_SUBST(bintrg, $qt_targets)
 AC_SUBST(datatrg, $data_targets)
+AC_SUBST(mantrg, $man_targets)
 
 # check for doxygen
 AC_ARG_ENABLE([doxygen], [AC_HELP_STRING([--enable-doxygen],

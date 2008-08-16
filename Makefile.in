@@ -16,7 +16,7 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-mandir = @mandir@
+mandir = @mandir@/man1
 pdfdir = @pdfdir@
 prefix = @prefix@
 psdir = @psdir@
@@ -32,9 +32,13 @@ QMAKE = @QMAKEBIN@
 DOXYGEN = @doxygen@
 BINTRG = @bintrg@
 INSTALL_BINTRG = $(BINTRG:%=bin/%)
+UNINSTALL_BINTRG = $(BINTRG:%=$(bindir)/%)
 OTHRTRG = @othrtrg@
 DATATRG = @datatrg@
 INSTALL_DATATRG = $(DATATRG:%=config_files/%)
+MANTRG = @mantrg@
+INSTALL_MANTRG = $(MANTRG)
+UNINSTALL_MANTRG := $(mandir)/$(notdir $(MANTRG))
 TRG = $(INSTALL_BINTRG) $(OTHRTRG)
 
 .PHONY : all clean doc
@@ -70,10 +74,14 @@ distclean:
 	-rm configure Makefile config.status config.log
 
 install : 
-	mkdir -p $(bindir) $(datadir) $(sysconfdir)
+	mkdir -p $(bindir) $(datadir) $(sysconfdir) $(mandir)
 	$(INSTALL_PROGRAM) $(INSTALL_BINTRG) $(bindir)
 	$(INSTALL_DATA) $(INSTALL_DATATRG) $(datadir)
 	$(INSTALL_DATA) $(INSTALL_DATATRG) $(sysconfdir)
+	$(INSTALL_DATA) $(INSTALL_MANTRG) $(mandir)
 	-cd doc; $(MAKE) -f Makefile install
 
-#uninstall :
+uninstall :
+	-cd doc; $(MAKE) -f Makefile uninstall
+	-rm $(UNINSTALL_BINTRG) $(UNINSTALL_MANTRG)
+	-rm -rf $(datadir) $(sysconfdir)
