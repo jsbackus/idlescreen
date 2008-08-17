@@ -1,0 +1,30 @@
+ Instructions For Compiling and Installing the Idle Screen Project On UNIX
+                                 Variants
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+To compile the Idle Screen Project on any of the UNIX variants, the
+following programs and libraries will need to be installed:
+* XScreenSaver available at http://www.jwz.org/xscreensaver/
+* Qt 4 available from Trolltech at http://www.trolltech.com/
+* The Free OpenGL User Toolkit (GLUT) (for the GLUT demos only) available at:
+  http://freeglut.sourceforge.net/
+* GNU Make
+* GCC
+* Doxygen (to generate code documentation) available at:
+  http://www.stack.nl/~dimitri/doxygen/
+
+After you have the prerequisites installed and working, simply type the
+following from the base directory:
+    ./configure
+    make
+    make install
+
+The ./configure script has several options, which can be viewed by typing
+    ./configure --help
+Each screen saver can be enabled or disabled.  The same goes for the GLUT
+versions as well as the Doxygen documentation.  You can also disable the
+ability to modify the XScreenSaver config file to add in the screen savers
+in the project.
+
+If you experience any problems, please check the FAQs and the Wiki, available
+at http://idlescreen.googlepages.com.

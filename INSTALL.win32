@@ -1,0 +1,30 @@
+ Instructions For Compiling and Installing the Idle Screen Project On Windows
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+To compile the Idle Screen Project on Windows, the following libraries will
+need to be installed:
+* Qt 4 available from Trolltech at http://www.trolltech.com
+* The OpenGL User Toolkit (GLUT) (for the GLUT demos only) available at:
+  http://www.opengl.org/resources/libraries/glut
+* NSIS (to build the installer) available at http://nsis.sourceforge.net
+
+In order to compile the source code in Microsoft Visual Studio .NET 2003 and
+later, including Microsoft Visual Studio Express, first set the environment
+variable QTDIR to the location of the Qt libraries.  For instance, if you
+installed the libraries to:
+    C:\Qt\4.4.0
+Then set QTDIR as follows:
+    QTDIR = C:\Qt\4.4.0
+You should have bin\ and lib\ directories (among others) below %QTDIR%.  After
+that, it should simply be a matter compiling the main solution:
+    ./idlescreen_msvc.sln
+
+I haven't attempted to compile the screen savers with MinGW, but it should
+be possible.  You will need to run qmake on each .pro file found in:
+    <scr name>/project_files/
+then run "makensis" on:
+    ./win32_installer/installer.nsi
+to build the installer.
+
+If you experience any problems, please check the FAQs and the Wiki, available
+at http://idlescreen.googlepages.com.
