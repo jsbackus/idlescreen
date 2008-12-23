@@ -14,9 +14,6 @@ AC_CONFIG_SRCDIR([idlescreen_msvc.sln])
 
 AC_PROG_CXX
 
-# find a version of AWK to modify xscreensaver config.
-AC_PROG_AWK
-
 # check for qmake and check its version
 AC_PATH_PROGS(QMAKEBIN, [qmake-qt4 qmake])
 

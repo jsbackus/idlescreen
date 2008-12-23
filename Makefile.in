@@ -30,7 +30,6 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 
 QMAKE = @QMAKEBIN@
 DOXYGEN = @doxygen@
-AWK = @AWK@
 BINTRG = @bintrg@
 INSTALL_BINTRG = $(BINTRG:%=bin/%)
 UNINSTALL_BINTRG = $(BINTRG:%=$(bindir)/%)
@@ -41,6 +40,10 @@ MANTRG = @mantrg@
 INSTALL_MANTRG = $(MANTRG)
 UNINSTALL_MANTRG := $(mandir)/$(notdir $(MANTRG))
 TRG = $(INSTALL_BINTRG) $(OTHRTRG)
+
+INSTALL_XSCR = idlescreen-glx.conf
+xscrdatadir = /usr/share/xscreensaver/hacks.conf.d/
+UNINSTALL_XSCR = $(xscrdatadir)/$(INSTALL_XSCR)
 
 .PHONY : all clean doc
 
@@ -80,9 +83,10 @@ install :
 	$(INSTALL_DATA) $(INSTALL_DATATRG) $(datadir)
 	$(INSTALL_DATA) $(INSTALL_DATATRG) $(sysconfdir)
 	$(INSTALL_DATA) $(INSTALL_MANTRG) $(mandir)
+	-$(INSTALL_DATA) $(INSTALL_XSCR) $(xscrdatadir)
 	-cd doc; $(MAKE) -f Makefile install
 
 uninstall :
 	-cd doc; $(MAKE) -f Makefile uninstall
-	-rm $(UNINSTALL_BINTRG) $(UNINSTALL_MANTRG)
+	-rm -f $(UNINSTALL_BINTRG) $(UNINSTALL_MANTRG) $(UNINSTALL_XSCR)
 	-rm -rf $(datadir) $(sysconfdir)
