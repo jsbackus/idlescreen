@@ -14,6 +14,11 @@ AC_CONFIG_SRCDIR([idlescreen_msvc.sln])
 
 AC_PROG_CXX
 
+# check for update-xscreensaver-hacks
+AC_PATH_PROG(UPDATEXSCR, update-xscreensaver-hacks,
+			 [@echo ""; echo ""; \
+			 echo 'Please run update-xscreensaver-hacks!'])
+
 # check for qmake and check its version
 AC_PATH_PROGS(QMAKEBIN, [qmake-qt4 qmake])
 
