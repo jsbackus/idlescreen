@@ -65,6 +65,7 @@ public slots:
 	void applyClicked(bool checked = false);
 	void cancelClicked(bool checked = false);
 	void aboutClicked(bool checked = false);
+	void helpClicked(bool checked = false);
 
 	//selected list related
 	void addListClicked(bool checked = false);

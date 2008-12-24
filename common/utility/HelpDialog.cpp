@@ -37,7 +37,7 @@
 
 #include "HelpDialog.h"
 
-HelpDialog::HelpDialog(QWidget* parent, Qt::WindowFlags f) {
+HelpDialog::HelpDialog(QString urlStr, QWidget* parent, Qt::WindowFlags f) {
 	QDialog(parent, f);
 
 	setWindowTitle(tr("Help"));
@@ -55,11 +55,12 @@ HelpDialog::HelpDialog(QWidget* parent, Qt::WindowFlags f) {
 		return;
 	//QUrl url(QString("file:///://gplv2.txt"));
 	//QUrl url(QString("file:///D:/tmp/html/test.html"));
-	QUrl url(QString("qrc:/help/index.html"));
+	//QUrl url(QString("qrc:/help/index.html"));
+	QUrl urlObj(urlStr);
 	
 	//QMessageBox::information(this, url.toString(), boolToString(url.isValid()), QMessageBox::Ok);
 
-	browser->setSource(url);
+	browser->setSource(urlObj);
 	layout->addWidget(browser);
 
 	//buttons at bottom

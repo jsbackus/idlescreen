@@ -4,5 +4,7 @@
 	<file alias="app_icon.png">app_icon.png</file>
 	<file alias="gplv2.txt">../../common/gpl_related/gplv2.txt</file>
 	<file alias="help/index.html">html/index.html</file>
+	<file alias="help/ProfileEditDialog.html">html/index.html</file>
+	<file alias="help/IndexedPaletteDialog.html">html/index.html</file>
 </qresource>
 </RCC>

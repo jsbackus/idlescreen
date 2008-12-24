@@ -36,7 +36,8 @@ class HelpDialog : public QDialog {
 	Q_OBJECT
 
 public:
-	HelpDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
+  HelpDialog(QString urlStr = "qrc:/help/index.html", QWidget* parent = 0,
+	     Qt::WindowFlags f = 0);
 
 //public slots:
 };

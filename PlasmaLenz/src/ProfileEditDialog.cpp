@@ -804,7 +804,7 @@ void ProfileEditDialog::populatePalList(QString selected) {
 
 void ProfileEditDialog::helpClicked(bool checked) {
 	//QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
-	HelpDialog* dlg = new HelpDialog();
+	HelpDialog* dlg = new HelpDialog("qrc:/help/ProfileEditDialog.html");
 	if(dlg != NULL) {
 		dlg->exec();
 		delete dlg;

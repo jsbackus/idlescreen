@@ -46,7 +46,11 @@ xscrdatadir = /usr/share/xscreensaver/hacks.conf.d/
 UNINSTALL_XSCR = $(xscrdatadir)/$(INSTALL_XSCR)
 UPDATEXSCR = @UPDATEXSCR@
 
-.PHONY : all clean doc
+.PHONY : forceall all clean doc
+
+forceall :
+	cd bin; rm *
+	$(MAKE) all
 
 all : $(TRG)
 

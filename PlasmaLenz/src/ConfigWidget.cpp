@@ -40,7 +40,7 @@
 #include <QDir>
 
 //temp
-#include <QMessageBox>
+//#include <QMessageBox>
 //end temp
 
 #include "../../common/2d_bgnd_w_lens/ConfigWidget.h"
@@ -48,6 +48,7 @@
 #include "../../common/utility/ImportExportDialog.h"
 #include "../../common/utility/misc_funcs.h"
 #include "../../common/utility/AboutDialog.h"
+#include "../../common/utility/HelpDialog.h"
 #include "../../common/2d_bgnd_w_lens/project_specific_extern_defs.h"
 #include "ProfileEditDialog.h"
 
@@ -145,7 +146,7 @@ void ConfigWidget::setup(void) {
 	mainLayout->addWidget(tempWidget);
 	tempWidget = NULL;
 
-	//About, OK, Apply, and Cancel buttons
+	//About, Help, OK, Apply, and Cancel buttons
 	QHBoxLayout* botButtonsLayout = new QHBoxLayout();
 	
 	tempButton = new QPushButton(tr("A&bout"));
@@ -153,6 +154,12 @@ void ConfigWidget::setup(void) {
 	botButtonsLayout->addWidget(tempButton);
 	tempButton = NULL;
 
+	tempButton = new QPushButton(tr("&Help"));
+	tempButton->setDefault(false);
+	tempButton->setAutoDefault(false);
+	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(helpClicked(bool)));
+	botButtonsLayout->addWidget(tempButton);
+	tempButton = NULL;
 
 	botButtonsLayout->addStretch(0);
 
@@ -671,4 +678,12 @@ void ConfigWidget::paletteEditorClicked(bool checked) {
 	//clean up
 	delete dlg;
 	dlg = NULL;
+}
+void ConfigWidget::helpClicked(bool checked) {
+	HelpDialog* dlg = new HelpDialog("qrc:/help/index.html");
+	if(dlg != NULL) {
+		dlg->exec();
+		delete dlg;
+		dlg = NULL;
+	}
 }

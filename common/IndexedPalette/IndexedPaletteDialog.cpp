@@ -42,6 +42,7 @@
 #include "IndexedPaletteDialog.h"
 //#include "IndexedPaletteEditorRawWidget.h"
 #include "IndexedPaletteEditorTableWidget.h"
+#include "../utility/HelpDialog.h"
 
 IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QWidget* parent, Qt::WindowFlags f) {
 	QDialog(parent, f);
@@ -519,5 +520,11 @@ void IndexedPaletteDialog::resizeClicked(bool checked) {
 	}
 }
 void IndexedPaletteDialog::helpClicked(bool checked) {
-	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+//	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+	HelpDialog* dlg = new HelpDialog("qrc:/help/IndexedPaletteDialog.html");
+	if(dlg != NULL) {
+		dlg->exec();
+		delete dlg;
+		dlg = NULL;
+	}
 }
