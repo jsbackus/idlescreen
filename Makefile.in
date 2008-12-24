@@ -49,7 +49,7 @@ UPDATEXSCR = @UPDATEXSCR@
 .PHONY : forceall all clean doc
 
 forceall :
-	cd bin; rm *
+	-cd bin; rm *
 	$(MAKE) all
 
 all : $(TRG)
