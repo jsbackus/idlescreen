@@ -53,12 +53,10 @@ HelpDialog::HelpDialog(QString urlStr, QWidget* parent, Qt::WindowFlags f) {
 	QTextBrowser* browser = new QTextBrowser();
 	if(browser == NULL)
 		return;
-	//QUrl url(QString("file:///://gplv2.txt"));
-	//QUrl url(QString("file:///D:/tmp/html/test.html"));
-	//QUrl url(QString("qrc:/help/index.html"));
+
 	QUrl urlObj(urlStr);
 	
-	//QMessageBox::information(this, url.toString(), boolToString(url.isValid()), QMessageBox::Ok);
+	//QMessageBox::information(this, urlObj.toString(), boolToString(urlObj.isValid()), QMessageBox::Ok);
 
 	browser->setSource(urlObj);
 	layout->addWidget(browser);
