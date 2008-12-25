@@ -395,7 +395,6 @@ void IndexedPaletteEditorTableWidget::insertTriggered() {
 	IndexedPaletteEditorTableWidgetSplitDlg dlg(startX, startX+width-1, startY, startY+height-1);
 	if(dlg.exec() == QDialog::Rejected)
 		return;
-
 	int retX = dlg.getX();
 	int retY = dlg.getY();
 

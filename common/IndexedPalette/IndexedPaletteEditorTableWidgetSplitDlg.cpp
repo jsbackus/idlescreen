@@ -21,6 +21,7 @@
  *     http://trolltech.com/
  * 
  */
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -40,7 +41,6 @@ IndexedPaletteEditorTableWidgetSplitDlg::IndexedPaletteEditorTableWidgetSplitDlg
 	_xBox = NULL;
 	_yBox = NULL;
 
-
 	setWindowTitle(tr("Insert Color"));
 	QIcon icon(":/app_icon.png");
 	setWindowIcon(icon);
@@ -50,13 +50,17 @@ IndexedPaletteEditorTableWidgetSplitDlg::IndexedPaletteEditorTableWidgetSplitDlg
 	QLabel* tempLabel = NULL;
 	QHBoxLayout* tmpHLyt = NULL;
 	QVBoxLayout* mainLayout = new QVBoxLayout();
+	if(mainLayout == NULL)
+	  return;
 	QString tempToolTip;
 
 	tempLabel = new QLabel("Insert Cell At:");
+	if(tempLabel == NULL)
+	  return;
 	tempToolTip = tr("Split the group of color cells up, such that there is a single undefined")+"\n"
 					+tr("color at the specified location, and the remaining colors remain")+"\n"
 					+tr("in groups around the specified location.");
-	tempWidget->setToolTip(tempToolTip);
+	tempLabel->setToolTip(tempToolTip);
 	mainLayout->addWidget(tempLabel);
 
 	// X
