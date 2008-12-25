@@ -4,7 +4,10 @@
 	<file alias="app_icon.png">app_icon.png</file>
 	<file alias="gplv2.txt">../../common/gpl_related/gplv2.txt</file>
 	<file alias="help/index.html">html/index.html</file>
+	<file alias="help/MainDialog.jpg">html/MainDialog.jpg</file>
 	<file alias="help/ProfileEditDialog.html">html/ProfileEditDialog.html</file>
+	<file alias="help/ProfileEditDialog.jpg">html/ProfileEditDialog.jpg</file>
 	<file alias="help/IndexedPaletteDialog.html">../../common/IndexedPalette/resource_files/IndexedPaletteDialog.html</file>
+	<file alias="help/IndexedPaletteDialog.jpg">../../common/IndexedPalette/resource_files/IndexedPaletteDialog.jpg</file>
 </qresource>
 </RCC>

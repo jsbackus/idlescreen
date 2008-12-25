@@ -199,6 +199,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	if(palGroupBox == NULL)
 		return;
 	palGroupBox->setCheckable(false);
+	palGroupBox->setFlat(false);
 
 	QHBoxLayout* palBoxLayout = new QHBoxLayout();
 
@@ -241,6 +242,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	QGroupBox* animPalBox = new QGroupBox(tr("Animate Palette"));
 	animPalBox->setCheckable(true);
 	animPalBox->setChecked(_bAnimatePalette);
+	animPalBox->setFlat(false);
 	animPalBox->setToolTip(tr("This will enable rotating the palette in both the X and Y directions by the specified speed."));
 	QObject::connect(animPalBox, SIGNAL(clicked(bool)), this, SLOT(animatePalClicked(bool)));
 
@@ -284,6 +286,12 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	animPalBox->setLayout(animPalLayout);
 	mainLayout->addWidget(animPalBox);
 
+	QGroupBox* fieldBox = new QGroupBox(tr("Field Generation"));
+	if(fieldBox == NULL)
+	  return;
+	fieldBox->setCheckable(false);
+	fieldBox->setFlat(false);
+
 	QHBoxLayout* ccLayout = new QHBoxLayout();
 
 	tempWidget = new QLabel(tr("Less Volatile"));
@@ -320,9 +328,8 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 								+tr("to the nearest valid color if checked, or wrap around if unchecked."));
 	ccLayout->addWidget(_clampColorBox);
 
-	tempWidget = new QWidget();
-	tempWidget->setLayout(ccLayout);
-	mainLayout->addWidget(tempWidget);
+	fieldBox->setLayout(ccLayout);
+	mainLayout->addWidget(fieldBox);
 	tempWidget = NULL;
 
 	// Begin SphericalLensProfile related
@@ -365,6 +372,8 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	QGroupBox* lensBox = new QGroupBox(tr("Lenses"));
 	if(lensBox == NULL)
 	  return;
+	lensBox->setFlat(false);
+	lensBox->setCheckable(false);
 	QHBoxLayout* lensLayout = new QHBoxLayout();
 	if(lensLayout == NULL)
 	  return;

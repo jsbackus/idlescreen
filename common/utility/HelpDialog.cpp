@@ -79,5 +79,6 @@ HelpDialog::HelpDialog(QString urlStr, QWidget* parent, Qt::WindowFlags f) {
 	tempWidget = NULL;
 
 	setLayout(layout);
+	resize(500,300);
 }
 
