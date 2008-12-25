@@ -2,7 +2,7 @@ First and foremost, thank you for downloading the Idle Screen Project!  The
 Idle Screen Project is a collection of cross-platform, open source screen
 savers, released under the GPL version 2.  More information on the project
 can be found at:
-http://idlescreen.googlepages.com
+http://sites.google.com/site/idlescreenproject
 
 And more information on the GPLv2 can be found at:
 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -29,3 +29,7 @@ Since 0.03:
 * Added in Randomizer, a random screen saver runner for Windows platforms.
 * Added a Microsoft Visual Studio solution to compile the whole project,
   including the installer.
+* Updated all files to reflect web page change.
+* Added a HelpDialog utility class that uses QTextBrowser.
+* Added help to certain dialogs.
+* Modified HelpDialog to accept the url to load as a QString parameter.

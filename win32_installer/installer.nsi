@@ -83,13 +83,13 @@ section "Base Files"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
 	"InstallLocation" "$TARGET_DIR"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
-	"HelpLink"  "http://idlescreen.googlepages.com"
+	"HelpLink"  "http://sites.google.com/site/idlescreenproject"
 
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
-	"URLUpdateInfo" "http://idlescreen.googlepages.com"
+	"URLUpdateInfo" "http://sites.google.com/site/idlescreenproject"
 
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
-	"URLInfoAbout" "http://idlescreen.googlepages.com"
+	"URLInfoAbout" "http://sites.google.com/site/idlescreenproject"
 
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
 	"DisplayVersion" ${VERSION}

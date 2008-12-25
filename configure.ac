@@ -4,7 +4,7 @@
 AC_INIT(IdleScreen, version-0.4)
 
 AC_COPYRIGHT([Copyright (c) 2008 Jeff Backus and the IdleScreen Project.
-http://idlescreen.googlepages.com  Released under the GPLv2.])
+http://sites.google.com/site/idlescreenproject  Released under the GPLv2.])
 
 AC_REVISION([$Revision 1.00$])
 

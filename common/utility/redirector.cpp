@@ -103,7 +103,7 @@ bool getPathFromRegistry(char* keyName, char* path, DWORD buffSize, bool bSearch
  */
 void displayAbout() {
 	cout<<endl<<"Executable Redirector version "<<VERSION_NUMBER<<" is part of the Idle Screen Project."<<endl;
-	cout<<"Please visit http://idlescreen.googlepages.com for more information."<<endl;
+	cout<<"Please visit http://sites.google.com/site/idlescreenproject for more information."<<endl;
 	exit(0);
 }
 
