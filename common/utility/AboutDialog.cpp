@@ -56,7 +56,7 @@ AboutDialog::AboutDialog(QString appName, QString versionStr, QWidget* parent, Q
 	layout->addWidget(tempLabel);
 	tempLabel = new QLabel("Part of the Idle Screen Project");
 	layout->addWidget(tempLabel);
-	tempLabel = new QLabel("http://idlescreen.googlepages.com");
+	tempLabel = new QLabel("http://sites.google.com/site/idlescreenproject/");
 	layout->addWidget(tempLabel);
 	tempLabel = new QLabel("");
 	layout->addWidget(tempLabel);

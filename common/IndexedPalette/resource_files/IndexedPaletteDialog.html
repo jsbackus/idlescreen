@@ -5,7 +5,134 @@
 <BODY>
 <H2>Palette Editor</H2><br>
 <img src="IndexedPaletteDialog.jpg" width="640" height="785" border="0" alt="" align="middle">
-<p>Under Construction</p>
+<h3>The Basics</h3>
+<p>In the days before "true color" was prevalent, graphics cards
+had to maintain a list of colors, called a palette, because
+the amount of memory available to the cards was very limited.
+Palettes as defined here are the same in that they are a 
+fixed-length
+list of available colors in a specific order.  These
+palettes go a step further and provide a second dimension, the
+meaning of which is different depending on the application
+using the palette.
+The X direction (from left to right), is referred
+to as the primary direction, and the Y direction (from top
+to bottom) is referred to as the secondary direction.  These
+palettes also have the ability to interpolate the undefined
+colors between two defined colors.  This is useful for building
+palettes that contain gradients.  The last bit of data
+contained with in each palette is a default color that is
+used when a color is undefined and color interpolation is
+not enabled.</p>
+<h3>Parameter Specifics</h3>
+<p>Below is a list of parameters and their meanings.</p>
+<ul><li><b>Palette Name</b> - This is the symbolic name
+of the palette.  The value of this field must be
+unique per application.</li>
+<li><b>Default Color</b> - Clicking on this button will allow
+you to define the default color for this palette.  The default
+is black (#000000).</li>
+<li><b>Width, Height</b> - These are the width (X) and
+height (Y) dimensions of the palette.  After changing
+the numbers, it is necessary to click the "Resize" button to
+actually resize the palette.  This isn't done by default, 
+because this can be a fairly CPU intensive task.  Note: if
+you chose a dimension that is <i>smaller</i> than the current
+dimension, you will lose any colors that are outside of the new
+dimension.</li>
+<li><b>Interpolate Colors</b> - When this is checked, the
+palette will attempt to calculate the values of all undefined
+colors by interpolating between defined colors when the
+palette is instantiated in the client application.</li>
+<li><b>Linear Interpolation</b> - When this is selected, 
+linear interpolation is used, of the form 
+C(i) = C(s) + ( (i - start) / (stop - start) ) *
+C(stop - start).</li>
+<li><b>Sinusoidal Interpolation</b> - When this is selected,
+sinusoidal interpolation is used, of the form 
+C(i) = C(s) + sin( (i - start)*PI / (2*(stop - start)) ) *
+C(stop - start).  This mode may produce smoother color
+gradients in some cases.</li>
+<li><b>Wrap Colors</b> - When this option is enabled, during
+the interpolation phase, the palette will wrap around to the 
+first defined color when interpolating the values for all
+undefined colors after the last defined color.</li>
+</ul>
+<h3>How To Edit the Colors</h3>
+<p>The region in the middle contains a table of the currently
+defined colors, with undefined colors grouped together.  Below
+this table is a preview area which shows how the palette will
+look when loaded in the client program.  The preview
+area will show the effects of interpolation when
+it is enabled.  To define a previously undefined color,
+first figure out where you want it to go in relation to
+the other colors in the palette.  If the cell where you
+wish to define a color is within a group, double-click on the
+group.  This brings up the "Insert Color" dialog box, shown
+here.</p>
+<h1>Insert picture of Insert Color Dialog Box</h1>
+<p>This dialog box asks for the coordinates of the cell to
+split out on its own.  Remember that these numbers start at 0.
+Click "Ok" to split up the cell group, or "Cancel" to cancel.
+After clicking "Ok", you will see that there are one or
+two new columns (depending if the target cell was on the 
+outside of the group), with the target cell by itself.  You
+can now define the color by double-clicking the cell.  This
+will bring up the Color Chooser.  You can change already
+defined colors by double-clicking on the color to bring up
+the Color Chooser.  Additionally you can copy defined colors
+and paste them in defined or ungrouped undefined cells by
+right-clicking on the target cell.  To delete an already
+defined color, simply right-click on the target cell and
+choose "Delete".</p>
+<h3>Important Notes</h3>
+<p>Some important things to keep in mind:</p>
+<ul><li>Changes are not saved until you click "Ok".  Clicking
+"Cancel" will discard any changes made.</li>
+<li>If you screw up, you can click "Revert" to reset the
+palette to what it was when the dialog was first opened.</li>
+<li>You can save incremental changes by clicking "Ok" and
+editing the palette repeatedly.  <b>This is a GOOD idea.</b></li>
+<li>If you resize the palette with a dimension that is smaller
+than the corresponding current dimension, any colors outside
+of the new width or height will be lost.</li>
+<li>When interpolating, you should always define a color
+in the column 0.</li>
+<li>When interpolating in the Y direction, for each column,
+there must be a defined color at row 0.</li>
+<li>When dealing with large palettes, disabling interpolation
+will reduce the amount of work the preview display has to
+do after each color change.  When done changing colors,
+you can re-enable interpolation</li>
+</ul>
+<h3>Example</h3>
+<p>Example of how the "Classic RGB" palette was defined.</p>
+<ol><li>First, create a new palette.</li>
+<li>Name the palette.</li>
+<li>Set the Width to 192 and the Height to 1, then click
+"Resize".</li>
+<li>Double-click the group of undefined colors.</li>
+<li>Insert a new color at 0,0 and click "Ok".</li>
+<li>Double-click on cell 0,0, and choose a red color.</li>
+<li>Double-click on the group of undefined colors.</li>
+<li>Insert a new color at 63,0 and click "Ok".</li>
+<li>Double-click on the cell at 63,0 and choose a green color.
+</li>
+<li>Double-click on the group of undefined colors at
+locations 64.0 through 191,0.</li>
+<li>Insert a new color at 127,0 and click "Ok".</li>
+<li>Double-click on the cell at 127,0 and choose a blue color.
+</li>
+<li>Enable "Interpolate Colors"</li>
+<li>Select "Linear"</li>
+<li>Enable "Wrap Colors"</li>
+<li>Click "Ok"</li>
+</ol>
+<p>That wasn't too bad, now was it?</p>
+<h3>Where To Look For More Info</h3>
+<p>For more help, feel free to visit us at
+http://sites.google.com/site/idlescreenproject/, where
+you can take advantage of the FAQS, Wiki, and user lists.</p>
 <br>
 <a href="index.html">Back To the Main Page</a>
 </BODY>
