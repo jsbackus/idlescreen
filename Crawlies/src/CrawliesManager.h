@@ -47,6 +47,8 @@ using namespace std;
 #include "2d_bgnd_w_lens/globaldefs.h"
 #include "2d_bgnd_w_lens/IndexedPaletteBackground.h"
 
+//12-26-08: Note-> Extend Background, not IndexedPaletteBackground.
+
 class PlasmaFractal : public IndexedPaletteBackground {
 
 public:
