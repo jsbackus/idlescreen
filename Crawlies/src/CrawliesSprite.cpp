@@ -129,12 +129,12 @@ void CrawliesSprite::drawSprite(screen_struct* screenObj) {
     int x = _segments[i].x;
     int y = _segments[i].y;
     if( x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight) {
-	x *= 4;
-	y *= _screenWidth*4;
-	int palIdx = curColorIdx + ((int)_palYOffset)*_palWidth;
-	for(int j=0; j<4;j++) {
-	  screenObj->_pixels[x+y+j] = _pal[j];
-	}
+      x *= 4;
+      y *= _screenWidth*4;
+      int palIdx = curColorIdx + ((int)_palYOffset)*_palWidth;
+      for(int j=0; j<4;j++) {
+	screenObj->_pixels[x+y+j] = _pal[j];
+      }
     }
   }
 }
@@ -183,9 +183,31 @@ void CrawliesSprite::clocktick() {
     // pick direction and move head
     bool bDone = false;
     crawlies_dir dir = NONE;
-	  int hdIdx = _numSegments-1;
     while(!bDone) {
-      dir = rand()%4;
+      int hdIdx = _numSegments-1;
+      if(lastDir == NONE) {
+	// if we started off screen, then the only option is to move on screen.
+	// we need to assume that the manager did its job and didn't start us
+	// beyond a corner.
+
+	if(_segments[hdIdx].x < 0) {
+	  // we're off to the left, so move right.
+	  dir = RIGHT;
+	} else if(_segments[hdIdx].x >= _screenWidth) {
+	  // we're off to the right, so move left.
+	  dir = LEFT;
+	} else if(_segments[hdIdx].y < 0) {
+	  // we're below the screen, so move up.
+	  dir = UP;
+	} else if(_segments[hdIdx].y >= _screenHeight) {
+	  dir = DOWN;
+	} else {
+	  // we're on the screen but haven't moved yet, so pick a direction.
+	  dir = rand()%4;
+	}
+      } else {
+	dir = rand()%4;
+      }
       switch(dir) {
       case LEFT:
 	if(_lastDir != RIGHT) {
@@ -215,6 +237,7 @@ void CrawliesSprite::clocktick() {
 	  bDone = true;
 	}
 	break;
+      }
     }
     
     // increment head color if not constant
@@ -224,64 +247,63 @@ void CrawliesSprite::clocktick() {
 
     clockStep--;
   }
-}
 
-/**
- * Whether the sprite is still "alive" or valid.
- *
- * @return True if alive.
- */
-bool CrawliesSprite::isAlive() {
-  return _bAlive && (_segments != NULL);
-}
-
-/**
- * Initializes the data structures.
- */
-void CrawliesSprite::initSprite() {
-  _bAlive = false;
-  _numSegments = 0;
-  _segments = NULL;
-  _bHeadConstantColor = false;
-  _screenWidth = 0;
-  _screenHeight = 0;
-  _pal = NULL;
-  _spriteSpeed = 0.0;
-  _palSpeed = 0.0;
-}
-
-/**
- * Converts the palette from IndexedPalette* to int*
- */
-void CrawliesSprite::convPalette(IndexedPalette* pal) {
-  if(pal == NULL)
-    return;
-
-  if(_pal != NULL) {
-    delete [] _palette;
-    _palette = NULL;
+  /**
+   * Whether the sprite is still "alive" or valid.
+   *
+   * @return True if alive.
+   */
+  bool CrawliesSprite::isAlive() {
+    return _bAlive && (_segments != NULL);
   }
 
-  _palWidth = pal->getWidth();
-  _palHeight = pal->getHeight();
-  _palYOffset = 0;
+  /**
+   * Initializes the data structures.
+   */
+  void CrawliesSprite::initSprite() {
+    _bAlive = false;
+    _numSegments = 0;
+    _segments = NULL;
+    _bHeadConstantColor = false;
+    _screenWidth = 0;
+    _screenHeight = 0;
+    _pal = NULL;
+    _spriteSpeed = 0.0;
+    _palSpeed = 0.0;
+  }
 
-  if(_palWidth <= 0 || _palHeight <= 0)
-    return;
+  /**
+   * Converts the palette from IndexedPalette* to int*
+   */
+  void CrawliesSprite::convPalette(IndexedPalette* pal) {
+    if(pal == NULL)
+      return;
 
-  // create space for the 2D palette
-  _pal = new int[(_palWidth*_palHeight)*4];
-  if(_pal == NULL)
-    return;
+    if(_pal != NULL) {
+      delete [] _palette;
+      _palette = NULL;
+    }
 
-  // copy palette
-  GLubyte buff[4];
-  for(int y=0; y<_palHeight; y++) {
-    for(int x=0; x<_palWidth; x++) {
-      pal->getColor(x,y,&buff[0], 4);
-      for(int j=0; j<4;j++) {
-	_pal[(x+y*_palWidth)*4+j] = buff[j];
+    _palWidth = pal->getWidth();
+    _palHeight = pal->getHeight();
+    _palYOffset = 0;
+
+    if(_palWidth <= 0 || _palHeight <= 0)
+      return;
+
+    // create space for the 2D palette
+    _pal = new int[(_palWidth*_palHeight)*4];
+    if(_pal == NULL)
+      return;
+
+    // copy palette
+    GLubyte buff[4];
+    for(int y=0; y<_palHeight; y++) {
+      for(int x=0; x<_palWidth; x++) {
+	pal->getColor(x,y,&buff[0], 4);
+	for(int j=0; j<4;j++) {
+	  _pal[(x+y*_palWidth)*4+j] = buff[j];
+	}
       }
     }
   }
-}
