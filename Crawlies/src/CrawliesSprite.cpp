@@ -164,20 +164,20 @@ void CrawliesSprite::clocktick() {
   // direction at each clock step.  We do this so that there isn't
   // a break between segments.  Not the most efficient...
   while(clockStep > 0) {
+    // check to see if head and tail equal.  If so, then this worm is alive,
+    // otherwise, assume it is dead.
+    _bAlive == (_segments[0].x == _segments[_numSegments-1].x &&
+		_segments[0].y == _segments[_numSegments-1].y);
+
     // for segments 0 to N-1, we just shift down.
     for(int i=0; i<_numSegments-1; i++) {
-      // check for transition from offscreen to onscreen.
-      if( (_segments[i].x >= 0 && _segments[i].x < _screenWidth) &&
-	  (_segments[i+1].x < 0 || _segments[i+1].x >= _screenWidth) ) {
-	_bAlive = false;
-      }
-      
-      if( (_segments[i].y >= 0 && _segments[i].y < _screenHeight ) &&
-	  (_segments[i+1].y < 0 || _segments[i+1].y >= _screenHeight ) ) {
-	_bAlive = false;
-      }
-
       _segment[i] = _segment[i+1];
+      // Check to see if this segment is on screen.  If so,
+      // indicate it is still alive.
+      if(0 <= _segments[i].x && _segments[i].x < _screenWidth &&
+	 0 <= _segments[i].y && _segments[i].y < _screenHeight) {
+	_bAlive = true;
+      }
     }
 
     // pick direction and move head
