@@ -51,7 +51,6 @@
 #include "2d_bgnd_w_lens/ConfigManager.h"
 #include "2d_bgnd_w_lens/MasterProfile.h"
 #include "2d_bgnd_w_lens/BackgroundProfile.h"
-#include "PlasmaFractalBackgroundProfile.h"
 #include "IndexedPalette/IndexedPaletteDialog.h"
 
 class ProfileEditDialog : public QDialog {

@@ -77,7 +77,7 @@ ID_APP                  ICON                    "../../resource_files/app_icon.i
 
 STRINGTABLE 
 BEGIN
-    IDS_DESCRIPTION         "PlasmaLenz"
+    IDS_DESCRIPTION         "Crawlies"
 END
 
 #endif    // English (U.S.) resources

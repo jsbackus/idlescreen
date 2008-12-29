@@ -27,15 +27,15 @@
 /**
  * Constructor.
  */
-void CrawliesSprite::CrawliesSprite() {
+CrawliesSprite::CrawliesSprite() {
   initSprite();
 }
 
 /**
  * Constructor that takes initialization parameters.
  *
- * @param sizeX The screen width.
- * @param sizeY The screen height.
+ * @param width The screen width.
+ * @param height The screen height.
  * @param startX The starting X coordinate
  * @param startY The starting Y coordinate
  * @param pal The palette to use for this Crawly.
@@ -45,22 +45,22 @@ void CrawliesSprite::CrawliesSprite() {
  * @param bHeadConstantColor Whether the head keeps the same pal index.
  * @param bHeadRandomColor Whether the head color is random or 0.
  */
-void CrawliesSprite::CrawliesSprite(int sizeX, int sizeY, int startX,
-				    int startY, IndexedPalette* pal, 
-				    int length, float spriteSpeed,
-				    float palSpeed, bool bHeadConstantColor,
-				    bool bHeadRandomColor) {
+CrawliesSprite::CrawliesSprite(int width, int height, int startX,
+			       int startY, IndexedPalette* pal, 
+			       int length, float spriteSpeed,
+			       float palSpeed, bool bHeadConstantColor,
+			       bool bHeadRandomColor) {
   initSprite();
 
   if(pal == NULL)
     return;
-  if(sizeX <= 0)
+  if(width <= 0)
     return;
-  if(sizeY <= 0)
+  if(height <= 0)
     return;
 
-  _screenWidth = sizeX;
-  _screenHeight = sizeY;
+  _screenWidth = width;
+  _screenHeight = height;
   _spriteSpeed = spriteSpeed;
   _palSpeed = palSpeed;
   _bHeadConstantColor = bHeadConstantColor;
@@ -71,7 +71,7 @@ void CrawliesSprite::CrawliesSprite(int sizeX, int sizeY, int startX,
   if(length < 1) {
     _numSegments = _palWidth;
   } else {
-    _numSegments == length;
+    _numSegments = length;
   }
 
   if(_numSegments == 0)
@@ -97,7 +97,7 @@ void CrawliesSprite::CrawliesSprite(int sizeX, int sizeY, int startX,
 
   // if the length of the crawly is longer than the palette, we'll
   // need to wrap.  In either case, we've gone 1 to far, so back up.
-  _tailColorIdx = (_tailColorIdx-1)%palWidth;
+  _tailColorIdx = (_tailColorIdx-1)%_palWidth;
 
   _lastDir = NONE;
 
@@ -133,8 +133,9 @@ void CrawliesSprite::drawSprite(screen_struct* screenObj) {
       y *= _screenWidth*4;
       int palIdx = curColorIdx + ((int)_palYOffset)*_palWidth;
       for(int j=0; j<4;j++) {
-	screenObj->_pixels[x+y+j] = _pal[j];
+	screenObj->_pixels[x+y+j] = _pal[palIdx+j];
       }
+      curColorIdx++;
     }
   }
 }
@@ -166,12 +167,12 @@ void CrawliesSprite::clocktick() {
   while(clockStep > 0) {
     // check to see if head and tail equal.  If so, then this worm is alive,
     // otherwise, assume it is dead.
-    _bAlive == (_segments[0].x == _segments[_numSegments-1].x &&
-		_segments[0].y == _segments[_numSegments-1].y);
+    _bAlive = (_segments[0].x == _segments[_numSegments-1].x &&
+	       _segments[0].y == _segments[_numSegments-1].y);
 
     // for segments 0 to N-1, we just shift down.
     for(int i=0; i<_numSegments-1; i++) {
-      _segment[i] = _segment[i+1];
+      _segments[i] = _segments[i+1];
       // Check to see if this segment is on screen.  If so,
       // indicate it is still alive.
       if(0 <= _segments[i].x && _segments[i].x < _screenWidth &&
@@ -185,7 +186,7 @@ void CrawliesSprite::clocktick() {
     crawlies_dir dir = NONE;
     while(!bDone) {
       int hdIdx = _numSegments-1;
-      if(lastDir == NONE) {
+      if(_lastDir == NONE) {
 	// if we started off screen, then the only option is to move on screen.
 	// we need to assume that the manager did its job and didn't start us
 	// beyond a corner.
@@ -203,10 +204,10 @@ void CrawliesSprite::clocktick() {
 	  dir = DOWN;
 	} else {
 	  // we're on the screen but haven't moved yet, so pick a direction.
-	  dir = rand()%4;
+	  dir = (crawlies_dir)(rand()%4);
 	}
       } else {
-	dir = rand()%4;
+	dir = (crawlies_dir)(rand()%4);
       }
       switch(dir) {
       case LEFT:
@@ -237,16 +238,20 @@ void CrawliesSprite::clocktick() {
 	  bDone = true;
 	}
 	break;
+      case NONE:
+      default:
+	break;
       }
     }
     
     // increment head color if not constant
     if(!_bHeadConstantColor) {
-      _lastColorIdx = (_lastColorIdx+1)%_palWidth;
+      _tailColorIdx = (_tailColorIdx+1)%_palWidth;
     }
 
     clockStep--;
   }
+}
 
   /**
    * Whether the sprite is still "alive" or valid.
@@ -280,8 +285,8 @@ void CrawliesSprite::clocktick() {
       return;
 
     if(_pal != NULL) {
-      delete [] _palette;
-      _palette = NULL;
+      delete [] _pal;
+      _pal = NULL;
     }
 
     _palWidth = pal->getWidth();

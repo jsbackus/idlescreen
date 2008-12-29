@@ -31,7 +31,6 @@
 #include <QMessageBox>
 
 #include "ProfileEditDialog.h"
-#include "2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h"
 #include "utility/misc_funcs.h"
 #include "utility/HelpDialog.h"
 
@@ -183,6 +182,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 	// Begin PlasmaFractalBackgroundProfile related
 	
 	// get the backgroundprofile in order to populate the data fields.
+	/*
 	PlasmaFractalBackgroundProfile* plasmaProfile = NULL;
 	QString bkgndProfileName = _mp.getBackgroundProfileName();
 	if(_confMgr->doesBackgroundProfileExist(bkgndProfileName)) {
@@ -472,7 +472,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 
 	lensBox->setLayout(lensLayout);
 	mainLayout->addWidget(lensBox);
-
+	*/
 	//Help, OK and Cancel buttons
 	QHBoxLayout* botButtonsLayout = new QHBoxLayout();
 	
@@ -588,7 +588,7 @@ void ProfileEditDialog::okClicked(bool checked) {
 		QMessageBox::warning(this, _windowTitle, "Please choose a palette from the drop-down box.", QMessageBox::Ok);
 		return;
 	}
-
+	/*
 	PlasmaFractalBackgroundProfile tmpProfile;
 	tmpProfile.setAnimatePalette(_bAnimatePalette);
 	tmpProfile.setClampColorIndex(_clampColorBox->isChecked());
@@ -681,6 +681,7 @@ void ProfileEditDialog::okClicked(bool checked) {
 	if(_oldName != newName) {
 		emit profileNameChange(_oldName, newName);
 	}
+	*/
 	emit accepted();
 	//emit finished(0);
 	close();

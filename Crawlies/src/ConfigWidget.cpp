@@ -25,7 +25,7 @@
 //begin debug
 //#include <iostream>
 //using namespace std;
-#include "2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h"
+//#include "2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h"
 //end debug
 
 #include <QVBoxLayout>
@@ -40,7 +40,7 @@
 #include <QDir>
 
 //temp
-//#include <QMessageBox>
+#include <QMessageBox>
 //end temp
 
 #include "../../common/2d_bgnd_w_lens/ConfigWidget.h"
@@ -62,7 +62,7 @@ ConfigWidget::ConfigWidget(QWidget* parent, Qt::WindowFlags f) {
 	_mpAvailList = NULL;
 	_mpSelList = NULL;
 
-	_windowTitle = tr("PlasmaLenz Configuration");
+	_windowTitle = tr("Crawlies Configuration");
 
 	setWindowTitle(_windowTitle);
 
@@ -281,15 +281,17 @@ void ConfigWidget::showGPLDialog(void) {
 }
 
 void ConfigWidget::addMPClicked(bool checked) {
-	
+	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+	/*	
 	ProfileEditDialog* dlg = new ProfileEditDialog("", _manager);
 	QObject::connect(dlg, SIGNAL(profileNameChange(QString, QString)), this, SLOT(profileNameChange(QString, QString)));
 	dlg->exec();	
+	*/
 }
 
 void ConfigWidget::editMPClicked(bool checked) {
-//	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
-
+	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+	/*
 	if(_mpAvailList == NULL)
 		return;
 
@@ -305,6 +307,7 @@ void ConfigWidget::editMPClicked(bool checked) {
 		delete dlg;
 		dlg = NULL;
 	}
+	*/
 }
 
 void ConfigWidget::deleteMPClicked(bool checked) {
@@ -547,7 +550,8 @@ void ConfigWidget::profileNameChange(QString oldName, QString newName) {
 }
 
 void ConfigWidget::importClicked(bool checked) {
-//	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+	/*
 	ImportExportDialog dlg(true);
 
 	// get file name to import from
@@ -609,9 +613,13 @@ void ConfigWidget::importClicked(bool checked) {
 			_mpAvailList->addItem(tmpMp.getName());
 		}
 	}
+	*/
 }
 
 void ConfigWidget::exportClicked(bool checked) {
+	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
+
+	/*
 	ImportExportDialog dlg(false);
 
 	// populate dialog box
@@ -669,6 +677,7 @@ void ConfigWidget::exportClicked(bool checked) {
 	tmpMgr->exportToFile(filename, false);
 	delete tmpMgr;
 	tmpMgr = NULL;
+	*/
 }
 
 void ConfigWidget::paletteEditorClicked(bool checked) {

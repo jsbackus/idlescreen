@@ -31,14 +31,15 @@
 #ifndef __CRAWLIESSPRITE_H__
 #define __CRAWLIESSPRITE_H__
 
-#include "globaldefs.h"
+#include "2d_bgnd_w_lens/globaldefs.h"
+#include "IndexedPalette/IndexedPalette.h"
 
 struct crawlies_tuple {
   int x, y;
 };
 
 enum crawlies_dir {
-  LEFT=0, RIGHT=2, UP=2, DOWN=3, NONE=4
+  LEFT=0, RIGHT=1, UP=2, DOWN=3, NONE=4
 };
 
 class CrawliesSprite {
@@ -46,13 +47,13 @@ class CrawliesSprite {
   /**
    * Constructor.
    */
-  void CrawliesSprite();
+  CrawliesSprite();
 
   /**
    * Constructor that takes initialization parameters.
    *
-   * @param sizeX The screen width.
-   * @param sizeY The screen height.
+   * @param width The screen width.
+   * @param height The screen height.
    * @param startX The starting X coordinate
    * @param startY The starting Y coordinate
    * @param pal The palette to use for this Crawly.
@@ -62,10 +63,10 @@ class CrawliesSprite {
    * @param bHeadConstantColor Whether the head keeps the same pal index.
    * @param bHeadRandomColor Whether the head color is random or 0.
    */
-  void CrawliesSprite(int sizeX, int sizeY, int startX, int startY,
-		      IndexedPalette* pal, int length, float spriteSpeed,
-		      float palSpeed, bool bHeadConstantColor,
-		      bool bHeadRandomColor);
+  CrawliesSprite(int width, int height, int startX, int startY,
+		 IndexedPalette* pal, int length, float spriteSpeed,
+		 float palSpeed, bool bHeadConstantColor,
+		 bool bHeadRandomColor);
 
   ~CrawliesSprite();
 
@@ -101,8 +102,8 @@ class CrawliesSprite {
   int _screenWidth;
   int _screenHeight;
   int* _pal;
-  int* _palWidth;
-  int* _palHeight;
+  int _palWidth;
+  int _palHeight;
   float _curStep;
   float _palYOffset;
   int _tailColorIdx;
@@ -112,6 +113,6 @@ class CrawliesSprite {
   bool _bAlive;
   int _numSegments;
   crawlies_tuple* _segments; //!< Worm segments.  Index 0 is tail!
-}
+};
 
 #endif

@@ -28,7 +28,7 @@
 
 #include "../../common/utility/redirector.h"
 
-const char KEY_NAME[] = "PlasmaLenz";
+const char KEY_NAME[] = "Crawlies";
 
 /**
  * Main entry point.

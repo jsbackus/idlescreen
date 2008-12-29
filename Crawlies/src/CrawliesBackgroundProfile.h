@@ -24,101 +24,118 @@
 
 /**
  * This background profile is responsible for setting up and returning a new 
- * PlasmaFractal background object.
+ * CrawliesManager background object.
  *
  * @author jeff backus
- * @date 09/01/2007
+ * @date 12/28/2008
  */
 
-#ifndef __PLASMAFRACTALBACKGROUNDPROFILE_H__
-#define __PLASMAFRACTALBACKGROUNDPROFILE_H__
+#ifndef __CRAWLIESBACKGROUNDPROFILE_H__
+#define __CRAWLIESBACKGROUNDPROFILE_H__
 
 #include <QString>
 #include <QtXml/QDomNode>
 #include <QtXml/QDomDocument>
 
 #include "../../common/2d_bgnd_w_lens/BackgroundProfile.h"
+#include "CrawliesManager.h"
 
-class PlasmaFractalBackgroundProfile : public BackgroundProfile {
+struct crawly_profile_style {
+  QString pal;
+  int minLength;
+  int maxLength;
+  float minSpriteSpeed;
+  float maxSpriteSpeed;
+  float palSpeed;
+  bool bHeadConstantColor;
+  bool bHeadRandomColor;
+};
+
+class CrawliesBackgroundProfile : public BackgroundProfile {
 
 public:
-	PlasmaFractalBackgroundProfile();
-	~PlasmaFractalBackgroundProfile();
+	CrawliesBackgroundProfile();
+	~CrawliesBackgroundProfile();
 
-	/* Attempts to load this background profile object from the
+	/** 
+	 * Attempts to load this background profile object from the
 	 * specified QDomNode.
 	 */
 	BackgroundProfile* load(QDomNode &node);
 
-	/*
+	/**
 	 * Returns a QDomNode object that represents this profile.
 	 */
 	QDomNode save(QDomDocument* doc);
 
-	/*
+	/**
 	 * Creates and returns a new background object.
 	 */
 	Background* getNewBackgroundObj(int height, int width, QHash<QString, IndexedPaletteProfile*>* palHash);
 
-	/*
-	 * get/set palette name.
+	/**
+	 * get/set max number of crawlies.
 	 */
-	QString getPaletteName();
-	void setPaletteName(QString paletteName);
+	int getMaxNumberCrawlies();
+	void setMaxNumberCrawlies(int numCrawlies);
 
-	/*
-	 * get/set coarseness.
+	/**
+	 * Get/set spawn chance.  This number is the denominator, i.e.
+	 * percent chance = 1/numCrawlies * 100%.
 	 */
-	float getCoarseness();
-	void setCoarseness(float coarseness);
+	int getSpawnChance();
+	void setSpawnChance(int spawnChance);
 
-	/*
-	 * get/set steps per tick
+	/**
+	 * Get/set functions related for style subprofiles.
 	 */
-	int getGenStepsPerTick();
-	void setGenStepsPerTick(int genStepsPerTick);
+	int getNumStyles();
+	void clearStyleList();
+	void addStyle();
+	void deleteStyle(int styleIdx);
 
-	/*
-	 * Get/set animate palette.
-	 */
-	bool getAnimatePalette();
-	void setAnimatePalette(bool bAnimatePalette);
+	QString getPalette(int styleIdx);
+	void setPalette(int styleIdx, QString palName);
 
-	/*
-	 * get/set palette x speed.
-	 */
-	float getPaletteXSpeed();
-	void setPaletteXSpeed(float speed);
+	int getMinLength(int styleIdx);
+	void setMinLength(int styleIdx, int minLength);
+	int getMaxLength(int styleIdx);
+	void setMaxLength(int styleIdx, int maxLength);
 
-	/*
-	 * get/set palette y speed.
-	 */
-	float getPaletteYSpeed();
-	void setPaletteYSpeed(float speed);
+	float getMinSpriteSpeed(int styleIdx);
+	void setMinSpriteSpeed(int styleIdx, float minSpeed);
+	float getMaxSpriteSpeed(int styleIdx);
+	void setMaxSpriteSpeed(int styleIdx, float maxSpeed);
 
-	/*
-	 * Get/set clamp color index.
-	 */
-	bool getClampColorIndex();
-	void setClampColorIndex(bool bClampColorIndex);
+	float getPaletteSpeed(int styleIdx);
+	void setPaletteSpeed(int styleIdx, float palSpeed);
 
-	/*
+	bool isHeadConstantColor(int styleIdx);
+	void setHeadConstantColor(int styleIdx, bool bConstant);
+
+	bool isHeadRandomColor(int styleIdx);
+	void setHeadRandomColor(int styleIdx, bool bRandom);
+
+	/**
 	 * Overloaded assignment operator.
 	 */
-	PlasmaFractalBackgroundProfile& operator=(PlasmaFractalBackgroundProfile& other);
+	CrawliesBackgroundProfile& operator=(CrawliesBackgroundProfile& other);
 
-	/*
+	/**
 	 * Creates a new object with this object's settings.
 	 */
 	BackgroundProfile* clone();
 
 private:
-	QString _palName;
-	float _coarseness;
-	int _genStepsPerTick;
-	bool _bAnimatePalette;
-	float _paletteXSpeed;
-	float _paletteYSpeed;
-	bool _bClampColorIndex;
+  /**
+   * Grows the list of crawly styles.
+   */
+  void growStyleList(int size=CRAWLY_STYLE_CHUNK_SIZE);
+
+  crawly_profile_style* _styles;
+  int _numStyles;
+  int _maxNumStyles;
+  int _maxNumCrawlies;
+  int _spawnChance;
 };
 #endif

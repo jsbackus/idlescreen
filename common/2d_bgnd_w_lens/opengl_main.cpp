@@ -22,6 +22,11 @@
  * 
  */
 
+//debug
+//#include <iostream>
+//using namespace std;
+// end debug
+
 #ifdef _M_IX86
 #include <windows.h>
 //#else
@@ -217,6 +222,7 @@ void initFunc(int argc, char** argv, char* filename) {
 	  exit(1);
 	}
 	if(filename == NULL) {
+
 		_configManager->load();
 	} else {
 		bDontSave = true;
@@ -226,7 +232,6 @@ void initFunc(int argc, char** argv, char* filename) {
 		}
 	}
 	_configManager->chooseActiveProfile();
-
 	//set up the screen object
 	_screenObj._sizeX = _configManager->getScreenWidth();
 	_screenObj._sizeY = _configManager->getScreenHeight();

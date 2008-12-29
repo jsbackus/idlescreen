@@ -23,8 +23,8 @@
  */
 
 // debug
-//#include <iostream>
-//using namespace std;
+#include <iostream>
+using namespace std;
 //#include <QMessageBox>
 //#include "lens_engine/SphericalLensProfile.h"
 
@@ -76,7 +76,7 @@ ConfigManager::ConfigManager() {
 	_numLensProfileTypes = 0;
 	_lensProfileTypes = getLensTypes(&_numLensProfileTypes);
 
-	_bGPLAccepted = false;
+	_bGPLAccepted = true;//false;
 }
 
 ConfigManager::~ConfigManager() {
@@ -206,10 +206,16 @@ void ConfigManager::deleteAllSettings() {
 bool ConfigManager::importFromFile(QString filename, bool bLoadMiscInfo) {
 	QDomDocument doc(getDomNodeQString());
 	QFile file(filename);
-	if (!file.open(QIODevice::ReadOnly))
+	if (!file.open(QIODevice::ReadOnly)) {
+	  cout<<"Unable to open file "<<filename.toStdString()
+	      <<" for reading!"<<endl;
 		return false;
+	}
 	if (!doc.setContent(&file)) {
 		file.close();
+		cout<<"File "<<filename.toStdString()
+		    <<" not a proper configuration file!"
+		    <<endl;
 		return false;
 	}
 	file.close();
@@ -518,6 +524,7 @@ void ConfigManager::setDefaults() {
 	// attempt to load from machine defaults file.
 	if(!importFromFile(getExternalDefaultConfigFile(), true)) {
 		if(!importFromFile(":/defaults.xml", true))
+		  cout<<"Unable to load any settings!"<<endl;
 			exit(1);
 	}
 }
@@ -707,7 +714,8 @@ void ConfigManager::chooseActiveProfile() {
 	}
 
 	//insert at the top, or append if the list is empty
-	if(historySize == 0) {
+	//if(historySize == 0) { //<< I think this is a bug
+	if(tmpSize == 0) {
 		_profileHistoryList.append(_selectedProfileList.at(current));
 	} else {
 		_profileHistoryList.replace(0,_selectedProfileList.at(current));

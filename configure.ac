@@ -65,6 +65,31 @@ if test "$enable_plasmalenz_glut" == "yes";
 	[man_targets="$man_targets PlasmaLenz/man_page/PlasmaLenz.1"]
 fi
 
+AC_ARG_ENABLE([crawlies], [AC_HELP_STRING([--enable-crawlies],
+		      [build Crawlies screen saver default=yes])],
+		      [enable_crawlies=$enableval],
+		      [enable_crawlies=yes])
+
+if test "$enable_crawlies" == "yes";
+   then 
+   	[qt_targets="$qt_targets Crawlies"]
+	[data_targets="$data_targets Crawlies.xml"]
+	[man_targets="$man_targets Crawlies/man_page/Crawlies.1"]
+fi
+
+AC_ARG_ENABLE([crawlies-glut], [AC_HELP_STRING([--enable-crawlies-glut],
+		      [build Crawlies GLUT demo default=no])],
+		      [enable_crawlies_glut=$enableval],
+		      [enable_crawlies_glut=no])
+
+if test "$enable_crawlies_glut" == "yes";
+   then
+	[qt_targets="$qt_targets Crawlies_glut"]
+   	[enable_glut="yes"]
+	[data_targets="$data_targets Crawlies.xml"]
+	[man_targets="$man_targets Crawlies/man_page/Crawlies.1"]
+fi
+
 AC_SUBST(bintrg, $qt_targets)
 AC_SUBST(datatrg, $data_targets)
 AC_SUBST(mantrg, $man_targets)

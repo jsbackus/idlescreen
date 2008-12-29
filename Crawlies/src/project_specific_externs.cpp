@@ -30,8 +30,7 @@
 
 #include "../../common/2d_bgnd_w_lens/BackgroundProfile.h"
 #include "../../common/2d_bgnd_w_lens/lens_engine/LensProfile.h"
-#include "../../common/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h"
-#include "PlasmaFractalBackgroundProfile.h"
+#include "CrawliesBackgroundProfile.h"
 
 /**
  * This function will create an array that contains the profiles
@@ -50,7 +49,7 @@ BackgroundProfile** getBackgroundTypes(int* numProfiles) {
 		return NULL;
 	}
 
-	retVal[0] = (BackgroundProfile*) (new PlasmaFractalBackgroundProfile());
+	retVal[0] = (BackgroundProfile*) (new CrawliesBackgroundProfile());
 
 	if(retVal[0] == NULL) {
 		*numProfiles = 0;
@@ -68,7 +67,7 @@ BackgroundProfile** getBackgroundTypes(int* numProfiles) {
  */
 LensProfile** getLensTypes(int* numProfiles) {
 	LensProfile** retVal = NULL;
-
+	/*
 	*numProfiles = 1;
 	retVal = new LensProfile*[*numProfiles];
 
@@ -83,7 +82,7 @@ LensProfile** getLensTypes(int* numProfiles) {
 		*numProfiles = 0;
 		return NULL;
 	}
-
+	*/
 	return retVal;
 }
 
@@ -93,7 +92,7 @@ LensProfile** getLensTypes(int* numProfiles) {
  * document root.
  */
 QString getAppConfigName(){
-	return QString("PlasmaLenz");
+	return QString("Crawlies");
 }
 
 /**
@@ -102,13 +101,14 @@ QString getAppConfigName(){
  * dialog box.
  */
 QString getAppFullName() {
-	return QString("PlasmaLenz");
+	return QString("Crawlies");
 }
 
 /**
  * Returns the version string for the screen saver.
  */
 QString getAppVersion() {
-	return QString("0.8");
+	return QString("0.1");
 }
+
 
