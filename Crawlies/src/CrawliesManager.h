@@ -50,6 +50,7 @@ struct crawly_style {
   IndexedPalette pal;
   int minLength;
   int maxLength;
+  int thickness;
   float minSpriteSpeed;
   float maxSpriteSpeed;
   float palSpeed;
@@ -95,6 +96,7 @@ class CrawliesManager : public Background {
    * @param pal A pointer to the palette to associate with this style.
    * @param minLength The minimum crawly length.
    * @param maxLength the maximum crawly length.
+   * @param thickness The thickness of the crawly.
    * @param minSpriteSpeed The minimum worm speed.
    * @param maxSpriteSpeed The maximum worm speed.
    * @param palSpeed The secondary palette rotation speed.
@@ -102,9 +104,9 @@ class CrawliesManager : public Background {
    * @param bHeadRandomColor Whether the head color is random when created.
    */
   void addCrawliesStyle(IndexedPalette* pal, int minLength, int maxLength, 
-			float minSpriteSpeed, float maxSpriteSpeed,
-			float palSpeed, bool bHeadConstantColor, 
-			bool bHeadRandomColor);
+			int thickness, float minSpriteSpeed,
+			float maxSpriteSpeed, float palSpeed,
+			bool bHeadConstantColor, bool bHeadRandomColor);
 
   /**
    * Sets the "setup finished" flag.
@@ -154,6 +156,7 @@ class CrawliesManager : public Background {
   CrawliesSprite** _crawlies;
   int _numCrawlies;
   int _maxNumCrawlies;
+
   int _spawnChance;
 };
 

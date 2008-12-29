@@ -40,6 +40,7 @@ CrawliesSprite::CrawliesSprite() {
  * @param startY The starting Y coordinate
  * @param pal The palette to use for this Crawly.
  * @param length The length of this Crawly.  If -1, use the palette length.
+ * @param thickness The thickness of the crawly.
  * @param spriteSpeed The speed at which this crawly moves.
  * @param palSpeed The speed at which the secondary palette rotates.
  * @param bHeadConstantColor Whether the head keeps the same pal index.
@@ -47,7 +48,8 @@ CrawliesSprite::CrawliesSprite() {
  */
 CrawliesSprite::CrawliesSprite(int width, int height, int startX,
 			       int startY, IndexedPalette* pal, 
-			       int length, float spriteSpeed,
+			       int length, int thickness,
+			       float spriteSpeed,
 			       float palSpeed, bool bHeadConstantColor,
 			       bool bHeadRandomColor) {
   initSprite();
@@ -58,9 +60,12 @@ CrawliesSprite::CrawliesSprite(int width, int height, int startX,
     return;
   if(height <= 0)
     return;
+  if(thickness <= 0)
+    return;
 
   _screenWidth = width;
   _screenHeight = height;
+  _thickness = thickness;
   _spriteSpeed = spriteSpeed;
   _palSpeed = palSpeed;
   _bHeadConstantColor = bHeadConstantColor;
@@ -129,13 +134,17 @@ void CrawliesSprite::drawSprite(screen_struct* screenObj) {
     int x = _segments[i].x;
     int y = _segments[i].y;
     if( x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight) {
-      x *= 4;
-      y *= _screenWidth*4;
       int palIdx = curColorIdx + ((int)_palYOffset)*_palWidth;
-      for(int j=0; j<4;j++) {
-	screenObj->_pixels[x+y+j] = _pal[palIdx+j];
+      for(int i=0;i<_thickness;i++) {
+	int ty = (y+i)*_screenWidth*4;
+	for(int j=0;j<_thickness;j++) {
+	  int tx = (x+j)*4;
+	  for(int k=0; k<4;k++) {
+	    screenObj->_pixels[tx+ty+k] = _pal[palIdx+k];
+	  }
+	}
       }
-      curColorIdx++;
+      curColorIdx = (curColorIdx+1)%_palWidth;
     }
   }
 }
@@ -212,28 +221,28 @@ void CrawliesSprite::clocktick() {
       switch(dir) {
       case LEFT:
 	if(_lastDir != RIGHT) {
-	  _segments[hdIdx].x -= 1;
+	  _segments[hdIdx].x -= _thickness;
 	  _lastDir = dir;
 	  bDone = true;
 	}
 	break;
       case RIGHT:
 	if(_lastDir != LEFT) {
-	  _segments[hdIdx].x += 1;
+	  _segments[hdIdx].x += _thickness;
 	  _lastDir = dir;
 	  bDone = true;
 	}
 	break;
       case UP:
 	if(_lastDir != DOWN) {
-	  _segments[hdIdx].y += 1;
+	  _segments[hdIdx].y += _thickness;
 	  _lastDir = dir;
 	  bDone = true;
 	}
 	break;
       case DOWN:
 	if(_lastDir != UP) {
-	  _segments[hdIdx].y -= 1;
+	  _segments[hdIdx].y -= _thickness;
 	  _lastDir = dir;
 	  bDone = true;
 	}
@@ -275,6 +284,7 @@ void CrawliesSprite::clocktick() {
     _pal = NULL;
     _spriteSpeed = 0.0;
     _palSpeed = 0.0;
+    _thickness = 0;
   }
 
   /**

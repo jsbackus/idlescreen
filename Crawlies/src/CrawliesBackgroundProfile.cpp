@@ -81,6 +81,7 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
 
   retVal->_styles[0].minLength = 31;
   retVal->_styles[0].maxLength = 32;
+  retVal->_styles[0].thickness = 1;
   retVal->_styles[0].minSpriteSpeed = 1.0;
   retVal->_styles[0].maxSpriteSpeed = 3.0;
   retVal->_styles[0].palSpeed = 0;
@@ -120,7 +121,9 @@ Background* CrawliesBackgroundProfile::getNewBackgroundObj(int height, int width
   for(int i=0; i<_numStyles; i++) {
     retVal->addCrawliesStyle(palHash->value(_styles[i].pal)->createPalette(),
 			     _styles[i].minLength, 
-			     _styles[i].maxLength, _styles[i].minSpriteSpeed,
+			     _styles[i].maxLength, 
+			     _styles[i].thickness,
+			     _styles[i].minSpriteSpeed,
 			     _styles[i].maxSpriteSpeed, _styles[i].palSpeed,
 			     _styles[i].bHeadConstantColor,
 			     _styles[i].bHeadRandomColor);

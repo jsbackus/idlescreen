@@ -88,6 +88,7 @@ CrawliesManager::~CrawliesManager() {
  * @param pal A pointer to the palette to associate with this style.
  * @param minLength The minimum crawly length.
  * @param maxLength the maximum crawly length.
+ * @param thickness The thickness of the crawly.
  * @param minSpriteSpeed The minimum worm speed.
  * @param maxSpriteSpeed The maximum worm speed.
  * @param palSpeed The secondary palette rotation speed.
@@ -96,6 +97,7 @@ CrawliesManager::~CrawliesManager() {
  */
 void CrawliesManager::addCrawliesStyle(IndexedPalette* pal, int minLength, 
 				       int maxLength, 
+				       int thickness,
 				       float minSpriteSpeed,
 				       float maxSpriteSpeed,
 				       float palSpeed, 
@@ -116,6 +118,7 @@ void CrawliesManager::addCrawliesStyle(IndexedPalette* pal, int minLength,
   // copy other parameters
   _styles[_numStyles].minLength = minLength;
   _styles[_numStyles].maxLength = maxLength;
+  _styles[_numStyles].thickness = thickness;
   _styles[_numStyles].minSpriteSpeed = minSpriteSpeed;
   _styles[_numStyles].maxSpriteSpeed = maxSpriteSpeed;
   _styles[_numStyles].palSpeed = palSpeed;
@@ -245,7 +248,8 @@ void CrawliesManager::spawnCrawly() {
 
   CrawliesSprite* tmpCrawly = new CrawliesSprite(_sizeX, _sizeY, startX, 
 						 startY,&_styles[idx].pal,
-						 length, spriteSpeed,
+						 length, _styles[idx].thickness,
+						 spriteSpeed,
 						 _styles[idx].palSpeed,
 						 _styles[idx].bHeadConstantColor,
 						 _styles[idx].bHeadRandomColor);

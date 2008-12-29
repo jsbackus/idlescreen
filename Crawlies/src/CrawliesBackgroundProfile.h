@@ -44,6 +44,7 @@ struct crawly_profile_style {
   QString pal;
   int minLength;
   int maxLength;
+  int thickness;
   float minSpriteSpeed;
   float maxSpriteSpeed;
   float palSpeed;
@@ -101,6 +102,9 @@ public:
 	void setMinLength(int styleIdx, int minLength);
 	int getMaxLength(int styleIdx);
 	void setMaxLength(int styleIdx, int maxLength);
+
+	int getThicness(int styleIdx);
+	void setThickness(int styleIdx, int thickness);
 
 	float getMinSpriteSpeed(int styleIdx);
 	void setMinSpriteSpeed(int styleIdx, float minSpeed);

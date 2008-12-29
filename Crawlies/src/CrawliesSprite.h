@@ -58,14 +58,15 @@ class CrawliesSprite {
    * @param startY The starting Y coordinate
    * @param pal The palette to use for this Crawly.
    * @param length The length of this Crawly.  If -1, use the palette length.
+   * @param thickness The thickness of the crawly.
    * @param spriteSpeed The speed at which this crawly moves.
    * @param palSpeed The speed at which the secondary palette rotates.
    * @param bHeadConstantColor Whether the head keeps the same pal index.
    * @param bHeadRandomColor Whether the head color is random or 0.
    */
   CrawliesSprite(int width, int height, int startX, int startY,
-		 IndexedPalette* pal, int length, float spriteSpeed,
-		 float palSpeed, bool bHeadConstantColor,
+		 IndexedPalette* pal, int length, int thickness,
+		 float spriteSpeed, float palSpeed, bool bHeadConstantColor,
 		 bool bHeadRandomColor);
 
   ~CrawliesSprite();
@@ -107,6 +108,7 @@ class CrawliesSprite {
   float _curStep;
   float _palYOffset;
   int _tailColorIdx;
+  int _thickness;
   float _spriteSpeed, _palSpeed;
   crawlies_dir _lastDir;
   bool _bHeadConstantColor;
