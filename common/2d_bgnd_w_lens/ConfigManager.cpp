@@ -76,7 +76,7 @@ ConfigManager::ConfigManager() {
 	_numLensProfileTypes = 0;
 	_lensProfileTypes = getLensTypes(&_numLensProfileTypes);
 
-	_bGPLAccepted = true;//false;
+	_bGPLAccepted = false;
 }
 
 ConfigManager::~ConfigManager() {
