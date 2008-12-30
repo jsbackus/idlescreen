@@ -22,6 +22,12 @@
  * 
  */
 
+//debug
+#include<iostream>
+using namespace std;
+//end debug
+
+
 #include "CrawliesSprite.h"
 
 /**
@@ -111,7 +117,10 @@ CrawliesSprite::CrawliesSprite(int width, int height, int startX,
 
 CrawliesSprite::~CrawliesSprite() {
   _bAlive = false;
-  _pal = NULL;
+  if(_pal != NULL) {
+    delete [] _pal;
+    _pal = NULL;
+  }
   if(_segments != NULL) {
     delete [] _segments;
     _segments = NULL;
@@ -178,6 +187,15 @@ void CrawliesSprite::clocktick() {
     // otherwise, assume it is dead.
     _bAlive = (_segments[0].x == _segments[_numSegments-1].x &&
 	       _segments[0].y == _segments[_numSegments-1].y);
+
+    //debug
+    /*
+    if(_segments[0].x == _segments[_numSegments-1].x &&
+       _segments[0].y == _segments[_numSegments-1].y) {
+      cout<<"Worm "<<this<<" hasn't moved!"<<endl;
+    }
+    */
+    //debug
 
     // for segments 0 to N-1, we just shift down.
     for(int i=0; i<_numSegments-1; i++) {
@@ -249,6 +267,7 @@ void CrawliesSprite::clocktick() {
 	break;
       case NONE:
       default:
+	cout<<"NONE case!"<<endl;
 	break;
       }
     }

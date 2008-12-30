@@ -281,6 +281,7 @@ void CrawliesManager::moveCrawlies() {
       // crawly, so move the crawly at the end of the list
       // to this location, decrement the size of the list
       // and try again.
+      delete _crawlies[i];
       _crawlies[i] = _crawlies[_numCrawlies-1];
       _numCrawlies--;
     }
