@@ -74,6 +74,16 @@ bin/Crawlies_glut : Crawlies/project_files/Crawlies_glut.pro
 	-o Makefile.Crawlies_glut && \
 	$(MAKE) -f Makefile.Crawlies_glut
 
+bin/AcidRain : AcidRain/project_files/AcidRain_scr.pro
+	cd $(srcdir)/AcidRain/project_files/ && $(QMAKE) AcidRain_scr.pro \
+	-o Makefile.AcidRain_scr && \
+	$(MAKE) -f Makefile.AcidRain_scr
+
+bin/AcidRain_glut : AcidRain/project_files/AcidRain_glut.pro
+	cd $(srcdir)/AcidRain/project_files/ && $(QMAKE) AcidRain_glut.pro \
+	-o Makefile.AcidRain_glut && \
+	$(MAKE) -f Makefile.AcidRain_glut
+
 doc : 
 	cd doc; $(MAKE)
 
@@ -81,20 +91,26 @@ clean :
 	-rm *~
 	-rm bin/PlasmaLenz bin/PlasmaLenz_glut
 	-rm bin/Crawlies bin/Crawlies_glut
+	-rm bin/AcidRain bin/AcidRain_glut
 	-cd $(srcdir)/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_scr clean
 	-cd $(srcdir)/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_glut clean
 	-cd $(srcdir)/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_scr clean
 	-cd $(srcdir)/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_glut clean
+	-cd $(srcdir)/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_scr clean
+	-cd $(srcdir)/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_glut clean
 	-cd doc; $(MAKE) -f Makefile clean
 
 distclean:
 	-rm *~
 	-rm bin/PlasmaLenz bin/PlasmaLenz_glut
 	-rm bin/Crawlies bin/Crawlies_glut
+	-rm bin/AcidRain bin/AcidRain_glut
 	-cd $(srcdir)/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_scr distclean
 	-cd $(srcdir)/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_glut distclean
 	-cd $(srcdir)/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_scr distclean
 	-cd $(srcdir)/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_glut distclean
+	-cd $(srcdir)/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_scr distclean
+	-cd $(srcdir)/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_glut distclean
 	-cd doc; $(MAKE) -f Makefile distclean
 	-rm -rf autom4te.cache
 	-rm configure Makefile config.status config.log

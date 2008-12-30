@@ -90,6 +90,31 @@ if test "$enable_crawlies_glut" == "yes";
 	[man_targets="$man_targets Crawlies/man_page/Crawlies.1"]
 fi
 
+AC_ARG_ENABLE([acidrain], [AC_HELP_STRING([--enable-acidrain],
+		      [build AcidRain screen saver default=yes])],
+		      [enable_acidrain=$enableval],
+		      [enable_acidrain=yes])
+
+if test "$enable_acidrain" == "yes";
+   then 
+   	[qt_targets="$qt_targets AcidRain"]
+	[data_targets="$data_targets AcidRain.xml"]
+	[man_targets="$man_targets AcidRain/man_page/AcidRain.1"]
+fi
+
+AC_ARG_ENABLE([acidrain-glut], [AC_HELP_STRING([--enable-acidrain-glut],
+		      [build AcidRain GLUT demo default=no])],
+		      [enable_acidrain_glut=$enableval],
+		      [enable_acidrain_glut=no])
+
+if test "$enable_acidrain_glut" == "yes";
+   then
+	[qt_targets="$qt_targets AcidRain_glut"]
+   	[enable_glut="yes"]
+	[data_targets="$data_targets AcidRain.xml"]
+	[man_targets="$man_targets AcidRain/man_page/AcidRain.1"]
+fi
+
 AC_SUBST(bintrg, $qt_targets)
 AC_SUBST(datatrg, $data_targets)
 AC_SUBST(mantrg, $man_targets)
