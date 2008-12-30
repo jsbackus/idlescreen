@@ -103,7 +103,7 @@ public:
 	int getMaxLength(int styleIdx);
 	void setMaxLength(int styleIdx, int maxLength);
 
-	int getThicness(int styleIdx);
+	int getThickness(int styleIdx);
 	void setThickness(int styleIdx, int thickness);
 
 	float getMinSpriteSpeed(int styleIdx);

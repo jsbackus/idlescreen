@@ -143,7 +143,7 @@ void CrawliesSprite::drawCrawly(screen_struct* screenObj) {
     int x = _segments[i].x;
     int y = _segments[i].y;
     if( x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight) {
-      int palIdx = curColorIdx + ((int)_palYOffset)*_palWidth;
+      int palIdx = (curColorIdx + ((int)_palYOffset)*_palWidth)*4;
       for(int i=0;i<_thickness;i++) {
 	int ty = (y+i)*_screenWidth*4;
 	for(int j=0;j<_thickness;j++) {
@@ -168,7 +168,7 @@ void CrawliesSprite::moveCrawly() {
   // rotate through secondary palette
   _palYOffset += _palSpeed;
   while(_palYOffset >= _palHeight) {
-    _palYOffset -= (float)_palHeight;
+    _palYOffset -= _palHeight;
   }
 
   // move body if _curStep is large enough
@@ -178,25 +178,6 @@ void CrawliesSprite::moveCrawly() {
   // have it, subtract it out of _curStep.
   int clockStep = (int)_curStep;
   _curStep -= (float)clockStep;
-
-  // check to see if there is at least one step to take this tick.
-  /*
-  if(clockStep < 1) {
-    // if not, increment the stall count.  If we haven't stepped in the
-    // last CRAWLIES_SPRITE_STALL_COUNT_MAX ticks, this worm has stalled out,
-    // so "kill" it.
-    cout<<"Stalled: sprite speed = "<<_spriteSpeed
-	<<", cur step = "<<_curStep<<", clock step = "<<clockStep<<endl;
-    _stallCount++;
-    if(_stallCount >= CRAWLIES_SPRITE_STALL_COUNT_MAX) {
-      _bAlive = false;
-      return;
-    }
-  } else {
-    // otherwise, we want to reset the stall counter.
-    _stallCount = 0;
-  }
-  */
 
   // move the worm one step per clockstep.  The head can change
   // direction at each clock step.  We do this so that there isn't
@@ -335,7 +316,7 @@ void CrawliesSprite::moveCrawly() {
 
     _palWidth = pal->getWidth();
     _palHeight = pal->getHeight();
-    _palYOffset = 0;
+    _palYOffset = 0.0;
 
     if(_palWidth <= 0 || _palHeight <= 0)
       return;

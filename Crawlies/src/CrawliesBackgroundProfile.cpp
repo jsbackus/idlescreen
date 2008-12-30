@@ -23,8 +23,8 @@
  */
 
 // begin debug
-//#include<iostream>
-//using namespace std;
+#include<iostream>
+using namespace std;
 //end debug
 
 #include <QtXml/QDomElement>
@@ -66,30 +66,137 @@ CrawliesBackgroundProfile::~CrawliesBackgroundProfile() {
  * specified QDomNode.
  */
 BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
-  // right now, just use defaults
+
+  float tmpF;
+  int tmpI;
+  QString tmpStr;
+  QDomElement tempElem;
+
+  //sanity check on the input
+  if(node.nodeName() != getXMLTagName())
+    return NULL;
+
+  //make sure that the type value matches
+  tempElem = node.firstChildElement("type");
+  if(tempElem.isNull() || tempElem.text() != _xmlTypeValue)
+    return NULL;
 
   CrawliesBackgroundProfile* retVal = new CrawliesBackgroundProfile();
   if(retVal == NULL)
      return NULL;
 
-  retVal->_name = "Classic RGB Profile";
+  tempElem = node.firstChildElement("name");
+  if(!tempElem.isNull()) {
+    retVal->_name = tempElem.text();
+  }
 
-  retVal->_spawnChance = 32;
-  retVal->_maxNumCrawlies = 200;
+  tempElem = node.firstChildElement("max_num_crawlies");
+  if(!tempElem.isNull()) {
+    tmpI = tempElem.text().toInt();
+    if(tmpI > 0 && tmpI < 30000) {
+      retVal->_maxNumCrawlies = tmpI;
+    }
+  }
 
-  retVal->growStyleList();
+  tempElem = node.firstChildElement("spawn_chance");
+  if(!tempElem.isNull()) {
+    tmpI = tempElem.text().toInt();
+    if(tmpI > 0 && tmpI < 100) {
+      retVal->_spawnChance = tmpI;
+    }
+  }
 
-  retVal->_styles[0].minLength = 8;
-  retVal->_styles[0].maxLength = 32;
-  retVal->_styles[0].thickness = 1;
-  retVal->_styles[0].minSpriteSpeed = 1.0;
-  retVal->_styles[0].maxSpriteSpeed = 1.0;
-  retVal->_styles[0].palSpeed = 0;
-  retVal->_styles[0].bHeadConstantColor = false;//true;
-  retVal->_styles[0].bHeadRandomColor = true;//false;
-  retVal->_styles[0].pal = "Classic RGB Palette";
+  // get style information
 
-  retVal->_numStyles = 1;
+  // get the number of styles in order to set the initial
+  // size of the list.  Styles will be added using the
+  // public functions, so the list will grow as necessary.
+  tempElem = node.firstChildElement("num_styles");
+  if(!tempElem.isNull()) {
+    tmpI = tempElem.text().toInt();
+    if(tmpI >= 0 && tmpI < 100) {
+      retVal->growStyleList(tmpI);
+    }
+  }
+
+  // read in all crawly_style_entry objects and add each one to the 
+  // list of styles.  Order isn't important, nor is whether the
+  // actual number of styes matches the number in the config file.
+  QDomElement tempNode = node.firstChildElement("crawly_style").
+    lastChildElement("crawly_style_entry");
+
+  while(!tempNode.isNull()) {	
+    int index = 0;
+    retVal->addStyle();
+
+    tempElem = tempNode.firstChildElement("palette");
+    if(!tempElem.isNull()) {
+      retVal->setPalette(index, tempElem.text());
+    }
+
+    tempElem = tempNode.firstChildElement("min_length");
+    if(!tempElem.isNull()) {
+      tmpI = tempElem.text().toInt();
+      if(tmpI < 30000) {
+	retVal->setMinLength(index, tmpI);
+      }
+    }
+
+    tempElem = tempNode.firstChildElement("max_length");
+    if(!tempElem.isNull()) {
+      tmpI = tempElem.text().toInt();
+      if(tmpI < 30000) {
+	retVal->setMaxLength(index, tmpI);
+      }
+    }
+
+    tempElem = tempNode.firstChildElement("thickness");
+    if(!tempElem.isNull()) {
+      tmpI = tempElem.text().toInt();
+      if(0 < tmpI && tmpI < 30000) {
+	retVal->setThickness(index, tmpI);
+      }
+    }
+
+    tempElem = tempNode.firstChildElement("min_sprite_speed");
+    if(!tempElem.isNull()) {
+      tmpF = tempElem.text().toFloat();
+      if(0.0 < tmpF && tmpF < 100.0) {
+	retVal->setMinSpriteSpeed(index, tmpF);
+      }
+    }
+
+    tempElem = tempNode.firstChildElement("max_sprite_speed");
+    if(!tempElem.isNull()) {
+      tmpF = tempElem.text().toFloat();
+      if(0.0 < tmpF && tmpF < 100.0) {
+	retVal->setMaxSpriteSpeed(index, tmpF);
+      }
+    }
+
+    tempElem = tempNode.firstChildElement("palette_speed");
+    if(!tempElem.isNull()) {
+      tmpF = tempElem.text().toFloat();
+      if(0.0 < tmpF && tmpF < 10000.0) {
+	retVal->setPaletteSpeed(index, tmpF);
+      }
+    }
+
+    tempElem = tempNode.firstChildElement("head_constant_color");
+    if(!tempElem.isNull()) {
+      tmpStr = tempElem.text();
+      retVal->setHeadConstantColor(index, stringToBool(tmpStr));
+    }
+
+    tempElem = tempNode.firstChildElement("head_random_color");
+    if(!tempElem.isNull()) {
+      tmpStr = tempElem.text();
+      retVal->setHeadRandomColor(index, stringToBool(tmpStr));
+    }
+
+    index++;
+    tempNode = tempNode.previousSiblingElement("crawly_style_entry");
+  }
 
   return retVal;
 }
@@ -103,17 +210,118 @@ QDomNode CrawliesBackgroundProfile::save(QDomDocument* doc) {
   QDomElement tempElem;
   QDomElement retVal = doc->createElement(getXMLTagName());
 
-  //type
+  // type
   tempNode = doc->createTextNode(_xmlTypeValue);
   tempElem = doc->createElement("type");
   tempElem.appendChild(tempNode);
   retVal.appendChild(tempElem);
 
-  //name
+  // name
   tempNode = doc->createTextNode(_name);
   tempElem = doc->createElement("name");
   tempElem.appendChild(tempNode);
   retVal.appendChild(tempElem);
+
+  // maximum number of crawlies
+  tempStr.setNum(_maxNumCrawlies);
+  tempNode = doc->createTextNode(tempStr);
+  tempElem = doc->createElement("max_num_crawlies");
+  tempElem.appendChild(tempNode);
+  retVal.appendChild(tempElem);
+
+  // spawn chance
+  tempStr.setNum(_spawnChance);
+  tempNode = doc->createTextNode(tempStr);
+  tempElem = doc->createElement("spawn_chance");
+  tempElem.appendChild(tempNode);
+  retVal.appendChild(tempElem);
+
+  // store the style information
+  if(_styles == NULL) {
+    // should never get to this point with these set to
+    // non-zero, but meh, doesn't hurt to be safe.
+    _numStyles = 0;
+    _maxNumStyles = 0;
+  }
+
+  // number of styles
+  tempStr.setNum(_numStyles);
+  tempNode = doc->createTextNode(tempStr);
+  tempElem = doc->createElement("num_styles");
+  tempElem.appendChild(tempNode);
+  retVal.appendChild(tempElem);
+
+  QDomElement styleElem = doc->createElement("crawly_style");
+  QDomElement entryElem;
+  int i;
+  for(i=0;i<_numStyles; i++) {
+    entryElem = doc->createElement("crawly_style_entry");
+
+    // palette name
+    tempNode = doc->createTextNode(_styles[i].pal);
+    tempElem = doc->createElement("palette");
+    tempElem.appendChild(tempNode);
+    entryElem.appendChild(tempElem);
+
+    // minimum length
+    tempStr.setNum(_styles[i].minLength);
+    tempNode = doc->createTextNode(tempStr);
+    tempElem = doc->createElement("min_length");
+    tempElem.appendChild(tempNode);
+    entryElem.appendChild(tempElem);
+    
+    // maximum length
+    tempStr.setNum(_styles[i].maxLength);
+    tempNode = doc->createTextNode(tempStr);
+    tempElem = doc->createElement("max_length");
+    tempElem.appendChild(tempNode);
+    entryElem.appendChild(tempElem);
+
+    // thickness
+    tempStr.setNum(_styles[i].thickness);
+    tempNode = doc->createTextNode(tempStr);
+    tempElem = doc->createElement("thickness");
+    tempElem.appendChild(tempNode);
+    entryElem.appendChild(tempElem);
+
+    // min sprite speed
+    tempStr.setNum(_styles[i].minSpriteSpeed);
+    tempNode = doc->createTextNode(tempStr);
+    tempElem = doc->createElement("min_sprite_speed");
+    tempElem.appendChild(tempNode);
+    entryElem.appendChild(tempElem);
+
+    // max sprite speed
+    tempStr.setNum(_styles[i].maxSpriteSpeed);
+    tempNode = doc->createTextNode(tempStr);
+    tempElem = doc->createElement("max_sprite_speed");
+    tempElem.appendChild(tempNode);
+    entryElem.appendChild(tempElem);
+
+    // palette (secondary) speed
+    tempStr.setNum(_styles[i].palSpeed);
+    tempNode = doc->createTextNode(tempStr);
+    tempElem = doc->createElement("palette_speed");
+    tempElem.appendChild(tempNode);
+    entryElem.appendChild(tempElem);
+
+    // head constant color?
+    tempNode = doc->createTextNode(boolToString(_styles[i].bHeadConstantColor));
+    tempElem = doc->createElement("head_constant_color");
+    tempElem.appendChild(tempNode);
+    entryElem.appendChild(tempElem);
+
+    // head random color?
+    tempNode = doc->createTextNode(boolToString(_styles[i].bHeadRandomColor));
+    tempElem = doc->createElement("head_random_color");
+    tempElem.appendChild(tempNode);
+    entryElem.appendChild(tempElem);
+
+    // add to the style element
+    styleElem.appendChild(entryElem);
+  }
+
+  retVal.appendChild(styleElem);
   
   return retVal;
 }
@@ -232,6 +440,20 @@ void CrawliesBackgroundProfile::setMaxLength(int styleIdx, int maxLength) {
 
   _styles[styleIdx].maxLength = maxLength;
 }
+
+int CrawliesBackgroundProfile::getThickness(int styleIdx) {
+  if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
+    return 0;
+
+  return _styles[styleIdx].thickness;
+}
+void CrawliesBackgroundProfile::setThickness(int styleIdx, int thickness) {
+  if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
+    return;
+  
+  _styles[styleIdx].thickness = thickness;
+}
+
 
 float CrawliesBackgroundProfile::getMinSpriteSpeed(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
