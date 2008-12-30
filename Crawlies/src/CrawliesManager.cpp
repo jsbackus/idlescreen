@@ -27,6 +27,7 @@
 //using namespace std;
 //end debug
 
+#include "utility/misc_funcs.h"
 #include "CrawliesManager.h"
 
 /**
@@ -166,7 +167,7 @@ void CrawliesManager::drawBackground(screen_struct* screenObj) {
   for(int i=0; i<_numCrawlies; i++) {
     if(_crawlies[i] != NULL && _crawlies[i]->isAlive()) {
       // we've found a valid, live crawly, so render!
-      _crawlies[i]->drawSprite(screenObj);
+      _crawlies[i]->drawCrawly(screenObj);
     }
   }
 }
@@ -179,11 +180,12 @@ void CrawliesManager::clocktick() {
     return;
   }
 
+
   // first, move the crawlies we have.
   moveCrawlies();
 
   // next, if there is space, consider making a new one.
-  if(_numCrawlies < _maxNumCrawlies && rand()%_spawnChance == 0) {
+  if(_numCrawlies < _maxNumCrawlies && jrand()%_spawnChance == 0) {
     spawnCrawly();
   }
 }
@@ -214,11 +216,11 @@ void CrawliesManager::spawnCrawly() {
     return;
 
   // determine which style we are going to use
-  int idx = rand()%_numStyles;
+  int idx = jrand()%_numStyles;
 
   // determine starting position
-  int startX = (rand()%(_sizeX+2)) - 1;
-  int startY = (rand()%(_sizeY+2)) - 1;
+  int startX = (jrand()%(_sizeX+2)) - 1;
+  int startY = (jrand()%(_sizeY+2)) - 1;
 
   // determine the length
   int minLength = _styles[idx].minLength;
@@ -233,7 +235,7 @@ void CrawliesManager::spawnCrawly() {
   if(minLength == maxLength) {
     length = minLength;
   } else {
-    length = (rand()%(maxLength-minLength))+minLength;
+    length = (jrand()%(maxLength-minLength))+minLength;
   }
 
   // determine sprite speed
@@ -243,7 +245,7 @@ void CrawliesManager::spawnCrawly() {
   if(minSpeed == maxSpeed) {
     spriteSpeed = minSpeed;
   } else {
-    spriteSpeed = ((float)(rand()%((int)((maxSpeed-minSpeed)*100.0))))/100.0;
+    spriteSpeed = ((float)(jrand()%((int)((maxSpeed-minSpeed)*100.0))))/100.0;
   }
 
   CrawliesSprite* tmpCrawly = new CrawliesSprite(_sizeX, _sizeY, startX, 
@@ -274,7 +276,7 @@ void CrawliesManager::moveCrawlies() {
   while(i<_numCrawlies) {
     if(_crawlies[i] != NULL && _crawlies[i]->isAlive()) {
       // we've found a valid, live crawly, so move!
-      _crawlies[i]->clocktick();
+      _crawlies[i]->moveCrawly();
       i++;
     } else {
       // current location does not contain a valid, living

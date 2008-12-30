@@ -23,11 +23,11 @@
  */
 
 //debug
-#include<iostream>
-using namespace std;
+//#include<iostream>
+//using namespace std;
 //end debug
 
-
+#include "utility/misc_funcs.h"
 #include "CrawliesSprite.h"
 
 /**
@@ -95,7 +95,7 @@ CrawliesSprite::CrawliesSprite(int width, int height, int startX,
   // set positions of all segments, and calculate
   // tail color.
   if(bHeadRandomColor) {
-    _tailColorIdx = rand() % _palWidth;
+    _tailColorIdx = jrand() % _palWidth;
   } else {
     _tailColorIdx = 0;
   }
@@ -131,7 +131,7 @@ CrawliesSprite::~CrawliesSprite() {
  * Draws the sprite.
  * @param screenObj Screen buffer to draw to.
  */
-void CrawliesSprite::drawSprite(screen_struct* screenObj) {
+void CrawliesSprite::drawCrawly(screen_struct* screenObj) {
   if(!isAlive())
     return;
   if(screenObj == NULL)
@@ -161,7 +161,7 @@ void CrawliesSprite::drawSprite(screen_struct* screenObj) {
 /**
  * Animate the sprite.
  */
-void CrawliesSprite::clocktick() {
+void CrawliesSprite::moveCrawly() {
   if(!isAlive())
     return;
 
@@ -179,6 +179,25 @@ void CrawliesSprite::clocktick() {
   int clockStep = (int)_curStep;
   _curStep -= (float)clockStep;
 
+  // check to see if there is at least one step to take this tick.
+  /*
+  if(clockStep < 1) {
+    // if not, increment the stall count.  If we haven't stepped in the
+    // last CRAWLIES_SPRITE_STALL_COUNT_MAX ticks, this worm has stalled out,
+    // so "kill" it.
+    cout<<"Stalled: sprite speed = "<<_spriteSpeed
+	<<", cur step = "<<_curStep<<", clock step = "<<clockStep<<endl;
+    _stallCount++;
+    if(_stallCount >= CRAWLIES_SPRITE_STALL_COUNT_MAX) {
+      _bAlive = false;
+      return;
+    }
+  } else {
+    // otherwise, we want to reset the stall counter.
+    _stallCount = 0;
+  }
+  */
+
   // move the worm one step per clockstep.  The head can change
   // direction at each clock step.  We do this so that there isn't
   // a break between segments.  Not the most efficient...
@@ -187,15 +206,6 @@ void CrawliesSprite::clocktick() {
     // otherwise, assume it is dead.
     _bAlive = (_segments[0].x == _segments[_numSegments-1].x &&
 	       _segments[0].y == _segments[_numSegments-1].y);
-
-    //debug
-    /*
-    if(_segments[0].x == _segments[_numSegments-1].x &&
-       _segments[0].y == _segments[_numSegments-1].y) {
-      cout<<"Worm "<<this<<" hasn't moved!"<<endl;
-    }
-    */
-    //debug
 
     // for segments 0 to N-1, we just shift down.
     for(int i=0; i<_numSegments-1; i++) {
@@ -231,10 +241,10 @@ void CrawliesSprite::clocktick() {
 	  dir = DOWN;
 	} else {
 	  // we're on the screen but haven't moved yet, so pick a direction.
-	  dir = (crawlies_dir)(rand()%4);
+	  dir = (crawlies_dir)(jrand()%4);
 	}
       } else {
-	dir = (crawlies_dir)(rand()%4);
+	dir = (crawlies_dir)(jrand()%4);
       }
       switch(dir) {
       case LEFT:
@@ -267,7 +277,6 @@ void CrawliesSprite::clocktick() {
 	break;
       case NONE:
       default:
-	cout<<"NONE case!"<<endl;
 	break;
       }
     }
@@ -301,9 +310,15 @@ void CrawliesSprite::clocktick() {
     _screenWidth = 0;
     _screenHeight = 0;
     _pal = NULL;
+    _palWidth = 0;
+    _palHeight = 0;
+    _curStep = 0.0;
+    _palYOffset = 0.0;
     _spriteSpeed = 0.0;
     _palSpeed = 0.0;
     _thickness = 0;
+    _tailColorIdx = 0;
+    _lastDir = NONE;
   }
 
   /**

@@ -25,6 +25,12 @@
 #include <QString>
 
 /**
+ * Returns a random integer just like rand() does, however it will
+ * periodically reseed the generator using the current time.
+ */
+extern int jrand();
+
+/**
  * converts a bool to a QString.
  */
 extern QString boolToString(bool bVal);

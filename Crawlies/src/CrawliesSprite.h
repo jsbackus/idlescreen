@@ -75,12 +75,12 @@ class CrawliesSprite {
    * Draws the sprite.
    * @param screenObj Screen buffer to draw to.
    */
-  void drawSprite(screen_struct* screenObj);
+  void drawCrawly(screen_struct* screenObj);
 
   /**
    * Animate the sprite.
    */
-  void clocktick();
+  void moveCrawly();
 
   /**
    * Whether the sprite is still "alive" or valid.

@@ -28,6 +28,28 @@ using namespace std;
 
 #include <QString>
 
+
+// Reseed countdown for rnd()
+int COUNT_TO_NEXT_RESEED = -1;
+
+/**
+ * Returns a random integer just like rand() does, however it will
+ * periodically reseed the generator using the current time.
+ */
+int jrand() {
+  if(COUNT_TO_NEXT_RESEED <= 0) {
+    //seed the random number generator.
+    srand((unsigned)time( NULL ));
+
+    while(COUNT_TO_NEXT_RESEED <= 0) {
+      COUNT_TO_NEXT_RESEED = rand();
+    }
+  }
+
+  COUNT_TO_NEXT_RESEED--;
+  return rand();
+}
+
 /**
  * converts a bool to a QString.
  */
@@ -60,14 +82,11 @@ float dotProduct(float v1x, float v1y, float v2x, float v2y) {
  * specified length.
  */
 QString randStr(int length) {
-	//seed the random number generator.
-	srand((unsigned)time( NULL ));
-
 	QString retVal = "";
 	QString validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 	for(int i=0;i<length;i++) {
-		int idx = rand()%validChars.length();
+		int idx = jrand()%validChars.length();
 		retVal.append(validChars.at(idx));
 	}
 

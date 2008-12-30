@@ -74,16 +74,16 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
 
   retVal->_name = "Classic RGB Profile";
 
-  retVal->_spawnChance = 4;
-  retVal->_maxNumCrawlies = 20;
+  retVal->_spawnChance = 32;
+  retVal->_maxNumCrawlies = 200;
 
   retVal->growStyleList();
 
-  retVal->_styles[0].minLength = 31;
+  retVal->_styles[0].minLength = 8;
   retVal->_styles[0].maxLength = 32;
   retVal->_styles[0].thickness = 1;
   retVal->_styles[0].minSpriteSpeed = 1.0;
-  retVal->_styles[0].maxSpriteSpeed = 3.0;
+  retVal->_styles[0].maxSpriteSpeed = 1.0;
   retVal->_styles[0].palSpeed = 0;
   retVal->_styles[0].bHeadConstantColor = false;//true;
   retVal->_styles[0].bHeadRandomColor = true;//false;
@@ -98,7 +98,22 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
  * Returns a QDomNode object that represents this profile.
  */
 QDomNode CrawliesBackgroundProfile::save(QDomDocument* doc) {
+  QString tempStr;
+  QDomText tempNode;
+  QDomElement tempElem;
   QDomElement retVal = doc->createElement(getXMLTagName());
+
+  //type
+  tempNode = doc->createTextNode(_xmlTypeValue);
+  tempElem = doc->createElement("type");
+  tempElem.appendChild(tempNode);
+  retVal.appendChild(tempElem);
+
+  //name
+  tempNode = doc->createTextNode(_name);
+  tempElem = doc->createElement("name");
+  tempElem.appendChild(tempNode);
+  retVal.appendChild(tempElem);
   
   return retVal;
 }
