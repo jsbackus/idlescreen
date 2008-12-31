@@ -222,7 +222,6 @@ void initFunc(int argc, char** argv, char* filename) {
 	  exit(1);
 	}
 	if(filename == NULL) {
-
 		_configManager->load();
 	} else {
 		bDontSave = true;
