@@ -1,7 +1,7 @@
 TEMPLATE	= app
 win32:CONFIG	+= qt warn_on
-//unix:CONFIG	+= qt x11 warn_on release
-unix:CONFIG	+= qt x11 warn_on
+unix:CONFIG	+= qt x11 warn_on release
+//unix:CONFIG	+= qt x11 warn_on
 QT			+=	xml
 
 unix:COMMON_PATH = ../../common
