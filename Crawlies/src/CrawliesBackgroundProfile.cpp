@@ -125,8 +125,8 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
   QDomElement tempNode = node.firstChildElement("crawly_style").
     lastChildElement("crawly_style_entry");
 
+  int index = 0;
   while(!tempNode.isNull()) {	
-    int index = 0;
     retVal->addStyle();
 
     tempElem = tempNode.firstChildElement("palette");

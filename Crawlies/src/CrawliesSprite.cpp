@@ -153,7 +153,11 @@ void CrawliesSprite::drawCrawly(screen_struct* screenObj) {
 	  }
 	}
       }
-      curColorIdx = (curColorIdx+1)%_palWidth;
+      //curColorIdx = (curColorIdx+1)%_palWidth;
+      curColorIdx--;
+      if(curColorIdx < 0) {
+	curColorIdx = _palWidth-1;
+      }
     }
   }
 }
