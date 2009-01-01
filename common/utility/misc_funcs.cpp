@@ -92,3 +92,14 @@ QString randStr(int length) {
 
 	return retVal;
 }
+
+/**
+ * Converts the specified bool to Qt::CheckState.
+ */
+Qt::CheckState boolToCheckState(bool bVal) {
+  if(bVal)
+    return Qt::Checked;
+  
+  return Qt::Unchecked;
+}
+

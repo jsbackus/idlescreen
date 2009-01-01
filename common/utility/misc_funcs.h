@@ -50,3 +50,8 @@ extern float dotProduct(float v1x, float v1y, float v2x, float v2y);
  * specified length.
  */
 extern QString randStr(int length);
+
+/**
+ * Converts the specified bool to Qt::CheckState.
+ */
+extern Qt::CheckState boolToCheckState(bool bVal);
