@@ -22,6 +22,11 @@
  * 
  */
 
+// begin debug
+#include <iostream>
+using namespace std;
+//end debug
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -302,8 +307,8 @@ void PaletteSelectWidget::editPalette(const QString& palName, bool bReplace) {
 	    if(tmpItem != NULL && tmpItem->text() == oldPalName) {
 	      _list->takeItem(i);
 	    }
+	    _list->addItem(newName);
 	  }
-	  _list->addItem(newName);
 	  bDone = true;
 	}
       } else {
