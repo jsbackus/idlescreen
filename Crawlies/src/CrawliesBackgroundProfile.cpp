@@ -131,7 +131,7 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
 
     tempElem = tempNode.firstChildElement("palette");
     if(!tempElem.isNull()) {
-      retVal->setPalette(index, tempElem.text());
+      retVal->setPaletteName(index, tempElem.text());
     }
 
     tempElem = tempNode.firstChildElement("min_length");
@@ -405,13 +405,13 @@ void CrawliesBackgroundProfile::deleteStyle(int styleIdx) {
   _numStyles--;
 }
 
-QString CrawliesBackgroundProfile::getPalette(int styleIdx) {
+QString CrawliesBackgroundProfile::getPaletteName(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return "";
 
   return _styles[styleIdx].pal;
 }
-void CrawliesBackgroundProfile::setPalette(int styleIdx, QString palName) {
+void CrawliesBackgroundProfile::setPaletteName(int styleIdx, QString palName) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
@@ -522,6 +522,34 @@ void CrawliesBackgroundProfile::setHeadRandomColor(int styleIdx, bool bRandom) {
 
   _styles[styleIdx].bHeadRandomColor = bRandom;
 }
+
+crawly_profile_style CrawliesBackgroundProfile::getStyle(int styleIdx) {
+  if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles) {
+    crawly_profile_style empty;
+    return empty;
+  }
+
+  return _styles[styleIdx];
+}
+
+void CrawliesBackgroundProfile::setStyle(int styleIdx, 
+					 crawly_profile_style& style) {
+  if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
+    return;
+
+  // to sanity check data, we'll use all other set routines instead
+  // of just copying.
+  setPaletteName(styleIdx, style.pal);
+  setMinLength(styleIdx, style.minLength);
+  setMaxLength(styleIdx, style.maxLength);
+  setThickness(styleIdx, style.thickness);
+  setMinSpriteSpeed(styleIdx, style.minSpriteSpeed);
+  setMaxSpriteSpeed(styleIdx, style.maxSpriteSpeed);
+  setPaletteSpeed(styleIdx, style.palSpeed);
+  setHeadConstantColor(styleIdx, style.bHeadConstantColor);
+  setHeadRandomColor(styleIdx, style.bHeadRandomColor);
+}
+
 
 /**
  * Overloaded assignment operator.
