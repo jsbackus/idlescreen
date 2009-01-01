@@ -43,12 +43,6 @@ SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/LensObject.cpp
 SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/LensManager.cpp
 SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.cpp
 
-SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/LensProfile.cpp
-SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/GenericLensObject.cpp
-SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/LensObject.cpp
-SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/LensManager.cpp
-SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.cpp
-
 SOURCES		+=	$$SOURCE_PATH/ConfigWidget.cpp $$SOURCE_PATH/CrawliesSprite.cpp
 SOURCES		+=	$$SOURCE_PATH/CrawliesManager.cpp
 SOURCES		+=	$$SOURCE_PATH/StyleEditDialog.cpp
