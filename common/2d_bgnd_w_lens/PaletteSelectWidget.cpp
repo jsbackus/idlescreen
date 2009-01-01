@@ -296,7 +296,8 @@ void PaletteSelectWidget::editPalette(const QString& palName, bool bReplace) {
 
 	  // if we are replacing, remove old name first, then
 	  // insert the new name.
-	  if(oldPalName != "" && oldPalName != newName) {
+	  //if(oldPalName != "" && oldPalName != newName) {
+	  if(oldPalName != newName) {
 	    int i=0;
 	    int count = _list->count();
 	    QListWidgetItem* tmpItem = _list->item(0);
