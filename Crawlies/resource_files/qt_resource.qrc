@@ -12,5 +12,6 @@
 	<file alias="help/StyleEditorDialog.jpg">html/StyleEditorDialog.jpg</file>
 	<file alias="help/IndexedPaletteDialog.html">../../common/IndexedPalette/resource_files/IndexedPaletteDialog.html</file>
 	<file alias="help/IndexedPaletteDialog.jpg">../../common/IndexedPalette/resource_files/IndexedPaletteDialog.jpg</file>
+	<file alias="help/InsertColorDialog.jpg">../../common/IndexedPalette/resource_files/InsertColorDialog.jpg</file>
 </qresource>
 </RCC>
