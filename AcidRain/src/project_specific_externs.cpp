@@ -30,7 +30,7 @@
 
 #include "../../common/2d_bgnd_w_lens/BackgroundProfile.h"
 #include "../../common/2d_bgnd_w_lens/lens_engine/LensProfile.h"
-#include "CrawliesBackgroundProfile.h"
+#include "AcidRainBackgroundProfile.h"
 
 /**
  * This function will create an array that contains the profiles
@@ -49,7 +49,7 @@ BackgroundProfile** getBackgroundTypes(int* numProfiles) {
 		return NULL;
 	}
 
-	retVal[0] = (BackgroundProfile*) (new CrawliesBackgroundProfile());
+	retVal[0] = (BackgroundProfile*) (new AcidRainBackgroundProfile());
 
 	if(retVal[0] == NULL) {
 		*numProfiles = 0;
@@ -92,7 +92,7 @@ LensProfile** getLensTypes(int* numProfiles) {
  * document root.
  */
 QString getAppConfigName(){
-	return QString("Crawlies");
+	return QString("AcidRain");
 }
 
 /**
@@ -101,7 +101,7 @@ QString getAppConfigName(){
  * dialog box.
  */
 QString getAppFullName() {
-	return QString("Crawlies");
+	return QString("AcidRain");
 }
 
 /**

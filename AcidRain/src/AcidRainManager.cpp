@@ -28,12 +28,12 @@
 //end debug
 
 #include "utility/misc_funcs.h"
-#include "CrawliesManager.h"
+#include "AcidRainManager.h"
 
 /**
  * Generic constructor.
  */
-CrawliesManager::CrawliesManager() {
+AcidRainManager::AcidRainManager() {
   initData();
 }
 
@@ -47,7 +47,7 @@ CrawliesManager::CrawliesManager() {
  * @param maxCrawlies The maximum number of worms allowed on the screen.
  * @param spawnChance There is a 1/spawnChance chance for a spawn.
  */
-CrawliesManager::CrawliesManager(int sizeX, int sizeY, int maxCrawlies,
+AcidRainManager::AcidRainManager(int sizeX, int sizeY, int maxCrawlies,
 				 int spawnChance) {
   initData();
   initBackground(sizeX, sizeY);
@@ -59,7 +59,7 @@ CrawliesManager::CrawliesManager(int sizeX, int sizeY, int maxCrawlies,
   _bSetupFinished = true;
 }
 
-CrawliesManager::~CrawliesManager() {
+AcidRainManager::~AcidRainManager() {
   if(_styles != NULL) {
     delete [] _styles;
     _styles = NULL;
@@ -96,7 +96,7 @@ CrawliesManager::~CrawliesManager() {
  * @param bHeadConstantColor Whether the head keeps the same color index.
  * @param bHeadRandomColor Whether the head color is random when created.
  */
-void CrawliesManager::addCrawliesStyle(IndexedPalette* pal, int minLength, 
+void AcidRainManager::addCrawliesStyle(IndexedPalette* pal, int minLength, 
 				       int maxLength, 
 				       int thickness,
 				       float minSpriteSpeed,
@@ -134,14 +134,14 @@ void CrawliesManager::addCrawliesStyle(IndexedPalette* pal, int minLength,
  *
  * @param Whether setup is finished.
  */
-void CrawliesManager::setFinished(bool bFinished) {
+void AcidRainManager::setFinished(bool bFinished) {
   _bSetupFinished = bFinished;
 }
 
 /**
  * Draws the whole Background.
  */
-void CrawliesManager::drawBackground(screen_struct* screenObj) {
+void AcidRainManager::drawBackground(screen_struct* screenObj) {
   if(screenObj == NULL)
     return;
 
@@ -175,14 +175,36 @@ void CrawliesManager::drawBackground(screen_struct* screenObj) {
 /**
  * Finishes generating the fractal then rotates the palette when done.
  */
-void CrawliesManager::clocktick() {
+void AcidRainManager::clocktick() {
   if(!isSetupFinished()) {
     return;
   }
+  if(_sprites == NULL) {
+    return;
+  }
 
+  // first, move the crawlies we have and calculate density
+  int i=0;
+  int usedPixels = 0;
+  while(i<_numSprites) {
+    if(_sprites[i] != NULL && _sprites[i]->isAlive()) {
+      // we've found a valid, live crawly, so move!
+      _sprites[i]->moveCrawly();
+      // add it to the density calculation
+      _sprites[i]->
 
-  // first, move the crawlies we have.
-  moveCrawlies();
+      i++;
+    } else {
+      // current location does not contain a valid, living
+      // crawly, so move the crawly at the end of the list
+      // to this location, decrement the size of the list
+      // and try again.
+      delete _sprites[i];
+      _sprites[i] = _sprites[_numSprites-1];
+      _sprites[_numSprites-1] == NULL;
+      _numSprites--;
+    }
+  }
 
   // next, if there is space, consider making a new one.
   if(_numCrawlies < _maxNumCrawlies && jrand()%_spawnChance == 0) {
@@ -193,7 +215,7 @@ void CrawliesManager::clocktick() {
 /**
  * Inits data structures.
  */
-void CrawliesManager::initData() {
+void AcidRainManager::initData() {
   _bSetupFinished = false;
   _styles = NULL;
   _maxNumStyles = 0;
@@ -209,8 +231,8 @@ void CrawliesManager::initData() {
  * Creates a new sprite from one of the palette styles available and
  * adds it to the list of live crawlies.
  */
-void CrawliesManager::spawnCrawly() {
-  if(_crawlies == NULL)
+void AcidRainManager::spawnSprite() {
+  if(_sprites == NULL)
     return;
   if(_styles == NULL)
     return;
@@ -219,8 +241,7 @@ void CrawliesManager::spawnCrawly() {
   int idx = jrand()%_numStyles;
 
   // determine starting position
-  int startX = (jrand()%(_sizeX+2)) - 1;
-  int startY = (jrand()%(_sizeY+2)) - 1;
+  int startX = (jrand()%(_sizeX));
 
   // determine the length
   int minLength = _styles[idx].minLength;
@@ -238,65 +259,41 @@ void CrawliesManager::spawnCrawly() {
     length = (jrand()%(maxLength-minLength))+minLength;
   }
 
-  // determine sprite speed
-  float minSpeed = _styles[idx].minSpriteSpeed;
-  float maxSpeed = _styles[idx].maxSpriteSpeed;
-  float spriteSpeed;
-  if(minSpeed == maxSpeed) {
-    spriteSpeed = minSpeed;
+  // determine sprite initial velocity  
+  float minV = _styles[idx].minInitialV;
+  float maxV = _styles[idx].maxInitialV;
+  float spriteV;
+  if(minV == maxV) {
+    spriteV = minV;
   } else {
-    spriteSpeed = ((float)(jrand()%((int)((maxSpeed-minSpeed)*100.0))))/100.0;
+    spriteV = ((float)(jrand()%((int)((maxV-minV)*100.0))))/100.0;
   }
 
-  CrawliesSprite* tmpCrawly = new CrawliesSprite(_sizeX, _sizeY, startX, 
-						 startY,&_styles[idx].pal,
-						 length, _styles[idx].thickness,
-						 spriteSpeed,
-						 _styles[idx].palSpeed,
-						 _styles[idx].bHeadConstantColor,
-						 _styles[idx].bHeadRandomColor);
+  FallingRainSprite* tmpSprite = 
+    new FallingRainSprite(_sizeX, _sizeY, startX, _gravity,&_styles[idx].pal,
+			  length, _styles[idx].thickness, spriteV,
+			  _styles[idx].palSpeed, _palYOffset,
+			  _styles[idx].bHeadConstantColor,
+			  _styles[idx].bHeadRandomColor);
 
-  // append to list of crawlies
-  _crawlies[_numCrawlies] = tmpCrawly;
-  if(_crawlies[_numCrawlies] == NULL)
+  // append to list of sprites
+  if(_numSprites == _maxNumSprites) {
+    growSpriteList(int size=RAIN_SPRITE_CHUNK_SIZE);
+  }
+  _sprites[_numSprites] = tmpSprite;
+  if(_sprites[_numSprites] == NULL)
     return;
-  _numCrawlies++;
-  tmpCrawly = NULL;
-}
-
-/**
- * Checks for "life" and moves living crawlies.
- */
-void CrawliesManager::moveCrawlies() {
-  if(_crawlies == NULL) {
-    return;
-  }
-
-  int i=0;
-  while(i<_numCrawlies) {
-    if(_crawlies[i] != NULL && _crawlies[i]->isAlive()) {
-      // we've found a valid, live crawly, so move!
-      _crawlies[i]->moveCrawly();
-      i++;
-    } else {
-      // current location does not contain a valid, living
-      // crawly, so move the crawly at the end of the list
-      // to this location, decrement the size of the list
-      // and try again.
-      delete _crawlies[i];
-      _crawlies[i] = _crawlies[_numCrawlies-1];
-      _numCrawlies--;
-    }
-  }
+  _numSprites++;
+  tmpSprite = NULL;
 }
 
 /**
  * Grows the list of crawly styles.
  */
-void CrawliesManager::growStyleList(int size) {
+void AcidRainManager::growStyleList(int size) {
   if(_styles == NULL) {
     _maxNumStyles = size;
-    _styles = new crawly_style[_maxNumStyles];
+    _styles = new rainsprite_style[_maxNumStyles];
     if(_styles == NULL) {
       _maxNumStyles = 0;
       return;
@@ -304,7 +301,7 @@ void CrawliesManager::growStyleList(int size) {
     _numStyles = 0;
   } else {
     // create a temp list and copy
-    crawly_style* tmpList = new crawly_style[_maxNumStyles+size];
+    rainsprite_style* tmpList = new rainsprite_style[_maxNumStyles+size];
     if(tmpList == NULL) {
       return;
     }
@@ -318,3 +315,77 @@ void CrawliesManager::growStyleList(int size) {
   }
 }
 
+/**
+ * Grows the list of sprites.
+ */
+void AcidRainManager::growSpriteList(int size) {
+  if(_sprites == NULL) {
+    _maxNumSprites = size;
+    _sprites = new FallingRainSprite*[_maxNumSprites];
+    if(_sprites == NULL) {
+      _maxNumSprites = 0;
+      return;
+    }
+    _numSprites = 0;
+    // null out list
+    for(int i=0; i<_maxNumSprites;i++) {
+      _sprites[i] = NULL;
+    }
+  } else {
+    // create a temp list and copy
+    FallingRainSprite** tmpList = new FallingRainSprite*[_maxNumStyles+size];
+    if(tmpList == NULL) {
+      return;
+    }
+    int i;
+    for(i=0;i<_numSprites;i++) {
+      tmpList[i] = _sprites[i];
+      _sprites[i] = NULL;
+    }
+    // null out rest of list
+    for(i=_numSprites;i<_maxNumSprites;i++) {
+      tmpList[i] = NULL;
+    }
+    delete [] _sprites;
+    _sprites = tmpList;
+    tmpList = NULL;
+    _maxNumSprites += size;
+  }
+}
+
+
+/**
+ * Converts the palette from IndexedPalette* to int*
+ */
+void FallingRainSprite::convPalette(IndexedPalette* pal) {
+  if(pal == NULL)
+    return;
+
+  if(_pal != NULL) {
+    delete [] _pal;
+    _pal = NULL;
+  }
+
+  _palWidth = pal->getWidth();
+  _palHeight = pal->getHeight();
+  _palYOffset = 0.0;
+
+  if(_palWidth <= 0 || _palHeight <= 0)
+    return;
+
+  // create space for the 2D palette
+  _pal = new int[(_palWidth*_palHeight)*4];
+  if(_pal == NULL)
+    return;
+
+  // copy palette
+  GLubyte buff[4];
+  for(int y=0; y<_palHeight; y++) {
+    for(int x=0; x<_palWidth; x++) {
+      pal->getColor(x,y,&buff[0], 4);
+      for(int j=0; j<4;j++) {
+	_pal[(x+y*_palWidth)*4+j] = buff[j];
+      }
+    }
+  }
+}

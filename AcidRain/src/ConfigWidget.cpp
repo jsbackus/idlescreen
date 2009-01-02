@@ -50,7 +50,7 @@
 #include "../../common/utility/HelpDialog.h"
 #include "../../common/2d_bgnd_w_lens/project_specific_extern_defs.h"
 #include "ProfileEditDialog.h"
-#include "CrawliesBackgroundProfile.h"
+#include "AcidRainBackgroundProfile.h"
 
 //constructor & destructor
 ConfigWidget::ConfigWidget(QWidget* parent, Qt::WindowFlags f) {
@@ -62,7 +62,7 @@ ConfigWidget::ConfigWidget(QWidget* parent, Qt::WindowFlags f) {
   _mpAvailList = NULL;
   _mpSelList = NULL;
 
-  _windowTitle = tr("Crawlies Configuration");
+  _windowTitle = tr("AcidRain Configuration");
 
   setWindowTitle(_windowTitle);
 
@@ -596,7 +596,7 @@ void ConfigWidget::importClicked(bool checked) {
     // since the respective add routines will check before appending
     // to the lists.
     if(!_manager->doesProfileExist(tmpMp.getName())) {
-      CrawliesBackgroundProfile* tmpBkgnd = (CrawliesBackgroundProfile*)tmpMgr->getBackgroundProfile(tmpMp.getBackgroundProfileName());
+      AcidRainBackgroundProfile* tmpBkgnd = (AcidRainBackgroundProfile*)tmpMgr->getBackgroundProfile(tmpMp.getBackgroundProfileName());
       if(tmpBkgnd == NULL)
 	return;
       // add palettes
@@ -656,7 +656,7 @@ void ConfigWidget::exportClicked(bool checked) {
   // it requires (including IndexedPaletteProfiles).
   for(int i = 0; i<bkgnds.size(); i++) {
     MasterProfile tmpMp = _manager->getProfile(bkgnds.at(i));
-    CrawliesBackgroundProfile* tmpBkgnd = (CrawliesBackgroundProfile*)_manager->getBackgroundProfile(tmpMp.getBackgroundProfileName());
+    AcidRainBackgroundProfile* tmpBkgnd = (AcidRainBackgroundProfile*)_manager->getBackgroundProfile(tmpMp.getBackgroundProfileName());
     if(tmpBkgnd == NULL)
       return;
     for(int j=0; j<tmpBkgnd->getNumStyles();j++) {

@@ -25,7 +25,7 @@
 /**
  * This class is responsible for creating and maintaining the worm
  * sprites, including drawing and moving them.  The corresponding
- * profile class is CrawliesBackgroundProfile.h.
+ * profile class is AcidRainBackgroundProfile.h.
  *
  * Note: it is important that the manager not place any worms beyond
  * corners!  i.e. at (-1,-1), (-1, height), (width, -1), (width, height).
@@ -36,77 +36,84 @@
 
 using namespace std;
 
-#ifndef __CRAWLIESMANAGER_H__
-#define __CRAWLIESMANAGER_H__
+#ifndef __ACIDRAINMANAGER_H__
+#define __ACIDRAINMANAGER_H__
 
-#define CRAWLY_STYLE_CHUNK_SIZE 5
+#define RAIN_STYLE_CHUNK_SIZE 5
 
 #include "2d_bgnd_w_lens/globaldefs.h"
 #include "2d_bgnd_w_lens/Background.h"
 
-#include "CrawliesSprite.h"
+#include "RainSprite.h"
+#include "FallingRainSprite.h"
+//#include "RecoilSprite.h"
 
-struct crawly_style {
-  IndexedPalette pal;
+struct rainsprite_style {
+  IndexedPalette palName;
+  int* palData;
+  int palLength;
+  int palWidth;
   int minLength;
   int maxLength;
   int thickness;
-  float minSpriteSpeed;
-  float maxSpriteSpeed;
+  float minInitialV;
+  float maxInitialV;
   float palSpeed;
   bool bHeadConstantColor;
   bool bHeadRandomColor;
 };
 
-class CrawliesManager : public Background {
+class AcidRainManager : public Background {
 
  public:
 
   /**
    * Generic constructor.
    */
-  CrawliesManager();
+  AcidRainManager();
 
   /**
    * Constructor that takes all of the initialization information that
    * isn't specific to each palette.  For palette specific information,
-   * see addCrawliesStyle().
+   * see addRainStyle().
    *
    * @param sizeX The width of the screen in pixels.
    * @param sizeY The height of the screen in pixels.
    * @param maxCrawlies The maximum number of worms allowed on the screen.
    * @param spawnChance There is a 1/spawnChance chance for a spawn.
+   * @param gravity The "downward" acceleration to use.  Must be positive!
    */
-  CrawliesManager(int sizeX, int sizeY, int maxCrawlies, int spawnChance);
+  AcidRainManager(int sizeX, int sizeY, int maxAcidRain, int spawnChance,
+		  float gravity);
 
-  ~CrawliesManager();
+  ~AcidRainManager();
 
   /**
-   * This procedure will add a new crawly style to the list of styles
-   * available for the worms.  Must be called at least once before the
+   * This procedure will add a new rain style to the list of styles
+   * available for the sprites.  Must be called at least once before the
    * first call to clocktick()!
    *
-   * For consistant sized worms, minLength and maxLength should be set
+   * For consistant sized sprites, minLength and maxLength should be set
    * equal.  To use the length of the palette for either quatity, set
    * equal to -1.
    * 
-   * If the sprite speed is supposed to be constant, minSpeed and maxSpeed
-   * must be set equal.
+   * If the sprite initial speed is supposed to be constant, minInitialV 
+   * and maxInitialV must be set equal.
    *
    * @param pal A pointer to the palette to associate with this style.
-   * @param minLength The minimum crawly length.
-   * @param maxLength the maximum crawly length.
-   * @param thickness The thickness of the crawly.
-   * @param minSpriteSpeed The minimum worm speed.
-   * @param maxSpriteSpeed The maximum worm speed.
+   * @param minLength The minimum sprite length.
+   * @param maxLength the maximum sprite length.
+   * @param thickness The thickness of the sprite.
+   * @param minInitialV The minimum sprite initial velocity.
+   * @param maxInitialV The maximum sprite initial velocity.
    * @param palSpeed The secondary palette rotation speed.
    * @param bHeadConstantColor Whether the head keeps the same color index.
    * @param bHeadRandomColor Whether the head color is random when created.
    */
-  void addCrawliesStyle(IndexedPalette* pal, int minLength, int maxLength, 
-			int thickness, float minSpriteSpeed,
-			float maxSpriteSpeed, float palSpeed,
-			bool bHeadConstantColor, bool bHeadRandomColor);
+  void addRainStyle(IndexedPalette* pal, int minLength, int maxLength, 
+		    int thickness, float minInitialV,
+		    float maxInitialV, float palSpeed,
+		    bool bHeadConstantColor, bool bHeadRandomColor);
 
   /**
    * Sets the "setup finished" flag.
@@ -137,27 +144,35 @@ class CrawliesManager : public Background {
    * Creates a new sprite from one of the palette styles available and
    * adds it to the list of live sprites.
    */
-  void spawnCrawly();
+  void spawnSprite();
 
   /**
-   * Checks for "life" and moves living crawlies.
+   * Grows the list of rain styles.
    */
-  void moveCrawlies();
+  void growStyleList(int size=RAIN_STYLE_CHUNK_SIZE);
 
   /**
-   * Grows the list of crawly styles.
+   * Grows the list of sprites.
    */
-  void growStyleList(int size=CRAWLY_STYLE_CHUNK_SIZE);
+  void growSpriteList(int size=RAIN_SPRITE_CHUNK_SIZE);
 
-  crawly_style* _styles;
+  /**
+   * Converts the palette from IndexedPalette* to int*
+   */
+  void convPalette(IndexedPalette* pal);
+
+  rainsprite_style* _styles;
   int _numStyles;
   int _maxNumStyles;
 
-  CrawliesSprite** _crawlies;
-  int _numCrawlies;
-  int _maxNumCrawlies;
+  FallingRainSprite** _sprites;
+  int _numSprites;
+  int _maxNumSprites;
 
   int _spawnChance;
+
+  int _palYOffset;
+  float _maxDensity;
 };
 
 #endif

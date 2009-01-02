@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<TITLE>Style Editor</TITLE>
+</HEAD>
+<BODY>
+<H2>Style Editor</H2><br>
+<h3>img src="StyleEditDialog.jpg" width="454" height="531" border="0" alt="" align="middle"</h3>
+<h3>The Basics</h3>
+<p>Crawly styles control things such as coloring, Crawly length,
+Crawly thickness, movement speed, and the secondary rotational speed
+of the palette.  The Crawly coloring comes from a palette specified
+in the drop-down box at the top.  Each Crawly must have a length,
+which is randomly picked from between the Min and Max length parameters.
+When animating the Crawly, it will "inch along" at a speed randomly
+chosen from between the Min and Max speed parameters.  As the
+Crawly moves, it can be configured such that the "head" keeps the
+same palette color index, or it can rotate through the palette.
+When the Crawly is spawned, it can be configured such that
+the head color palette index is randomly chosen or will always
+be color index 0.  Lastly, the Crawly color can be rotated
+through the palette's secondary color axis at the speed indicated
+by the Palette Speed.  For more information on palettes,
+please refer to the help for the
+<a href="IndexedPaletteDialog.html">Palette Editor</a>.</P>
+<h3>The Nitty-Gritty</h3>
+<p>Here we will discuss the specifics of each parameter.</p>
+<ul><li><b>Palette</b> - This is the palette to use to color the
+Crawlies.  Use the drop-down list to select one of
+the available palettes, or you can add a new palette by
+clicking the "Add" button to the right.  Clicking the "Edit"
+button will edit the palette currently selected.  For more
+information on palettes and the Palette Editor, please
+click <a href="IndexedPaletteDialog.html">here</a>.  For
+more suggestions on designing a palette, please see below.</li>
+<li><b>Min Crawly Length</b> - This is the minimum allowed
+length of the Crawly.  If you wish to use the length of the
+palette for the minimum length, check "Use Palette For Min".  If
+the length of the Crawly exceeds the length of the palette, the 
+palette will wrap around.</li>
+<li><b>Use Palette Length For Min</b> - When this is checked,
+the Min Crawly Length will be set to the length of the palette.
+This happens at render time, so if the palette changes, so
+will the minimum length of the Crawly.</li>
+<li><b>Max Crawly Length</b> - This is the maximum allowed length
+of the Crawly.  If you wish to use the length of the palette for
+the maximum length, check "Use Palette For Max".  If the length of
+the Crawly exceeds the length of the palette, the palette will wrap
+around.</li>
+<li><b>Use Palette Length For Max</b> - When this is checked,
+the Max Crawly Length will be set to the length of the palette.
+This happens at render time, so if the palette changes, so
+will the maximum length of the Crawly.</li>
+<li><b>Min Crawly Speed</b> - This is the minimum allowed speed
+that the Crawly can move at.</li>
+<li><b>Max Crawly Speed</b> - This is the maximum allowed speed
+that the Crawly can move at.</li>
+<li><b>Thickness</b> - This is the thickness of the Crawly.  This will
+also effect the length of the crawly.  This is essentially a multiplier
+that determines how many pixels each color segment will be.</li>
+<li><b>Palette Speed</b> - This is the speed at which the Crawly colors
+will rotate through the secondary palette.</li>
+<li><b>Head Keeps Constant Color</b> - When this box is checked, the
+Crawly's head will maintain the same palette primary-axis index as it
+moves, as opposed to rotating through the primary axis.  This will
+not affect the rotation through the secondary palette axis.</li>
+<li><b>Random Head Color On Spawn</b> - When this box is checked, the
+Crawly's head palette primary-axis index will be randomly chosen, as
+opposed to always starting out at index 0.</li></ul>
+<h3>Palette Considerations</h3>
+<p>Palette design is a bit of an artform, but some guidelines
+that I stick to are as follows:</p>
+<ul><li>Stick to a small number of "key" colors, say 3-5.</li>
+<li>Keep a consistent amount of undefined colors between
+each "key" color, say 7 or 15.</li>
+<li>Utilize color interpolation and color wrapping, especially
+with "Head Keeps Constant Color" disabled.</li>
+<li>Have fun doing it!</li></ul>
+<h3>Where To Look For More Info</h3>
+<p>For more help, feel free to visit us at
+http://sites.google.com/site/idlescreenproject/, where
+you can take advantage of the FAQS, Wiki, and user lists.</p>
+<hr>
+<a href="index.html">Back To the Main Page</a>
+</BODY>
+</HTML>

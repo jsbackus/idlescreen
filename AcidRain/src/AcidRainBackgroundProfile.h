@@ -95,8 +95,8 @@ public:
 	void addStyle();
 	void deleteStyle(int styleIdx);
 
-	QString getPalette(int styleIdx);
-	void setPalette(int styleIdx, QString palName);
+	QString getPaletteName(int styleIdx);
+	void setPaletteName(int styleIdx, QString palName);
 
 	int getMinLength(int styleIdx);
 	void setMinLength(int styleIdx, int minLength);
@@ -119,6 +119,9 @@ public:
 
 	bool isHeadRandomColor(int styleIdx);
 	void setHeadRandomColor(int styleIdx, bool bRandom);
+
+	crawly_profile_style getStyle(int styleIdx);
+	void setStyle(int styleIdx, crawly_profile_style& style);
 
 	/**
 	 * Overloaded assignment operator.

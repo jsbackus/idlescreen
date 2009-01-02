@@ -41,17 +41,16 @@
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QSlider>
-
-//#include "../../common/2d_bgnd_w_lens/ConfigManager.h"
-//#include "../../common/2d_bgnd_w_lens/MasterProfile.h"
-//#include "../../common/2d_bgnd_w_lens/BackgroundProfile.h"
-//#include "PlasmaFractalBackgroundProfile.h"
-//#include "../../../common/IndexedPalette/IndexedPaletteDialog.h"
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QStringList>
 
 #include "2d_bgnd_w_lens/ConfigManager.h"
 #include "2d_bgnd_w_lens/MasterProfile.h"
 #include "2d_bgnd_w_lens/BackgroundProfile.h"
-#include "IndexedPalette/IndexedPaletteDialog.h"
+#include "IndexedPalette/IndexedPaletteProfile.h"
+#include "StyleEditDialog.h"
+#include "CrawliesBackgroundProfile.h"
 
 class ProfileEditDialog : public QDialog {
 
@@ -67,21 +66,33 @@ public slots:
 	void cancelClicked(bool checked = false);
 	void helpClicked(bool checked = false);
 
-	void addPalClicked(bool checked = false);
-	void editPalClicked(bool checked = false);
-	void animatePalClicked(bool checked = false);
+	void addStyleClicked();
+	void editStyleClicked();
+	void copyStyleClicked();
+	void deleteStyleClicked();
+
+	void cellSelected(int row=0, int column=0);
+	void cellDoubleClicked(int row=0, int column=0);
 
 signals:
 	void profileNameChange(QString oldName, QString newName);
 
 private:
-	//attempts to edit the specified palette.
-	//void editPalette(IndexedPaletteProfile* pal, bool bWasAddRename = false);
-	//attempts to edit the specified palette.
-	void editPalette(const QString& palName, bool bReplace = false);
 
-	// populates the palette name selection combo box
-	void populatePalList(QString selected);
+	/**
+	 * Updates the style table data for the specified style index.
+	 */
+	void updateStyleRow(int styleIdx);
+
+	/**
+	 * Sets up the style table widget.
+	 */
+	void setupStyleTableWidget(CrawliesBackgroundProfile* profile);
+
+	/**
+	 * Grows the list of crawly styles.
+	 */
+	void growStyleList(int size=CRAWLY_STYLE_CHUNK_SIZE);
 
 	//MasterProfile related
 	QLineEdit* _nameBox;
@@ -91,23 +102,18 @@ private:
 
 	MasterProfile _mp;
 
-	//PlasmaFractalBackgroundProfile related
-	QSlider* _coarsenessBox;
-	float _coarsenessAdjust;
-	QComboBox* _paletteBox;
-	bool _bAnimatePalette;
-	QDoubleSpinBox* _paletteXSpeedBox;
-	QDoubleSpinBox* _paletteYSpeedBox;
-	QCheckBox* _clampColorBox;
+	// CrawliesBackgroundProfile related
+	QSpinBox* _numCrawlies;
+	QSlider* _spawnSlider; //!< Note: reversed!
+	QTableWidget* _styleTable;
 
-	IndexedPaletteDialog* _palDlg;
-	QString _palOldName;
+	// list of tool tips for the table
+	QString _tableToolTips[9];
 
-	// lens related
-	QSlider* _lensSizeSlider;
-	QSlider* _lensVarSlider;
-	QSpinBox* _numLenses;
-
+	crawly_profile_style* _styleList;
+	int _numStyles;
+	int _maxNumStyles;
+	
 	ConfigManager* _confMgr;
 
 	QString _oldName;
