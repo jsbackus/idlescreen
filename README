@@ -33,3 +33,9 @@ Since 0.03:
 * Added a HelpDialog utility class that uses QTextBrowser.
 * Added help to certain dialogs.
 * Modified HelpDialog to accept the url to load as a QString parameter.
+* Added Crawlies
+* Fixed a bug in the Palette Editor Chooser that wasn't listing the new
+  palettes until after closing and reopening the Chooser.
+* Fixed a bug that when editing a palette but not changing its name, it
+  was added to the end of the list in the Palette Editor Chooser, until
+  the Chooser was closed and reopened.

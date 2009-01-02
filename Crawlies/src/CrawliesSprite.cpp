@@ -142,22 +142,23 @@ void CrawliesSprite::drawCrawly(screen_struct* screenObj) {
   for(int i=0; i<_numSegments; i++) {
     int x = _segments[i].x;
     int y = _segments[i].y;
-    if( x >= 0 && x < _screenWidth && y >= 0 && y < _screenHeight) {
-      int palIdx = (curColorIdx + ((int)_palYOffset)*_palWidth)*4;
-      for(int i=0;i<_thickness;i++) {
-	int ty = (y+i)*_screenWidth*4;
-	for(int j=0;j<_thickness;j++) {
-	  int tx = (x+j)*4;
+    int palIdx = (curColorIdx + ((int)_palYOffset)*_palWidth)*4;
+    for(int m=0;m<_thickness;m++) {
+      int ty = (y+m)*_screenWidth*4;
+      for(int j=0;j<_thickness;j++) {
+	int tx = (x+j)*4;
+	if( (x+j) >= 0 && (x+j) < _screenWidth 
+	    && (m+y) >= 0 && (m+y) < _screenHeight) {
 	  for(int k=0; k<4;k++) {
 	    screenObj->_pixels[tx+ty+k] = _pal[palIdx+k];
 	  }
 	}
       }
-      //curColorIdx = (curColorIdx+1)%_palWidth;
-      curColorIdx--;
-      if(curColorIdx < 0) {
-	curColorIdx = _palWidth-1;
-      }
+    }
+    //curColorIdx = (curColorIdx+1)%_palWidth;
+    curColorIdx--;
+    if(curColorIdx < 0) {
+      curColorIdx = _palWidth-1;
     }
   }
 }

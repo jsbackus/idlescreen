@@ -108,7 +108,7 @@ QString getAppFullName() {
  * Returns the version string for the screen saver.
  */
 QString getAppVersion() {
-	return QString("0.1");
+	return QString("0.8");
 }
 
 
