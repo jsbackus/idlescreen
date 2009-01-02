@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.10"
+	Name="glut_demo"
+	ProjectGUID="{E9EA924D-90C5-46C8-814B-B871C68261B3}"
+	Keyword="MakeFileProj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="Debug"
+			IntermediateDirectory="Debug"
+			ConfigurationType="0">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\Crawlies_glut.pro
+nmake debug
+"
+				ReBuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\Crawlies_glut.pro
+nmake debug-clean
+nmake debug
+"
+				CleanCommandLine="%QTDIR%\bin\qmake ..\..\project_files\Crawlies_glut.pro
+nmake debug-clean
+"
+				Output="debug\Crawlies_glut.exe"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="Release"
+			IntermediateDirectory="Release"
+			ConfigurationType="0">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\Crawlies_glut.pro
+nmake release
+"
+				ReBuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\Crawlies_glut.pro
+namke release-clean
+nmake release"
+				CleanCommandLine="%QTDIR%\bin\qmake ..\..\project_files\Crawlies_glut.pro
+nmake release-clean
+"
+				Output="release\Crawlies_glut.exe"/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			<File
+				RelativePath="..\..\..\common\core\glut_demo.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+		</Filter>
+		<File
+			RelativePath="..\..\project_files\Crawlies_glut.pro">
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

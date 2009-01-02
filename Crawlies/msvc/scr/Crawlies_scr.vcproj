@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="PlasmaLenz_scr"
-	ProjectGUID="{40673460-AD38-42EA-BB87-65AAD770DD20}"
+	Name="Crawlies_scr"
+	ProjectGUID="{72B831D6-7CFF-4614-990C-3DA015146765}"
 	Keyword="MakeFileProj">
 	<Platforms>
 		<Platform
@@ -18,18 +18,18 @@
 			<Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="set PATH=%PATH%;C:\MinGW\bin
-rc /fo&quot;Debug\scr.res&quot; ..\..\..\resource_files\win_resource.rc
-%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+rc /fo&quot;Debug\scr.res&quot; ..\..\resource_files\win_resource.rc
+%QTDIR%\bin\qmake ..\..\project_files\Crawlies_scr.pro
 nmake debug
 "
-				ReBuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+				ReBuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\Crawlies_scr.pro
 nmake debug-clean
 nmake debug
 "
-				CleanCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+				CleanCommandLine="%QTDIR%\bin\qmake ..\..\project_files\Crawlies_scr.pro
 nmake debug-clean
 "
-				Output="debug\PlasmaLenz.exe"/>
+				Output="debug\Crawlies.exe"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -39,19 +39,19 @@ nmake debug-clean
 			<Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="rc /fo&quot;Release\scr.res&quot; ..\..\resource_files\win_resource.rc
-%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+%QTDIR%\bin\qmake ..\..\project_files\Crawlies_scr.pro
 nmake release
 "
 				ReBuildCommandLine="del /F Release\*.res
-%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+%QTDIR%\bin\qmake ..\..\project_files\Crawlies_scr.pro
 namke release-clean
 rc /fo&quot;Release\scr.res&quot; ..\..\resource_files\win_resource.rc
 nmake release"
-				CleanCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+				CleanCommandLine="%QTDIR%\bin\qmake ..\..\project_files\Crawlies_scr.pro
 del /F Release\*.res
 nmake release-clean
 "
-				Output="release\PlasmaLenz.exe"/>
+				Output="release\Crawlies.exe"/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -81,6 +81,15 @@ nmake release-clean
 			</File>
 			<File
 				RelativePath="..\..\src\ConfigWidget.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\CrawliesBackgroundProfile.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\CrawliesManager.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\CrawliesSprite.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\lens_engine\GenericLensObject.cpp">
@@ -155,22 +164,13 @@ nmake release-clean
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\PaletteSelectWidget.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\common\plasma\PlasmaAlgorithm.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\PlasmaFractal.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\PlasmaFractalBackgroundProfile.cpp">
-			</File>
-			<File
 				RelativePath="..\..\src\ProfileEditDialog.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\project_specific_externs.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\common\2d_bgnd_w_lens\lens_engine\SphericalLensProfile.cpp">
+				RelativePath="..\..\src\StyleEditDialog.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\common\core\win_main.cpp">
@@ -197,6 +197,15 @@ nmake release-clean
 			</File>
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\ConfigWidget.h">
+			</File>
+			<File
+				RelativePath="..\..\src\CrawliesBackgroundProfile.h">
+			</File>
+			<File
+				RelativePath="..\..\src\CrawliesManager.h">
+			</File>
+			<File
+				RelativePath="..\..\src\CrawliesSprite.h">
 			</File>
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\lens_engine\GenericLensObject.h">
@@ -274,15 +283,6 @@ nmake release-clean
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\PaletteSelectWidget.h">
 			</File>
 			<File
-				RelativePath="..\..\..\common\plasma\PlasmaAlgorithm.h">
-			</File>
-			<File
-				RelativePath="..\..\src\PlasmaFractal.h">
-			</File>
-			<File
-				RelativePath="..\..\src\PlasmaFractalBackgroundProfile.h">
-			</File>
-			<File
 				RelativePath="..\..\src\ProfileEditDialog.h">
 			</File>
 			<File
@@ -292,7 +292,7 @@ nmake release-clean
 				RelativePath="..\..\resource_files\resource.h">
 			</File>
 			<File
-				RelativePath="..\..\..\common\2d_bgnd_w_lens\lens_engine\SphericalLensProfile.h">
+				RelativePath="..\..\src\StyleEditDialog.h">
 			</File>
 			<File
 				RelativePath="..\..\..\common\core\win_misc_funcs.h">
@@ -310,13 +310,13 @@ nmake release-clean
 			</File>
 		</Filter>
 		<File
+			RelativePath="..\..\project_files\Crawlies_scr.pro">
+		</File>
+		<File
 			RelativePath="..\..\resource_files\defaults.xml">
 		</File>
 		<File
-			RelativePath="..\..\project_files\PlasmaLenz_scr.pro">
-		</File>
-		<File
-			RelativePath="..\..\..\resource_files\qt_resource.qrc">
+			RelativePath="..\..\resource_files\qt_resource.qrc">
 		</File>
 	</Files>
 	<Globals>

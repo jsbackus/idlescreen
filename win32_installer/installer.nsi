@@ -1,7 +1,7 @@
 # Globals
 !define VERSION_MAJOR "0"
-!define VERSION_MINOR "4"
-!define VERSION "${VERSION_MAJOR}.${VERSION_MINOR}_Alpha"
+!define VERSION_MINOR "8"
+!define VERSION "${VERSION_MAJOR}.${VERSION_MINOR}_Beta"
 Name "Idle Screen Installer ${VERSION}"
 OutFile "idlescreen_${VERSION}.exe"
 SetCompressor /FINAL lzma
@@ -20,7 +20,6 @@ Function .onInit
   SetShellVarContext all
 
   #set variables
-  #StrCpy $TARGET_DIR "$PROGRAMFILES\Blargh"
   StrCpy $TARGET_DIR "C:\IdleScreen"
   StrCpy $REDIRECTOR_TARGET "$SYSDIR"
   StrCpy $DATA_DIR "$APPDATA\idlescreen_inst"
@@ -125,6 +124,23 @@ Section "Qt Libraries"
 SectionEnd
 
 SectionGroup "Screen Savers"
+Section "Crawlies"
+  # main scr file
+  SetOutPath "$TARGET_DIR\bin"
+  File /oname=Crawlies.scr "..\Crawlies\msvc\scr\release\Crawlies.exe"
+
+  # redirector file
+  SetOutPath "$REDIRECTOR_TARGET"
+  File /oname=Crawlies.scr "..\Crawlies\msvc\redirector\Release\redirector.exe"
+
+  # machine defaults file
+  SetOutPath "$TARGET_DIR\defaults"
+  File /oname=Crawlies.xml "..\config_files\Crawlies.xml"
+
+  # registry entry for the redirector
+  WriteRegStr SHCTX "Software\IdleScreen\Redirector" "Crawlies" "$TARGET_DIR\bin\Crawlies.scr"
+SectionEnd
+
 Section "PlasmaLenz"
   # main scr file
   SetOutPath "$TARGET_DIR\bin"

@@ -1,0 +1,37 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Crawlies_scr", "scr\Crawlies_scr.vcproj", "{72B831D6-7CFF-4614-990C-3DA015146765}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glut_demo", "glut_demo\Crawlies_glut.vcproj", "{E9EA924D-90C5-46C8-814B-B871C68261B3}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Crawlies_redirector", "redirector\Crawlies_redirector.vcproj", "{84E3981B-6049-478A-BB8C-71BC75DFB8EA}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{72B831D6-7CFF-4614-990C-3DA015146765}.Debug.ActiveCfg = Debug|Win32
+		{72B831D6-7CFF-4614-990C-3DA015146765}.Debug.Build.0 = Debug|Win32
+		{72B831D6-7CFF-4614-990C-3DA015146765}.Release.ActiveCfg = Release|Win32
+		{72B831D6-7CFF-4614-990C-3DA015146765}.Release.Build.0 = Release|Win32
+		{E9EA924D-90C5-46C8-814B-B871C68261B3}.Debug.ActiveCfg = Debug|Win32
+		{E9EA924D-90C5-46C8-814B-B871C68261B3}.Debug.Build.0 = Debug|Win32
+		{E9EA924D-90C5-46C8-814B-B871C68261B3}.Release.ActiveCfg = Release|Win32
+		{E9EA924D-90C5-46C8-814B-B871C68261B3}.Release.Build.0 = Release|Win32
+		{84E3981B-6049-478A-BB8C-71BC75DFB8EA}.Debug.ActiveCfg = Debug|Win32
+		{84E3981B-6049-478A-BB8C-71BC75DFB8EA}.Debug.Build.0 = Debug|Win32
+		{84E3981B-6049-478A-BB8C-71BC75DFB8EA}.Release.ActiveCfg = Release|Win32
+		{84E3981B-6049-478A-BB8C-71BC75DFB8EA}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
