@@ -41,21 +41,21 @@
 
 #include "IndexedPalette/IndexedPaletteDialog.h"
 #include "2d_bgnd_w_lens/ConfigManager.h"
-#include "CrawliesBackgroundProfile.h"
+#include "AcidRainBackgroundProfile.h"
 
 class StyleEditDialog : public QDialog {
 
 	Q_OBJECT
 
 public:
-  StyleEditDialog(crawly_profile_style* style, ConfigManager* confMgr = NULL, QWidget* parent = 0, Qt::WindowFlags f = 0);
+  StyleEditDialog(rain_profile_style* style, ConfigManager* confMgr = NULL, QWidget* parent = 0, Qt::WindowFlags f = 0);
   ~StyleEditDialog();
 
   /**
    * Returns the settings.  If cancel was clicked,
    * this routine will replace data with initial values.
    */
-  crawly_profile_style getStyleData();
+  rain_profile_style getStyleData();
 
 public slots:
 	//ok is responsible for updating the ConfigManager
@@ -99,6 +99,6 @@ private:
 
 	QString _windowTitle;
 
-	crawly_profile_style _dataVals;
+	rain_profile_style _dataVals;
 };
 #endif

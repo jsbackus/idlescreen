@@ -71,7 +71,7 @@ class RainSprite {
    */
   int getNumPixelsUsed();
 
- private:
+ protected:
   /**
    * Initializes the data structures.
    */

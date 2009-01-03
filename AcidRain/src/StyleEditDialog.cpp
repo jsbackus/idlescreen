@@ -38,7 +38,7 @@ using namespace std;
 #include "utility/misc_funcs.h"
 #include "utility/HelpDialog.h"
 
-StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* confMgr, QWidget* parent, Qt::WindowFlags f) {
+StyleEditDialog::StyleEditDialog(rain_profile_style* style, ConfigManager* confMgr, QWidget* parent, Qt::WindowFlags f) {
   QDialog(parent, f);
 
   if(style != NULL) {
@@ -48,8 +48,8 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
     _dataVals.minLength = 3;
     _dataVals.maxLength = -1;
     _dataVals.thickness = 1;
-    _dataVals.minSpriteSpeed = 1.0;
-    _dataVals.maxSpriteSpeed = 3.0;
+    _dataVals.minInitialV = 1.0;
+    _dataVals.maxInitialV = 3.0;
     _dataVals.palSpeed = 1.0;
     _dataVals.bHeadConstantColor = true;
     _dataVals.bHeadRandomColor = true;
@@ -129,7 +129,7 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
   tempWidget = NULL;
 
   // length box
-  tmpGroup = new QGroupBox(tr("Crawly Length"));
+  tmpGroup = new QGroupBox(tr("Sprite Length"));
   if(tmpGroup == NULL)
     return;
   tmpGroup->setFlat(false);
@@ -148,7 +148,7 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
   if(tmpHBox == NULL)
     return;
 
-  tempToolTip = tr("Minimum Crawly length");
+  tempToolTip = tr("Minimum Sprite length");
   _bMinUsePalSize = (_dataVals.minLength == -1);
   tempWidget = new QLabel(tr("Min:"));
   if(tempWidget == NULL)
@@ -179,7 +179,7 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
   tmpCheckBox = new QCheckBox(tr("Use Palette Length For Min"));
   if(tmpCheckBox == NULL)
     return;
-  tmpCheckBox->setToolTip(tr("Will use palette length for Crawly minimum length."));
+  tmpCheckBox->setToolTip(tr("Will use palette length for sprite minimum length."));
   tmpCheckBox->setTristate(false);
   tmpCheckBox->setCheckState(boolToCheckState(_bMinUsePalSize));
   QObject::connect(tmpCheckBox, SIGNAL(clicked(bool)), this, SLOT(minUsePalSizeClicked(bool)));
@@ -205,7 +205,7 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
   if(tmpHBox == NULL)
     return;
 
-  tempToolTip = tr("Maximum Crawly length");
+  tempToolTip = tr("Maximum Sprite length");
   _bMaxUsePalSize = (_dataVals.maxLength == -1);
   tempWidget = new QLabel(tr("Max:"));
   if(tempWidget == NULL)
@@ -236,7 +236,7 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
   tmpCheckBox = new QCheckBox(tr("Use Palette Length For Max"));
   if(tmpCheckBox == NULL)
     return;
-  tmpCheckBox->setToolTip(tr("Will use palette length for Crawly maximum length."));
+  tmpCheckBox->setToolTip(tr("Will use palette length for sprite maximum length."));
   tmpCheckBox->setTristate(false);
   tmpCheckBox->setCheckState(boolToCheckState(_bMaxUsePalSize));
   QObject::connect(tmpCheckBox, SIGNAL(clicked(bool)), this, SLOT(maxUsePalSizeClicked(bool)));
@@ -256,7 +256,7 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
   tmpGroup = NULL;
 
   // speed
-  tmpGroup = new QGroupBox(tr("Crawly Speed"));
+  tmpGroup = new QGroupBox(tr("Initial Velocity"));
   if(tmpGroup == NULL)
     return;
   tmpGroup->setFlat(false);
@@ -267,7 +267,7 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
     return;
 
   // min
-  tempToolTip = tr("Minimum Crawly speed");
+  tempToolTip = tr("Minimum sprite initial velocity");
   tempWidget = new QLabel(tr("Min:"));
   if(tempWidget == NULL)
     return;
@@ -282,14 +282,14 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
   _minSpeedBox->setMinimum(0.01);
   _minSpeedBox->setMaximum(100.0);
   _minSpeedBox->setSingleStep(0.1);
-  _minSpeedBox->setValue(_dataVals.minSpriteSpeed);
+  _minSpeedBox->setValue(_dataVals.minInitialV);
   _minSpeedBox->setToolTip(tempToolTip);
   tmpHBox->addWidget(_minSpeedBox);
 
   tmpHBox->addStretch(0);
 
   // max
-  tempToolTip = tr("Maximum Crawly speed");
+  tempToolTip = tr("Maximum sprite initial velocity");
   tempWidget = new QLabel(tr("Max:"));
   if(tempWidget == NULL)
     return;
@@ -304,7 +304,7 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
   _maxSpeedBox->setMinimum(0.01);
   _maxSpeedBox->setMaximum(100.0);
   _maxSpeedBox->setSingleStep(0.1);
-  _maxSpeedBox->setValue(_dataVals.maxSpriteSpeed);
+  _maxSpeedBox->setValue(_dataVals.maxInitialV);
   _maxSpeedBox->setToolTip(tempToolTip);
   tmpHBox->addWidget(_maxSpeedBox);
   
@@ -319,7 +319,7 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
   if(tmpHBox == NULL)
     return;
 
-  tempToolTip = tr("Crawly Thickness");
+  tempToolTip = tr("Sprite Thickness");
   tempWidget = new QLabel(tr("Thickness:"));
   if(tempWidget == NULL)
     return;
@@ -377,7 +377,7 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
   tmpCheckBox = new QCheckBox(tr("Head Keeps Constant Color"));
   if(tmpCheckBox == NULL)
     return;
-  tmpCheckBox->setToolTip(tr("Crawly head keeps the same palette index (in the primary direction) as it moves."));
+  tmpCheckBox->setToolTip(tr("Sprite head keeps the same palette index (in the primary direction) as it moves."));
   tmpCheckBox->setTristate(false);
   tmpCheckBox->setCheckState(boolToCheckState(_bHeadConstant));
   QObject::connect(tmpCheckBox, SIGNAL(clicked(bool)), this, 
@@ -392,7 +392,7 @@ StyleEditDialog::StyleEditDialog(crawly_profile_style* style, ConfigManager* con
   tmpCheckBox = new QCheckBox(tr("Random Head Color On Spawn"));
   if(tmpCheckBox == NULL)
     return;
-  tmpCheckBox->setToolTip(tr("Crawly head color index (primary direction) is randomly chosen on spawn when checked, otherwise it is 0."));
+  tmpCheckBox->setToolTip(tr("Sprite head color index (primary direction) is randomly chosen on spawn when checked, otherwise it is 0."));
   tmpCheckBox->setTristate(false);
   tmpCheckBox->setCheckState(boolToCheckState(_bHeadRandom));
   QObject::connect(tmpCheckBox, SIGNAL(clicked(bool)), this, 
@@ -499,8 +499,8 @@ void StyleEditDialog::okClicked() {
     _dataVals.maxLength = _maxSizeBox->value();
   }
   _dataVals.thickness = _thicknessBox->value();
-  _dataVals.minSpriteSpeed = _minSpeedBox->value();
-  _dataVals.maxSpriteSpeed = _maxSpeedBox->value();
+  _dataVals.minInitialV = _minSpeedBox->value();
+  _dataVals.maxInitialV = _maxSpeedBox->value();
   _dataVals.palSpeed = _palSpeedBox->value();
   _dataVals.bHeadConstantColor = _bHeadConstant;
   _dataVals.bHeadRandomColor = _bHeadRandom;
@@ -657,6 +657,6 @@ void StyleEditDialog::helpClicked() {
  * Returns the settings.  If cancel was clicked,
  * this routine will replace data with initial values.
  */
-crawly_profile_style StyleEditDialog::getStyleData() {
+rain_profile_style StyleEditDialog::getStyleData() {
   return _dataVals;
 }

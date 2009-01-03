@@ -134,7 +134,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   _screenXBox->setCurrentIndex(xCurVal);
   _screenYBox->setCurrentIndex(yCurVal);
 
-  tempToolTip = tr("The resolution width of the plasma in pixels.  Does not need to match actual")+"\n"+tr("screen resolution.");
+  tempToolTip = tr("The resolution width of the screen in pixels.  Does not need to match actual")+"\n"+tr("screen resolution.");
   tempWidget = new QLabel(tr("Width:"));
   tempWidget->setToolTip(tempToolTip);
   dimBoxLayout->addWidget(tempWidget);
@@ -144,7 +144,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 
   dimBoxLayout->addStretch(0);
 
-  tempToolTip = tr("The resolution height of the plasma in pixels.  Does not need to match actual")+"\n"+tr("screen resolution.");
+  tempToolTip = tr("The resolution height of the screen in pixels.  Does not need to match actual")+"\n"+tr("screen resolution.");
   tempWidget = new QLabel(tr("Height:"));
   tempWidget->setToolTip(tempToolTip);
   dimBoxLayout->addWidget(tempWidget);
@@ -179,10 +179,10 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   tempWidget = NULL;
 
   // Begin CrawliesBackgroundProfile related
-	
+  /*	
   // get the backgroundprofile in order to populate the data fields.
 
-  CrawliesBackgroundProfile* crawliesProfile = NULL;
+  AcidRainBackgroundProfile* rainProfile = NULL;
   QString bkgndProfileName = _mp.getBackgroundProfileName();
   if(_confMgr->doesBackgroundProfileExist(bkgndProfileName)) {
     crawliesProfile = new CrawliesBackgroundProfile();
@@ -319,7 +319,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   mainLayout->addWidget(tempWidget);
   tempWidget = NULL;
   tmpHBox = NULL;
-
+  */
   //Help, OK and Cancel buttons
   QHBoxLayout* botButtonsLayout = new QHBoxLayout();
   if(botButtonsLayout == NULL)
@@ -418,6 +418,7 @@ void ProfileEditDialog::okClicked(bool checked) {
 
   // BackgroundProfile related
   // populate data fields
+  /*
   CrawliesBackgroundProfile tmpProfile;
   tmpProfile.setMaxNumberCrawlies(_numCrawlies->value());
   tmpProfile.setSpawnChance(101-_spawnSlider->value());
@@ -428,7 +429,7 @@ void ProfileEditDialog::okClicked(bool checked) {
     tmpProfile.addStyle();
     tmpProfile.setStyle(i, _styleList[i]);
   }
-
+  */
   // check for an existing BackgroundProfile.  If none
   // create a new one, otherwise update the current one.
   QString tempName = _mp.getBackgroundProfileName();
@@ -795,7 +796,7 @@ void ProfileEditDialog::setupStyleTableWidget(CrawliesBackgroundProfile* profile
   // min length
   tmpItem = new QTableWidgetItem("Min Length");
   _tableToolTips[col] = 
-    tr("Crawly min length or -1 to use the palette length.");
+    tr("Sprite min length or -1 to use the palette length.");
   if(tmpItem != NULL) {
     tmpItem->setToolTip(_tableToolTips[col]);
     tmpItem->setFlags(Qt::ItemIsEnabled);
@@ -806,7 +807,7 @@ void ProfileEditDialog::setupStyleTableWidget(CrawliesBackgroundProfile* profile
   // max length
   tmpItem = new QTableWidgetItem("Max Length");
   _tableToolTips[col] = 
-    tr("Crawly max length or -1 to use the palette length.");
+    tr("Sprite max length or -1 to use the palette length.");
   if(tmpItem != NULL) {
     tmpItem->setToolTip(_tableToolTips[col]);
     tmpItem->setFlags(Qt::ItemIsEnabled);
@@ -817,7 +818,7 @@ void ProfileEditDialog::setupStyleTableWidget(CrawliesBackgroundProfile* profile
   // thickness
   tmpItem = new QTableWidgetItem("Thickness");
   _tableToolTips[col] = 
-    tr("Crawly thickness.");
+    tr("Sprite thickness.");
   if(tmpItem != NULL) {
     tmpItem->setToolTip(_tableToolTips[col]);
     tmpItem->setFlags(Qt::ItemIsEnabled);
@@ -825,10 +826,10 @@ void ProfileEditDialog::setupStyleTableWidget(CrawliesBackgroundProfile* profile
   }
   col++;
 
-  // min speed
-  tmpItem = new QTableWidgetItem("Min Speed");
+  // min initial v
+  tmpItem = new QTableWidgetItem("Min Initial V");
   _tableToolTips[col] = 
-    tr("Crawly min movement speed.");
+    tr("Sprite min initial velocity.");
   if(tmpItem != NULL) {
     tmpItem->setToolTip(_tableToolTips[col]);
     tmpItem->setFlags(Qt::ItemIsEnabled);
@@ -836,10 +837,10 @@ void ProfileEditDialog::setupStyleTableWidget(CrawliesBackgroundProfile* profile
   }
   col++;
 
-  // max speed
-  tmpItem = new QTableWidgetItem("Max Speed");
+  // max initial v
+  tmpItem = new QTableWidgetItem("Max Initial V");
   _tableToolTips[col] = 
-    tr("Crawly max movement speed.");
+    tr("Sprite max initial velocity.");
   if(tmpItem != NULL) {
     tmpItem->setToolTip(_tableToolTips[col]);
     tmpItem->setFlags(Qt::ItemIsEnabled);
@@ -861,7 +862,7 @@ void ProfileEditDialog::setupStyleTableWidget(CrawliesBackgroundProfile* profile
   // constant color
   tmpItem = new QTableWidgetItem("Constant Color");
   _tableToolTips[col] = 
-    tr("Whether the Crawly head keeps the same color or not.");
+    tr("Whether the sprite head keeps the same color or not.");
   if(tmpItem != NULL) {
     tmpItem->setToolTip(_tableToolTips[col]);
     tmpItem->setFlags(Qt::ItemIsEnabled);
@@ -872,7 +873,7 @@ void ProfileEditDialog::setupStyleTableWidget(CrawliesBackgroundProfile* profile
   // random color
   tmpItem = new QTableWidgetItem("Random Color");
   _tableToolTips[col] = 
-    tr("Whether the Crawly head starting color is random or not.");
+    tr("Whether the sprite head starting color is random or not.");
   if(tmpItem != NULL) {
     tmpItem->setToolTip(_tableToolTips[col]);
     tmpItem->setFlags(Qt::ItemIsEnabled);

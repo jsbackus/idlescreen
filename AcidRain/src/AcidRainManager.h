@@ -40,6 +40,7 @@ using namespace std;
 #define __ACIDRAINMANAGER_H__
 
 #define RAIN_STYLE_CHUNK_SIZE 5
+#define RAIN_SPRITE_CHUNK_SIZE 20
 
 #include "2d_bgnd_w_lens/globaldefs.h"
 #include "2d_bgnd_w_lens/Background.h"
@@ -49,10 +50,9 @@ using namespace std;
 //#include "RecoilSprite.h"
 
 struct rainsprite_style {
-  IndexedPalette palName;
-  int* palData;
-  int palLength;
+  int** pal;
   int palWidth;
+  int palHeight;
   int minLength;
   int maxLength;
   int thickness;
@@ -79,12 +79,16 @@ class AcidRainManager : public Background {
    *
    * @param sizeX The width of the screen in pixels.
    * @param sizeY The height of the screen in pixels.
-   * @param maxCrawlies The maximum number of worms allowed on the screen.
-   * @param spawnChance There is a 1/spawnChance chance for a spawn.
+   * @param maxDensity The maximum rain density allowed on the screen as %.
    * @param gravity The "downward" acceleration to use.  Must be positive!
+   * @param maxHorizontalAcceleration The maximum "wind" acceleration
+   * @param maxHorizontalAcclerationDelta The maximum change in "wind" accel.
+   * @param recoilElasticity The amount of "bounce" the rain has.
    */
-  AcidRainManager(int sizeX, int sizeY, int maxAcidRain, int spawnChance,
-		  float gravity);
+  AcidRainManager(int sizeX, int sizeY, int maxDensity, float gravity,
+		  float maxHorizontalAcceleration,
+		  float maxHorizontalAccelerationDelta,
+		  float recoilElasticity);
 
   ~AcidRainManager();
 
@@ -141,8 +145,8 @@ class AcidRainManager : public Background {
   void initData();
 
   /**
-   * Creates a new sprite from one of the palette styles available and
-   * adds it to the list of live sprites.
+   * Creates a new falling sprite from the styles available  and adds
+   * it to the list.
    */
   void spawnSprite();
 
@@ -152,27 +156,45 @@ class AcidRainManager : public Background {
   void growStyleList(int size=RAIN_STYLE_CHUNK_SIZE);
 
   /**
-   * Grows the list of sprites.
+   * Grows the list of falling sprites.
    */
-  void growSpriteList(int size=RAIN_SPRITE_CHUNK_SIZE);
+  void growFallingSpriteList(int size=RAIN_SPRITE_CHUNK_SIZE);
 
   /**
-   * Converts the palette from IndexedPalette* to int*
+   * Grows the list of bouncing sprites.
    */
-  void convPalette(IndexedPalette* pal);
+  void growBouncingSpriteList(int size=RAIN_SPRITE_CHUNK_SIZE);
+
+  /**
+   * Converts the palette from IndexedPalette* to int* and places
+   * information into the specified style.
+   */
+  void convPalette(IndexedPalette* pal, rainsprite_style* style);
 
   rainsprite_style* _styles;
   int _numStyles;
   int _maxNumStyles;
 
-  FallingRainSprite** _sprites;
-  int _numSprites;
-  int _maxNumSprites;
+  FallingRainSprite** _fallingSprites;
+  int _numFallingSprites;
+  int _maxNumFallingSprites;
+
+  RainSprite** _bouncingSprites;
+  int _numBouncingSprites;
+  int _maxNumBouncingSprites;
 
   int _spawnChance;
 
   int _palYOffset;
   float _maxDensity;
+  float _curDensity;
+  float _screenArea;
+
+  float _horizAccel;
+  float _maxHorizAccel;
+  float _maxHorizAccelDelta;
+  float _recoilElasticity;
+  float _gravity;
 };
 
 #endif

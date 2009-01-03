@@ -36,10 +36,10 @@ using namespace std;
 #include "IndexedPalette/IndexedPaletteProfile.h"
 //endtmp
 
-#include "CrawliesBackgroundProfile.h"
+#include "AcidRainBackgroundProfile.h"
 
-CrawliesBackgroundProfile::CrawliesBackgroundProfile() {
-  _xmlTypeValue = "CrawliesBackground";
+AcidRainBackgroundProfile::AcidRainBackgroundProfile() {
+  _xmlTypeValue = "AcidRainBackground";
 
   //defaults
   _name = "Empty";
@@ -47,14 +47,18 @@ CrawliesBackgroundProfile::CrawliesBackgroundProfile() {
   _styles = NULL;
   _numStyles = 0;
   _maxNumStyles = 0;
-  _maxNumCrawlies = 0;
-  _spawnChance = 0;
+
+  _maxRainDensity = 0.0;
+  _gravity = 0.0;
+  _maxHorizAccel = 0.0;
+  _maxHorizAccelDelta = 0.0;
+  _recoilElasticity = 0.0;
 
   // make an initially empty list of default size
   growStyleList();
 }
 
-CrawliesBackgroundProfile::~CrawliesBackgroundProfile() {
+AcidRainBackgroundProfile::~AcidRainBackgroundProfile() {
   if(_styles != NULL) {
     delete [] _styles;
     _styles = NULL;
@@ -65,7 +69,7 @@ CrawliesBackgroundProfile::~CrawliesBackgroundProfile() {
  * Attempts to load this background profile object from the
  * specified QDomNode.
  */
-BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
+BackgroundProfile* AcidRainBackgroundProfile::load(QDomNode &node) {
 
   float tmpF;
   int tmpI;
@@ -81,28 +85,52 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
   if(tempElem.isNull() || tempElem.text() != _xmlTypeValue)
     return NULL;
 
-  CrawliesBackgroundProfile* retVal = new CrawliesBackgroundProfile();
+  AcidRainBackgroundProfile* retVal = new AcidRainBackgroundProfile();
   if(retVal == NULL)
-     return NULL;
+    return NULL;
 
   tempElem = node.firstChildElement("name");
   if(!tempElem.isNull()) {
     retVal->_name = tempElem.text();
   }
 
-  tempElem = node.firstChildElement("max_num_crawlies");
+  tempElem = node.firstChildElement("max_rain_density");
   if(!tempElem.isNull()) {
     tmpI = tempElem.text().toInt();
-    if(tmpI > 0 && tmpI < 30000) {
-      retVal->_maxNumCrawlies = tmpI;
+    if(tmpI >= 0 && tmpI <= 100) {
+      retVal->_maxRainDensity = tmpI;
     }
   }
 
-  tempElem = node.firstChildElement("spawn_chance");
+  tempElem = node.firstChildElement("gravity");
   if(!tempElem.isNull()) {
-    tmpI = tempElem.text().toInt();
-    if(tmpI > 0 && tmpI < 100) {
-      retVal->_spawnChance = tmpI;
+    tmpF = tempElem.text().toFloat();
+    if(tmpF > -100.0 && tmpF < 100.0) {
+      retVal->_gravity = tmpF;
+    }
+  }
+
+  tempElem = node.firstChildElement("recoil_elasticity");
+  if(!tempElem.isNull()) {
+    tmpF = tempElem.text().toFloat();
+    if(tmpF > -100.0 && tmpF < 100.0) {
+      retVal->_recoilElasticity = tmpF;
+    }
+  }
+
+  tempElem = node.firstChildElement("max_horiz_accel");
+  if(!tempElem.isNull()) {
+    tmpF = tempElem.text().toFloat();
+    if(tmpF > -100.0 && tmpF < 100.0) {
+      retVal->_maxHorizAccel = tmpF;
+    }
+  }
+
+  tempElem = node.firstChildElement("max_horiz_accel_delta");
+  if(!tempElem.isNull()) {
+    tmpF = tempElem.text().toFloat();
+    if(tmpF > -100.0 && tmpF < 100.0) {
+      retVal->_maxHorizAccelDelta = tmpF;
     }
   }
 
@@ -122,8 +150,8 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
   // read in all crawly_style_entry objects and add each one to the 
   // list of styles.  Order isn't important, nor is whether the
   // actual number of styes matches the number in the config file.
-  QDomElement tempNode = node.firstChildElement("crawly_style").
-    lastChildElement("crawly_style_entry");
+  QDomElement tempNode = node.firstChildElement("rain_style").
+    lastChildElement("rain_style_entry");
 
   int index = 0;
   while(!tempNode.isNull()) {	
@@ -158,19 +186,19 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
       }
     }
 
-    tempElem = tempNode.firstChildElement("min_sprite_speed");
+    tempElem = tempNode.firstChildElement("min_initial_v");
     if(!tempElem.isNull()) {
       tmpF = tempElem.text().toFloat();
       if(0.0 < tmpF && tmpF < 100.0) {
-	retVal->setMinSpriteSpeed(index, tmpF);
+	retVal->setMinInitialV(index, tmpF);
       }
     }
 
-    tempElem = tempNode.firstChildElement("max_sprite_speed");
+    tempElem = tempNode.firstChildElement("max_initial_v");
     if(!tempElem.isNull()) {
       tmpF = tempElem.text().toFloat();
       if(0.0 < tmpF && tmpF < 100.0) {
-	retVal->setMaxSpriteSpeed(index, tmpF);
+	retVal->setMaxInitialV(index, tmpF);
       }
     }
 
@@ -195,7 +223,7 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
     }
 
     index++;
-    tempNode = tempNode.previousSiblingElement("crawly_style_entry");
+    tempNode = tempNode.previousSiblingElement("rain_style_entry");
   }
 
   return retVal;
@@ -204,7 +232,7 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
 /**
  * Returns a QDomNode object that represents this profile.
  */
-QDomNode CrawliesBackgroundProfile::save(QDomDocument* doc) {
+QDomNode AcidRainBackgroundProfile::save(QDomDocument* doc) {
   QString tempStr;
   QDomText tempNode;
   QDomElement tempElem;
@@ -222,17 +250,38 @@ QDomNode CrawliesBackgroundProfile::save(QDomDocument* doc) {
   tempElem.appendChild(tempNode);
   retVal.appendChild(tempElem);
 
-  // maximum number of crawlies
-  tempStr.setNum(_maxNumCrawlies);
+  // maximum rain density
+  tempStr.setNum(_maxRainDensity);
   tempNode = doc->createTextNode(tempStr);
-  tempElem = doc->createElement("max_num_crawlies");
+  tempElem = doc->createElement("max_rain_density");
   tempElem.appendChild(tempNode);
   retVal.appendChild(tempElem);
 
-  // spawn chance
-  tempStr.setNum(_spawnChance);
+  // gravity
+  tempStr.setNum(_gravity);
   tempNode = doc->createTextNode(tempStr);
-  tempElem = doc->createElement("spawn_chance");
+  tempElem = doc->createElement("gravity");
+  tempElem.appendChild(tempNode);
+  retVal.appendChild(tempElem);
+
+  // recoil elasticity
+  tempStr.setNum(_recoilElasticity);
+  tempNode = doc->createTextNode(tempStr);
+  tempElem = doc->createElement("recoil_elasticity");
+  tempElem.appendChild(tempNode);
+  retVal.appendChild(tempElem);
+
+  // max horizontal acceleration
+  tempStr.setNum(_maxHorizAccel);
+  tempNode = doc->createTextNode(tempStr);
+  tempElem = doc->createElement("max_horiz_accel");
+  tempElem.appendChild(tempNode);
+  retVal.appendChild(tempElem);
+
+  // max horizontal acceleration delta
+  tempStr.setNum(_maxHorizAccelDelta);
+  tempNode = doc->createTextNode(tempStr);
+  tempElem = doc->createElement("max_horiz_accel_delta");
   tempElem.appendChild(tempNode);
   retVal.appendChild(tempElem);
 
@@ -251,11 +300,11 @@ QDomNode CrawliesBackgroundProfile::save(QDomDocument* doc) {
   tempElem.appendChild(tempNode);
   retVal.appendChild(tempElem);
 
-  QDomElement styleElem = doc->createElement("crawly_style");
+  QDomElement styleElem = doc->createElement("rain_style");
   QDomElement entryElem;
   int i;
   for(i=0;i<_numStyles; i++) {
-    entryElem = doc->createElement("crawly_style_entry");
+    entryElem = doc->createElement("rain_style_entry");
 
     // palette name
     tempNode = doc->createTextNode(_styles[i].pal);
@@ -285,16 +334,16 @@ QDomNode CrawliesBackgroundProfile::save(QDomDocument* doc) {
     entryElem.appendChild(tempElem);
 
     // min sprite speed
-    tempStr.setNum(_styles[i].minSpriteSpeed);
+    tempStr.setNum(_styles[i].minInitialV);
     tempNode = doc->createTextNode(tempStr);
-    tempElem = doc->createElement("min_sprite_speed");
+    tempElem = doc->createElement("min_initial_v");
     tempElem.appendChild(tempNode);
     entryElem.appendChild(tempElem);
 
     // max sprite speed
-    tempStr.setNum(_styles[i].maxSpriteSpeed);
+    tempStr.setNum(_styles[i].maxInitialV);
     tempNode = doc->createTextNode(tempStr);
-    tempElem = doc->createElement("max_sprite_speed");
+    tempElem = doc->createElement("max_initial_v");
     tempElem.appendChild(tempNode);
     entryElem.appendChild(tempElem);
 
@@ -329,14 +378,16 @@ QDomNode CrawliesBackgroundProfile::save(QDomDocument* doc) {
 /**
  * Creates and returns a new background object.
  */
-Background* CrawliesBackgroundProfile::getNewBackgroundObj(int height, int width, QHash<QString, IndexedPaletteProfile*>* palHash) {
+Background* AcidRainBackgroundProfile::getNewBackgroundObj(int height, int width, QHash<QString, IndexedPaletteProfile*>* palHash) {
 
   if(palHash == NULL)
     return NULL;
 
   // create a new CrawliesManager to return
-  CrawliesManager* retVal = new CrawliesManager(width, height, _maxNumCrawlies,
-						_spawnChance);
+  AcidRainManager* retVal = new AcidRainManager(width, height, _maxRainDensity,
+						_gravity, _maxHorizAccel,
+						_maxHorizAccelDelta,
+						_recoilElasticity);
   if(retVal == NULL)
     return NULL;
 
@@ -346,8 +397,8 @@ Background* CrawliesBackgroundProfile::getNewBackgroundObj(int height, int width
 			     _styles[i].minLength, 
 			     _styles[i].maxLength, 
 			     _styles[i].thickness,
-			     _styles[i].minSpriteSpeed,
-			     _styles[i].maxSpriteSpeed, _styles[i].palSpeed,
+			     _styles[i].minInitialV,
+			     _styles[i].maxInitialV, _styles[i].palSpeed,
 			     _styles[i].bHeadConstantColor,
 			     _styles[i].bHeadRandomColor);
   }
@@ -356,33 +407,58 @@ Background* CrawliesBackgroundProfile::getNewBackgroundObj(int height, int width
 }
 
 /**
- * get/set max number of crawlies.
+ * get/set max rain density as an integer number between 0-100.
  */
-int CrawliesBackgroundProfile::getMaxNumberCrawlies() {
-  return _maxNumCrawlies;
+int AcidRainBackgroundProfile::getMaxRainDensity() {
+  return _maxRainDensity;
 }
-void CrawliesBackgroundProfile::setMaxNumberCrawlies(int numCrawlies) {
-  _maxNumCrawlies = numCrawlies;
+void AcidRainBackgroundProfile::setMaxRainDensity(int density) {
+  _maxRainDensity = density;
 }
 
 /**
- * Get/set spawn chance.  This number is the denominator, i.e.
- * percent chance = 1/numCrawlies * 100%.
+ * Get/set the acceleration "downward".  Must be a positive number!
  */
-int CrawliesBackgroundProfile::getSpawnChance() {
-  return _spawnChance;
+float AcidRainBackgroundProfile::getGravity() {
+  return _gravity;
 }
-void CrawliesBackgroundProfile::setSpawnChance(int spawnChance) {
-  _spawnChance = spawnChance;
+void AcidRainBackgroundProfile::setGravity(int gravity) {
+  _gravity = gravity;
+}
+
+/**
+ * Get/set the amount of rain "bounce".  Must be a positive number!
+ */
+float AcidRainBackgroundProfile::getRecoilElasticity() {
+  return _recoilElasticity;
+}
+void AcidRainBackgroundProfile::setRecoilElasticity(int recoil) {
+  _recoilElasticity = recoil;
+}
+
+/**
+ * Get/set the max horizontal acceleration and delta acceleration.
+ */
+float AcidRainBackgroundProfile::getMaxHorizontalAcceleration() {
+  return _maxHorizAccel;
+}
+void AcidRainBackgroundProfile::setMaxHorizontalAcceleration(float accel) {
+  _maxHorizAccel = acce;
+}
+float AcidRainBackgroundProfile::getMaxHorizontalAcclerationDelta() {
+  return _maxHorizAccelDelta;
+}
+void AcidRainBackgroundProfile::setMaxHorizontalAccelerationDelta(float delta) {
+  _maxHorizAccelDelta = delta;
 }
 
 /**
  * Get/set functions related for style subprofiles.
  */
-int CrawliesBackgroundProfile::getNumStyles() {
+int AcidRainBackgroundProfile::getNumStyles() {
   return _numStyles;
 }
-void CrawliesBackgroundProfile::clearStyleList() {
+void AcidRainBackgroundProfile::clearStyleList() {
   if(_styles != NULL) {
     delete [] _styles;
     _styles = NULL;
@@ -391,12 +467,12 @@ void CrawliesBackgroundProfile::clearStyleList() {
   }
   growStyleList();
 }
-void CrawliesBackgroundProfile::addStyle() {
+void AcidRainBackgroundProfile::addStyle() {
   if(_numStyles == _maxNumStyles || _styles == NULL)
     growStyleList();
   _numStyles = _numStyles+1;
 }
-void CrawliesBackgroundProfile::deleteStyle(int styleIdx) {
+void AcidRainBackgroundProfile::deleteStyle(int styleIdx) {
   if(_styles == NULL)
     return;
   for(int i=styleIdx;i<_numStyles-1;i++) {
@@ -405,104 +481,103 @@ void CrawliesBackgroundProfile::deleteStyle(int styleIdx) {
   _numStyles--;
 }
 
-QString CrawliesBackgroundProfile::getPaletteName(int styleIdx) {
+QString AcidRainBackgroundProfile::getPaletteName(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return "";
 
   return _styles[styleIdx].pal;
 }
-void CrawliesBackgroundProfile::setPaletteName(int styleIdx, QString palName) {
+void AcidRainBackgroundProfile::setPaletteName(int styleIdx, QString palName) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
   _styles[styleIdx].pal = palName;
 }
 
-int CrawliesBackgroundProfile::getMinLength(int styleIdx) {
+int AcidRainBackgroundProfile::getMinLength(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return -1;
   return _styles[styleIdx].minLength;
 }
-void CrawliesBackgroundProfile::setMinLength(int styleIdx, int minLength) {
+void AcidRainBackgroundProfile::setMinLength(int styleIdx, int minLength) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
   _styles[styleIdx].minLength = minLength;
 }
-int CrawliesBackgroundProfile::getMaxLength(int styleIdx) {
+int AcidRainBackgroundProfile::getMaxLength(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return -1;
 
   return _styles[styleIdx].maxLength;
 }
-void CrawliesBackgroundProfile::setMaxLength(int styleIdx, int maxLength) {
+void AcidRainBackgroundProfile::setMaxLength(int styleIdx, int maxLength) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
   _styles[styleIdx].maxLength = maxLength;
 }
 
-int CrawliesBackgroundProfile::getThickness(int styleIdx) {
+int AcidRainBackgroundProfile::getThickness(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return 0;
 
   return _styles[styleIdx].thickness;
 }
-void CrawliesBackgroundProfile::setThickness(int styleIdx, int thickness) {
+void AcidRainBackgroundProfile::setThickness(int styleIdx, int thickness) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
   
   _styles[styleIdx].thickness = thickness;
 }
 
-
-float CrawliesBackgroundProfile::getMinSpriteSpeed(int styleIdx) {
+float AcidRainBackgroundProfile::getMinInitialV(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return 0.0;
 
-  return _styles[styleIdx].minSpriteSpeed;
+  return _styles[styleIdx].minInitialV;
 }
-void CrawliesBackgroundProfile::setMinSpriteSpeed(int styleIdx, float minSpeed) 
+void AcidRainBackgroundProfile::setInitialV(int styleIdx, float veloctiy) 
 {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
-  _styles[styleIdx].minSpriteSpeed = minSpeed;
+  _styles[styleIdx].minInitialV = minInitialV;
 }
-float CrawliesBackgroundProfile::getMaxSpriteSpeed(int styleIdx) {
+float AcidRainBackgroundProfile::getMaxInitialV(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return 0.0;
 
-  return _styles[styleIdx].maxSpriteSpeed;
+  return _styles[styleIdx].maxInitialV;
 }
-void CrawliesBackgroundProfile::setMaxSpriteSpeed(int styleIdx, float maxSpeed) 
+void AcidRainBackgroundProfile::setMaxSpriteSpeed(int styleIdx, float velocity) 
 {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
-  _styles[styleIdx].maxSpriteSpeed = maxSpeed;
+  _styles[styleIdx].maxInitialV = maxInitialV;
 }
 
-float CrawliesBackgroundProfile::getPaletteSpeed(int styleIdx) {
+float AcidRainBackgroundProfile::getPaletteSpeed(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return 0.0;
 
   return _styles[styleIdx].palSpeed;
 }
-void CrawliesBackgroundProfile::setPaletteSpeed(int styleIdx, float palSpeed) {
+void AcidRainBackgroundProfile::setPaletteSpeed(int styleIdx, float palSpeed) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
   _styles[styleIdx].palSpeed = palSpeed;
 }
 
-bool CrawliesBackgroundProfile::isHeadConstantColor(int styleIdx)  {
+bool AcidRainBackgroundProfile::isHeadConstantColor(int styleIdx)  {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return true;
 
   return _styles[styleIdx].bHeadConstantColor;
 }
 
-void CrawliesBackgroundProfile::setHeadConstantColor(int styleIdx, 
+void AcidRainBackgroundProfile::setHeadConstantColor(int styleIdx, 
 						     bool bConstant) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
@@ -510,20 +585,20 @@ void CrawliesBackgroundProfile::setHeadConstantColor(int styleIdx,
   _styles[styleIdx].bHeadConstantColor = bConstant;
 }
 
-bool CrawliesBackgroundProfile::isHeadRandomColor(int styleIdx) {
+bool AcidRainBackgroundProfile::isHeadRandomColor(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return false;
 
   return _styles[styleIdx].bHeadRandomColor;
 }
-void CrawliesBackgroundProfile::setHeadRandomColor(int styleIdx, bool bRandom) {
+void AcidRainBackgroundProfile::setHeadRandomColor(int styleIdx, bool bRandom) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
   _styles[styleIdx].bHeadRandomColor = bRandom;
 }
 
-crawly_profile_style CrawliesBackgroundProfile::getStyle(int styleIdx) {
+crawly_profile_style AcidRainBackgroundProfile::getStyle(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles) {
     crawly_profile_style empty;
     return empty;
@@ -532,7 +607,7 @@ crawly_profile_style CrawliesBackgroundProfile::getStyle(int styleIdx) {
   return _styles[styleIdx];
 }
 
-void CrawliesBackgroundProfile::setStyle(int styleIdx, 
+void AcidRainBackgroundProfile::setStyle(int styleIdx, 
 					 crawly_profile_style& style) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
@@ -543,8 +618,8 @@ void CrawliesBackgroundProfile::setStyle(int styleIdx,
   setMinLength(styleIdx, style.minLength);
   setMaxLength(styleIdx, style.maxLength);
   setThickness(styleIdx, style.thickness);
-  setMinSpriteSpeed(styleIdx, style.minSpriteSpeed);
-  setMaxSpriteSpeed(styleIdx, style.maxSpriteSpeed);
+  setMinInitialV(styleIdx, style.minInitialV);
+  setMaxInitialV(styleIdx, style.maxInitialV);
   setPaletteSpeed(styleIdx, style.palSpeed);
   setHeadConstantColor(styleIdx, style.bHeadConstantColor);
   setHeadRandomColor(styleIdx, style.bHeadRandomColor);
@@ -554,11 +629,14 @@ void CrawliesBackgroundProfile::setStyle(int styleIdx,
 /**
  * Overloaded assignment operator.
  */
-CrawliesBackgroundProfile& CrawliesBackgroundProfile::operator=(CrawliesBackgroundProfile& other) {
+AcidRainBackgroundProfile& AcidRainBackgroundProfile::operator=(AcidRainBackgroundProfile& other) {
   _name = other._name;
 
-  _maxNumCrawlies = other._maxNumCrawlies;
-  _spawnChance = other._spawnChance;
+  _maxRainDensity = other._maxRainDensity;
+  _gravity = other._gravity;
+  _maxHorizAccel = other._maxHorizAccel;
+  _maxHorizAccelDelta = other._maxHorizAccelDelta;
+  _recoilElasticity = other._recoilElasticity;
 
   int i;
 
@@ -585,8 +663,8 @@ CrawliesBackgroundProfile& CrawliesBackgroundProfile::operator=(CrawliesBackgrou
 /**
  * Creates a new object with this object's settings.
  */
-BackgroundProfile* CrawliesBackgroundProfile::clone() {
-  CrawliesBackgroundProfile* retVal = new CrawliesBackgroundProfile();
+BackgroundProfile* AcidRainBackgroundProfile::clone() {
+  AcidRainBackgroundProfile* retVal = new AcidRainBackgroundProfile();
 
   *retVal = *this;
 
@@ -596,10 +674,10 @@ BackgroundProfile* CrawliesBackgroundProfile::clone() {
 /**
  * Grows the list of crawly styles.
  */
-void CrawliesBackgroundProfile::growStyleList(int size) {
+void AcidRainBackgroundProfile::growStyleList(int size) {
   if(_styles == NULL) {
     _maxNumStyles = size;
-    _styles = new crawly_profile_style[_maxNumStyles];
+    _styles = new rain_profile_style[_maxNumStyles];
     if(_styles == NULL) {
       _maxNumStyles = 0;
       return;
@@ -607,7 +685,7 @@ void CrawliesBackgroundProfile::growStyleList(int size) {
     _numStyles = 0;
   } else {
     // create a temp list and copy
-    crawly_profile_style* tmpList=new crawly_profile_style[_maxNumStyles+size];
+    rain_profile_style* tmpList=new rain_profile_style[_maxNumStyles+size];
     if(tmpList == NULL) {
       return;
     }

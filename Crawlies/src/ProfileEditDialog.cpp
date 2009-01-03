@@ -134,7 +134,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   _screenXBox->setCurrentIndex(xCurVal);
   _screenYBox->setCurrentIndex(yCurVal);
 
-  tempToolTip = tr("The resolution width of the plasma in pixels.  Does not need to match actual")+"\n"+tr("screen resolution.");
+  tempToolTip = tr("The resolution width of the screen in pixels.  Does not need to match actual")+"\n"+tr("screen resolution.");
   tempWidget = new QLabel(tr("Width:"));
   tempWidget->setToolTip(tempToolTip);
   dimBoxLayout->addWidget(tempWidget);
@@ -144,7 +144,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 
   dimBoxLayout->addStretch(0);
 
-  tempToolTip = tr("The resolution height of the plasma in pixels.  Does not need to match actual")+"\n"+tr("screen resolution.");
+  tempToolTip = tr("The resolution height of the screen in pixels.  Does not need to match actual")+"\n"+tr("screen resolution.");
   tempWidget = new QLabel(tr("Height:"));
   tempWidget->setToolTip(tempToolTip);
   dimBoxLayout->addWidget(tempWidget);

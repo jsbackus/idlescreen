@@ -47,6 +47,7 @@ class BouncingRainSprite : public RainSprite {
    * @param width The screen width.
    * @param height The screen height.
    * @param startX The starting X coordinate
+   * @param startY The starting Y coordinate
    * @param gravity The acceleration due to gravity.
    * @param pal The palette to use for this.
    * @param palWidth The width of the palette to use.
@@ -59,7 +60,8 @@ class BouncingRainSprite : public RainSprite {
    * @param initialPalYOffset The initial secondary axis index.
    * @param bHeadConstantColor Whether the head keeps the same pal index.
    */
-  BouncingRainSprite(int width, int height, int startX, float gravity,
+  BouncingRainSprite(int width, int height, float startX, float startY,
+		     float gravity,
 		     int** pal, int palWidth, int palHeight, int palIdx,
 		     int thickness, float initialVX, float initialVY,
 		     float palSpeed, int initialPalYOffset,

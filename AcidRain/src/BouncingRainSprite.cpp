@@ -43,6 +43,7 @@ BouncingRainSprite::BouncingRainSprite() {
  * @param width The screen width.
  * @param height The screen height.
  * @param startX The starting X coordinate
+ * @param startY The starting Y coordinate
  * @param gravity The acceleration due to gravity.
  * @param pal The palette to use for this.
  * @param palWidth The width of the palette to use.
@@ -55,7 +56,8 @@ BouncingRainSprite::BouncingRainSprite() {
  * @param initialPalYOffset The initial secondary axis index.
  * @param bHeadConstantColor Whether the head keeps the same pal index.
  */
-BouncingRainSprite::BouncingRainSprite(int width, int height, int startX, 
+BouncingRainSprite::BouncingRainSprite(int width, int height, float startX,
+				       float startY,
 				       float gravity, int** pal, int palWidth,
 				       int palHeight, int palIdx,int thickness, 
 				       float initialVX, float initialVY,
@@ -81,12 +83,12 @@ BouncingRainSprite::BouncingRainSprite(int width, int height, int startX,
   _gravity = gravity;
   _vX = initialVX;
   _vY = initialVY;
-  _pX = (float)startX;
-  _pY = 0.0;
+  _pX = startX;
+  _pY = startY;
   _pal = pal;
   _palWidth = palWidth;
   _palHeight = palHeight;
-  _palIdx = palIdx;
+  _colorIdx = palIdx;
 
   _numPixelsUsed = _thickness * _thickness;
 
@@ -107,8 +109,8 @@ void BouncingRainSprite::drawSprite(screen_struct* screenObj) {
   if(screenObj == NULL)
     return;
 
-  int x = _segments[i].x;
-  int y = _segments[i].y;
+  int x = (int)_pX;
+  int y = (int)_pY;
   int palIdx = (_colorIdx + ((int)_palYOffset)*_palWidth)*4;
   for(int m=0;m<_thickness;m++) {
     int ty = (y+m)*_screenWidth*4;
@@ -117,7 +119,7 @@ void BouncingRainSprite::drawSprite(screen_struct* screenObj) {
       if( (x+j) >= 0 && (x+j) < _screenWidth 
 	  && (m+y) >= 0 && (m+y) < _screenHeight) {
 	for(int k=0; k<4;k++) {
-	  screenObj->_pixels[tx+ty+k] = _pal[palIdx+k];
+	  screenObj->_pixels[tx+ty+k] = *_pal[palIdx+k];
 	}
       }
     }
@@ -175,8 +177,6 @@ void BouncingRainSprite::moveSprite(float horizontalAcceleration) {
     dX = ((float)stepX)/((float)stepY);
   }
 
-  float hX = _segments[_numSegments-1].x;
-  float hY = _segments[_numSegments-1].y;
   float scrWidth = (float)_screenWidth;
   float thick = (float)_thickness;
 
@@ -198,7 +198,7 @@ void BouncingRainSprite::moveSprite(float horizontalAcceleration) {
 
     // increment head color if not constant
     if(!_bHeadConstantColor) {
-      _tailColorIdx = (_tailColorIdx+1)%_palWidth;
+      _colorIdx = (_colorIdx+1)%_palWidth;
     }
 
     // if head reaches the bottom, kill sprite

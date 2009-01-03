@@ -30,33 +30,33 @@
  * @date 12/28/2008
  */
 
-#ifndef __CRAWLIESBACKGROUNDPROFILE_H__
-#define __CRAWLIESBACKGROUNDPROFILE_H__
+#ifndef __ACIDRAINBACKGROUNDPROFILE_H__
+#define __ACIDRAINBACKGROUNDPROFILE_H__
 
 #include <QString>
 #include <QtXml/QDomNode>
 #include <QtXml/QDomDocument>
 
 #include "../../common/2d_bgnd_w_lens/BackgroundProfile.h"
-#include "CrawliesManager.h"
+#include "AcidRainManager.h"
 
-struct crawly_profile_style {
+struct rain_profile_style {
   QString pal;
   int minLength;
   int maxLength;
   int thickness;
-  float minSpriteSpeed;
-  float maxSpriteSpeed;
+  float minInitialV;
+  float maxInitialV;
   float palSpeed;
   bool bHeadConstantColor;
   bool bHeadRandomColor;
 };
 
-class CrawliesBackgroundProfile : public BackgroundProfile {
+class AcidRainBackgroundProfile : public BackgroundProfile {
 
 public:
-	CrawliesBackgroundProfile();
-	~CrawliesBackgroundProfile();
+	AcidRainBackgroundProfile();
+	~AcidRainBackgroundProfile();
 
 	/** 
 	 * Attempts to load this background profile object from the
@@ -75,17 +75,30 @@ public:
 	Background* getNewBackgroundObj(int height, int width, QHash<QString, IndexedPaletteProfile*>* palHash);
 
 	/**
-	 * get/set max number of crawlies.
+	 * get/set max rain density as an integer number between 0-100.
 	 */
-	int getMaxNumberCrawlies();
-	void setMaxNumberCrawlies(int numCrawlies);
+	int getMaxRainDensity();
+	void setMaxRainDensity(int density);
 
 	/**
-	 * Get/set spawn chance.  This number is the denominator, i.e.
-	 * percent chance = 1/numCrawlies * 100%.
+	 * Get/set the acceleration "downward".  Must be a positive number!
 	 */
-	int getSpawnChance();
-	void setSpawnChance(int spawnChance);
+	float getGravity();
+	void setGravity(int gravity);
+
+	/**
+	 * Get/set the amount of rain "bounce".  Must be a positive number!
+	 */
+	float getRecoilElasticity();
+	void setRecoilElasticity(int recoil);
+
+	/**
+	 * Get/set the max horizontal acceleration and delta acceleration.
+	 */
+	float getMaxHorizontalAcceleration();
+	void setMaxHorizontalAcceleration(float accel);
+	float getMaxHorizontalAcclerationDelta();
+	void setMaxHorizontalAccelerationDelta(float delta);
 
 	/**
 	 * Get/set functions related for style subprofiles.
@@ -106,10 +119,10 @@ public:
 	int getThickness(int styleIdx);
 	void setThickness(int styleIdx, int thickness);
 
-	float getMinSpriteSpeed(int styleIdx);
-	void setMinSpriteSpeed(int styleIdx, float minSpeed);
-	float getMaxSpriteSpeed(int styleIdx);
-	void setMaxSpriteSpeed(int styleIdx, float maxSpeed);
+	float getMinInitialV(int styleIdx);
+	void setMinInitialV(int styleIdx, float velocity);
+	float getMaxInitialV(int styleIdx);
+	void setMaxInitialV(int styleIdx, float velocity);
 
 	float getPaletteSpeed(int styleIdx);
 	void setPaletteSpeed(int styleIdx, float palSpeed);
@@ -120,13 +133,13 @@ public:
 	bool isHeadRandomColor(int styleIdx);
 	void setHeadRandomColor(int styleIdx, bool bRandom);
 
-	crawly_profile_style getStyle(int styleIdx);
-	void setStyle(int styleIdx, crawly_profile_style& style);
+	rain_profile_style getStyle(int styleIdx);
+	void setStyle(int styleIdx, rain_profile_style& style);
 
 	/**
 	 * Overloaded assignment operator.
 	 */
-	CrawliesBackgroundProfile& operator=(CrawliesBackgroundProfile& other);
+	AcidRainBackgroundProfile& operator=(AcidRainBackgroundProfile& other);
 
 	/**
 	 * Creates a new object with this object's settings.
@@ -137,12 +150,16 @@ private:
   /**
    * Grows the list of crawly styles.
    */
-  void growStyleList(int size=CRAWLY_STYLE_CHUNK_SIZE);
+  void growStyleList(int size=RAIN_STYLE_CHUNK_SIZE);
 
-  crawly_profile_style* _styles;
+  rain_profile_style* _styles;
   int _numStyles;
   int _maxNumStyles;
-  int _maxNumCrawlies;
-  int _spawnChance;
+
+  int _maxRainDensity;
+  float _gravity;
+  float _maxHorizAccel;
+  float _maxHorizAccelDelta;
+  float _recoilElasticity;
 };
 #endif

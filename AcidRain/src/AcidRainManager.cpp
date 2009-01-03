@@ -40,37 +40,59 @@ AcidRainManager::AcidRainManager() {
 /**
  * Constructor that takes all of the initialization information that
  * isn't specific to each palette.  For palette specific information,
- * see addCrawliesStyle().
+ * see addRainStyle().
  *
  * @param sizeX The width of the screen in pixels.
  * @param sizeY The height of the screen in pixels.
- * @param maxCrawlies The maximum number of worms allowed on the screen.
- * @param spawnChance There is a 1/spawnChance chance for a spawn.
+ * @param maxDensity The maximum rain density allowed on the screen as %.
+ * @param gravity The "downward" acceleration to use.  Must be positive!
+ * @param maxHorizontalAcceleration The maximum "wind" acceleration
+ * @param maxHorizontalAcclerationDelta The maximum change in "wind" accel.
+ * @param recoilElasticity The amount of "bounce" the rain has.
  */
-AcidRainManager::AcidRainManager(int sizeX, int sizeY, int maxCrawlies,
-				 int spawnChance) {
+AcidRainManager::AcidRainManager(int sizeX, int sizeY, int maxDensity,
+				 float gravity,
+				 float maxHorizontalAcceleration,
+				 float maxHorizontalAccelerationDelta,
+				 float recoilElasticity) {
   initData();
   initBackground(sizeX, sizeY);
-  _maxNumCrawlies = maxCrawlies;
-  _crawlies = new CrawliesSprite*[maxCrawlies];
-  _numCrawlies = 0;
-  _spawnChance = spawnChance;
-  _numStyles = 0;
-  _bSetupFinished = true;
+
+  _screenArea = ((float)sizeX)*((float)sizeY);
+
+  _maxDensity = ((float)maxDensity)/100.0;
+  _gravity = gravity;
+  _maxHorizAccel = maxHorizontalAcceleration;
+  _maxHorizAccelDelta = maxHorizontalAccelerationDelta;
+  _recoilElasticity = recoilElasticity;
+
+  _bSetupFinished = false;
 }
 
 AcidRainManager::~AcidRainManager() {
   if(_styles != NULL) {
+    for(int i=0; i<_numStyles;i++) {
+      delete [] _styles[i].pal;
+      _styles[i].pal = NULL;
+    }
     delete [] _styles;
     _styles = NULL;
   }
-  if(_crawlies != NULL) {
-    for(int i=0; i<_numCrawlies;i++) {
-      delete _crawlies[i];
-      _crawlies[i] = NULL;
+  if(_fallingSprites != NULL) {
+    for(int i=0; i<_numFallingSprites;i++) {
+      delete _fallingSprites[i];
+      _fallingSprites[i] = NULL;
     }
-    delete [] _crawlies;
-    _crawlies = NULL;
+    delete [] _fallingSprites;
+    _fallingSprites = NULL;
+  }
+  if(_bouncingSprites != NULL) {
+    for(int i=0; i<_numBouncingSprites;i++) {
+      delete _bouncingSprites[i];
+      _bouncingSprites[i] = NULL;
+    }
+    delete [] _bouncingSprites;
+    _bouncingSprites = NULL;
   }
 }
 
@@ -90,20 +112,20 @@ AcidRainManager::~AcidRainManager() {
  * @param minLength The minimum crawly length.
  * @param maxLength the maximum crawly length.
  * @param thickness The thickness of the crawly.
- * @param minSpriteSpeed The minimum worm speed.
- * @param maxSpriteSpeed The maximum worm speed.
+ * @param minInitialV The minimum sprite initial velocity.
+ * @param maxInitialV The maximum sprite initial velocity.
  * @param palSpeed The secondary palette rotation speed.
  * @param bHeadConstantColor Whether the head keeps the same color index.
  * @param bHeadRandomColor Whether the head color is random when created.
  */
-void AcidRainManager::addCrawliesStyle(IndexedPalette* pal, int minLength, 
-				       int maxLength, 
-				       int thickness,
-				       float minSpriteSpeed,
-				       float maxSpriteSpeed,
-				       float palSpeed, 
-				       bool bHeadConstantColor, 
-				       bool bHeadRandomColor) {
+void AcidRainManager::addRainStyle(IndexedPalette* pal, int minLength, 
+				   int maxLength, 
+				   int thickness,
+				   float minInitialV,
+				   float maxInitialV,
+				   float palSpeed, 
+				   bool bHeadConstantColor, 
+				   bool bHeadRandomColor) {
   if(pal == NULL)
     return;
   if(_styles == NULL)
@@ -113,15 +135,15 @@ void AcidRainManager::addCrawliesStyle(IndexedPalette* pal, int minLength,
     growStyleList();
   }
 
-  // clone palette
-  _styles[_numStyles].pal = *pal;
+  // convert palette
+  convPalette(pal, &_styles[_numStyles]);
 
   // copy other parameters
   _styles[_numStyles].minLength = minLength;
   _styles[_numStyles].maxLength = maxLength;
   _styles[_numStyles].thickness = thickness;
-  _styles[_numStyles].minSpriteSpeed = minSpriteSpeed;
-  _styles[_numStyles].maxSpriteSpeed = maxSpriteSpeed;
+  _styles[_numStyles].minInitialV = minInitialV;
+  _styles[_numStyles].maxInitialV = maxInitialV;
   _styles[_numStyles].palSpeed = palSpeed;
   _styles[_numStyles].bHeadConstantColor = bHeadConstantColor;
   _styles[_numStyles].bHeadRandomColor = bHeadRandomColor;
@@ -144,6 +166,12 @@ void AcidRainManager::setFinished(bool bFinished) {
 void AcidRainManager::drawBackground(screen_struct* screenObj) {
   if(screenObj == NULL)
     return;
+  if(_fallingSprites == NULL) {
+    return;
+  }
+  if(_bouncingSprites == NULL) {
+    return;
+  }
 
   if(!isSetupFinished()) {
     return;
@@ -161,54 +189,114 @@ void AcidRainManager::drawBackground(screen_struct* screenObj) {
     }
   }
 
-  // now go through the list of crawlies
-  if(_crawlies == NULL)
-    return;
-  for(int i=0; i<_numCrawlies; i++) {
-    if(_crawlies[i] != NULL && _crawlies[i]->isAlive()) {
-      // we've found a valid, live crawly, so render!
-      _crawlies[i]->drawCrawly(screenObj);
+  // go through the list of falling sprites
+  if(_fallingSprites != NULL) {
+    for(int i=0; i<_numFallingSprites; i++) {
+      if(_fallingSprites[i] != NULL && _fallingSprites[i]->isAlive()) {
+	// we've found a valid, live crawly, so render!
+	_fallingSprites[i]->drawSprite(screenObj);
+      }
+    }
+  }
+
+  // go through the list of other sprites
+  if(_bouncingSprites != NULL) {
+    for(int i=0; i<_numBouncingSprites; i++) {
+      if(_bouncingSprites[i] != NULL && _bouncingSprites[i]->isAlive()) {
+	// we've found a valid, live crawly, so render!
+	_bouncingSprites[i]->drawSprite(screenObj);
+      }
     }
   }
 }
 
 /**
- * Finishes generating the fractal then rotates the palette when done.
+ * Animates the sprites and calculates density.
  */
 void AcidRainManager::clocktick() {
   if(!isSetupFinished()) {
     return;
   }
-  if(_sprites == NULL) {
+  if(_fallingSprites == NULL) {
+    return;
+  }
+  if(_bouncingSprites == NULL) {
     return;
   }
 
-  // first, move the crawlies we have and calculate density
+  // adjust horizontal acceleration
+  float _accelDelta = ((float)((jrand()%200)-100))*(_maxHorizAccelDelta/100.0);
+  if(_accelDelta + _horizAccel > 1.0*_maxHorizAccel) {
+    _horizAccel -= _accelDelta;
+  }
+  if(_accelDelta + _horizAccel < -1.0*_maxHorizAccel) {
+    _horizAccel -= _accelDelta;
+  }
+
+  // move the falling sprites we have and calculate their density
   int i=0;
   int usedPixels = 0;
-  while(i<_numSprites) {
-    if(_sprites[i] != NULL && _sprites[i]->isAlive()) {
-      // we've found a valid, live crawly, so move!
-      _sprites[i]->moveCrawly();
+  while(i<_numFallingSprites) {
+    if(_fallingSprites[i] != NULL && _fallingSprites[i]->isAlive()) {
+      // we've found a valid, live sprite, so move!
+      _fallingSprites[i]->moveSprite(_horizAccel);
       // add it to the density calculation
-      _sprites[i]->
+      usedPixels += _fallingSprites[i]->getNumPixelsUsed();
 
+      // check to see if it throws off any bouncing sprites
+      RainSprite* tmpSprite = _fallingSprites[i]->getRecoilSprite();
+      while(tmpSprite != NULL) {
+	if(_numBouncingSprites == _maxNumBouncingSprites) {
+	  growBouncingSpriteList();
+	}
+	_bouncingSprites[_numBouncingSprites] = tmpSprite;
+	_numBouncingSprites++;
+	tmpSprite = _fallingSprites[i]->getRecoilSprite();
+      }
       i++;
     } else {
       // current location does not contain a valid, living
       // crawly, so move the crawly at the end of the list
       // to this location, decrement the size of the list
       // and try again.
-      delete _sprites[i];
-      _sprites[i] = _sprites[_numSprites-1];
-      _sprites[_numSprites-1] == NULL;
-      _numSprites--;
+      delete _fallingSprites[i];
+      _fallingSprites[i] = _fallingSprites[_numFallingSprites-1];
+      _fallingSprites[_numFallingSprites-1] = NULL;
+      _numFallingSprites--;
     }
   }
 
-  // next, if there is space, consider making a new one.
-  if(_numCrawlies < _maxNumCrawlies && jrand()%_spawnChance == 0) {
-    spawnCrawly();
+  // now animate the bouncing sprites (if any)
+  while(i<_numBouncingSprites) {
+    if(_bouncingSprites[i] != NULL && _bouncingSprites[i]->isAlive()) {
+      // we've found a valid, live sprite, so move!
+      _bouncingSprites[i]->moveSprite(_horizAccel);
+      // add it to the density calculation
+      usedPixels += _bouncingSprites[i]->getNumPixelsUsed();
+      i++;
+    } else {
+      // current location does not contain a valid, living
+      // crawly, so move the crawly at the end of the list
+      // to this location, decrement the size of the list
+      // and try again.
+      delete _bouncingSprites[i];
+      _bouncingSprites[i] = _bouncingSprites[_numBouncingSprites-1];
+      _bouncingSprites[_numBouncingSprites-1] = NULL;
+      _numBouncingSprites--;
+    }
+  }
+
+  // next, if there is space, consider making a new one.  To do so,
+  // subtract the current density from the max density and multiply
+  // by 100.  Now, take a random number between 0 and 100.  If that
+  // random number is less than the difference in densities * 100,
+  // then spawn.
+  _curDensity = ((float)usedPixels)/_screenArea;
+  if(_curDensity < _maxDensity) {
+    int spawnChance = (int)((_maxDensity - _curDensity)*100.0);
+    if(jrand()%101 < spawnChance) {
+      spawnSprite();
+    }
   }
 }
 
@@ -220,19 +308,31 @@ void AcidRainManager::initData() {
   _styles = NULL;
   _maxNumStyles = 0;
   _numStyles = 0;
-  _crawlies = NULL;
-  _numCrawlies = 0;
-  _maxNumCrawlies = 0;
+  _fallingSprites = NULL;
+  _maxNumFallingSprites = 0;
+  _numFallingSprites = 0;
+  _bouncingSprites = NULL;
+  _maxNumBouncingSprites = 0;
+  _numBouncingSprites = 0;
+  _maxDensity = 0.0;
+  _curDensity = 0.0;
+  _screenArea = 0.0;
+  _horizAccel = 0.0;
+  _maxHorizAccel = 0.0;
+  _maxHorizAccelDelta = 0.0;
+  _recoilElasticity = 0.0;
 
   growStyleList();
+  growFallingSpriteList();
+  growBouncingSpriteList();
 }
 
 /**
- * Creates a new sprite from one of the palette styles available and
- * adds it to the list of live crawlies.
+ * Creates a new falling sprite from the styles available  and adds
+ * it to the list.
  */
 void AcidRainManager::spawnSprite() {
-  if(_sprites == NULL)
+  if(_fallingSprites == NULL)
     return;
   if(_styles == NULL)
     return;
@@ -246,11 +346,11 @@ void AcidRainManager::spawnSprite() {
   // determine the length
   int minLength = _styles[idx].minLength;
   if(minLength <= 0) {
-    minLength = _styles[idx].pal.getWidth();
+    minLength = _styles[idx].palWidth;
   }
   int maxLength = _styles[idx].maxLength;
   if(maxLength <= 0) {
-    maxLength = _styles[idx].pal.getWidth();
+    maxLength = _styles[idx].palWidth;
   }
   int length;
   if(minLength == maxLength) {
@@ -270,20 +370,22 @@ void AcidRainManager::spawnSprite() {
   }
 
   FallingRainSprite* tmpSprite = 
-    new FallingRainSprite(_sizeX, _sizeY, startX, _gravity,&_styles[idx].pal,
+    new FallingRainSprite(_sizeX, _sizeY, startX, _gravity,_styles[idx].pal,
+			  _styles[idx].palWidth, _styles[idx].palHeight, 
 			  length, _styles[idx].thickness, spriteV,
 			  _styles[idx].palSpeed, _palYOffset,
 			  _styles[idx].bHeadConstantColor,
-			  _styles[idx].bHeadRandomColor);
+			  _styles[idx].bHeadRandomColor,
+			  _recoilElasticity);
 
   // append to list of sprites
-  if(_numSprites == _maxNumSprites) {
-    growSpriteList(int size=RAIN_SPRITE_CHUNK_SIZE);
+  if(_numFallingSprites == _maxNumFallingSprites) {
+    growFallingSpriteList();
   }
-  _sprites[_numSprites] = tmpSprite;
-  if(_sprites[_numSprites] == NULL)
+  _fallingSprites[_numFallingSprites] = tmpSprite;
+  if(_fallingSprites[_numFallingSprites] == NULL)
     return;
-  _numSprites++;
+  _numFallingSprites++;
   tmpSprite = NULL;
 }
 
@@ -316,75 +418,114 @@ void AcidRainManager::growStyleList(int size) {
 }
 
 /**
- * Grows the list of sprites.
+ * Grows the list of falling sprites.
  */
-void AcidRainManager::growSpriteList(int size) {
-  if(_sprites == NULL) {
-    _maxNumSprites = size;
-    _sprites = new FallingRainSprite*[_maxNumSprites];
-    if(_sprites == NULL) {
-      _maxNumSprites = 0;
+void AcidRainManager::growFallingSpriteList(int size) {
+  if(_fallingSprites == NULL) {
+    _maxNumFallingSprites = size;
+    _fallingSprites = new FallingRainSprite*[_maxNumFallingSprites];
+    if(_fallingSprites == NULL) {
+      _maxNumFallingSprites = 0;
       return;
     }
-    _numSprites = 0;
+    _numFallingSprites = 0;
     // null out list
-    for(int i=0; i<_maxNumSprites;i++) {
-      _sprites[i] = NULL;
+    for(int i=0; i<_maxNumFallingSprites;i++) {
+      _fallingSprites[i] = NULL;
     }
   } else {
     // create a temp list and copy
-    FallingRainSprite** tmpList = new FallingRainSprite*[_maxNumStyles+size];
+    FallingRainSprite** tmpList = 
+      new FallingRainSprite*[_maxNumFallingSprites+size];
     if(tmpList == NULL) {
       return;
     }
     int i;
-    for(i=0;i<_numSprites;i++) {
-      tmpList[i] = _sprites[i];
-      _sprites[i] = NULL;
+    for(i=0;i<_numFallingSprites;i++) {
+      tmpList[i] = _fallingSprites[i];
+      _fallingSprites[i] = NULL;
     }
     // null out rest of list
-    for(i=_numSprites;i<_maxNumSprites;i++) {
+    for(i=_numFallingSprites;i<_maxNumFallingSprites;i++) {
       tmpList[i] = NULL;
     }
-    delete [] _sprites;
-    _sprites = tmpList;
+    delete [] _fallingSprites;
+    _fallingSprites = tmpList;
     tmpList = NULL;
-    _maxNumSprites += size;
+    _maxNumFallingSprites += size;
+  }
+}
+
+/**
+ * Grows the list of sprites.
+ */
+void AcidRainManager::growBouncingSpriteList(int size) {
+  if(_bouncingSprites == NULL) {
+    _maxNumBouncingSprites = size;
+    _bouncingSprites = new RainSprite*[_maxNumBouncingSprites];
+    if(_bouncingSprites == NULL) {
+      _maxNumBouncingSprites = 0;
+      return;
+    }
+    _numBouncingSprites = 0;
+    // null out list
+    for(int i=0; i<_maxNumBouncingSprites;i++) {
+      _bouncingSprites[i] = NULL;
+    }
+  } else {
+    // create a temp list and copy
+    RainSprite** tmpList = new RainSprite*[_maxNumBouncingSprites+size];
+    if(tmpList == NULL) {
+      return;
+    }
+    int i;
+    for(i=0;i<_numBouncingSprites;i++) {
+      tmpList[i] = _bouncingSprites[i];
+      _bouncingSprites[i] = NULL;
+    }
+    // null out rest of list
+    for(i=_numBouncingSprites;i<_maxNumBouncingSprites;i++) {
+      tmpList[i] = NULL;
+    }
+    delete [] _bouncingSprites;
+    _bouncingSprites = tmpList;
+    tmpList = NULL;
+    _maxNumBouncingSprites += size;
   }
 }
 
 
 /**
- * Converts the palette from IndexedPalette* to int*
+ * Converts the palette from IndexedPalette* to int* and places
+ * information into the specified style.
  */
-void FallingRainSprite::convPalette(IndexedPalette* pal) {
+void AcidRainManager::convPalette(IndexedPalette* pal, 
+				  rainsprite_style* style) {
   if(pal == NULL)
     return;
+  if(style == NULL)
+    return;
 
-  if(_pal != NULL) {
-    delete [] _pal;
-    _pal = NULL;
-  }
+  style->palWidth = pal->getWidth();
+  style->palHeight = pal->getHeight();
 
-  _palWidth = pal->getWidth();
-  _palHeight = pal->getHeight();
-  _palYOffset = 0.0;
-
-  if(_palWidth <= 0 || _palHeight <= 0)
+  if(style->palWidth <= 0 || style->palHeight <= 0)
     return;
 
   // create space for the 2D palette
-  _pal = new int[(_palWidth*_palHeight)*4];
-  if(_pal == NULL)
+  int* tmpPal = new int[(style->palWidth*style->palHeight)*4];
+  if(tmpPal == NULL)
     return;
+  style->pal = &tmpPal;
+
 
   // copy palette
   GLubyte buff[4];
-  for(int y=0; y<_palHeight; y++) {
-    for(int x=0; x<_palWidth; x++) {
+  for(int y=0; y<style->palHeight; y++) {
+    for(int x=0; x<style->palWidth; x++) {
       pal->getColor(x,y,&buff[0], 4);
       for(int j=0; j<4;j++) {
-	_pal[(x+y*_palWidth)*4+j] = buff[j];
+	*style->pal[(x+y*style->palWidth)*4+j] = buff[j];
       }
     }
   }

@@ -50,7 +50,7 @@
 #include "2d_bgnd_w_lens/BackgroundProfile.h"
 #include "IndexedPalette/IndexedPaletteProfile.h"
 #include "StyleEditDialog.h"
-#include "CrawliesBackgroundProfile.h"
+#include "AcidRainBackgroundProfile.h"
 
 class ProfileEditDialog : public QDialog {
 
@@ -87,12 +87,12 @@ private:
 	/**
 	 * Sets up the style table widget.
 	 */
-	void setupStyleTableWidget(CrawliesBackgroundProfile* profile);
+	void setupStyleTableWidget(AcidRainBackgroundProfile* profile);
 
 	/**
 	 * Grows the list of crawly styles.
 	 */
-	void growStyleList(int size=CRAWLY_STYLE_CHUNK_SIZE);
+	void growStyleList(int size=RAIN_STYLE_CHUNK_SIZE);
 
 	//MasterProfile related
 	QLineEdit* _nameBox;
@@ -110,7 +110,7 @@ private:
 	// list of tool tips for the table
 	QString _tableToolTips[9];
 
-	crawly_profile_style* _styleList;
+	rain_profile_style* _styleList;
 	int _numStyles;
 	int _maxNumStyles;
 	

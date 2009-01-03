@@ -36,7 +36,7 @@
 struct recoil_sprite_node {
   RainSprite* sprite;
   recoil_sprite_node* next;
-}
+};
 
 class FallingRainSprite : public RainSprite {
  public:

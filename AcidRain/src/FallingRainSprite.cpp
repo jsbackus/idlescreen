@@ -27,7 +27,7 @@
 //using namespace std;
 //end debug
 
-#include <math>
+#include <math.h>
 
 #include "utility/misc_funcs.h"
 #include "FallingRainSprite.h"
@@ -159,7 +159,7 @@ void FallingRainSprite::drawSprite(screen_struct* screenObj) {
 	if( (x+j) >= 0 && (x+j) < _screenWidth 
 	    && (m+y) >= 0 && (m+y) < _screenHeight) {
 	  for(int k=0; k<4;k++) {
-	    screenObj->_pixels[tx+ty+k] = _pal[palIdx+k];
+	    screenObj->_pixels[tx+ty+k] = *_pal[palIdx+k];
 	  }
 	}
       }
@@ -280,16 +280,33 @@ void FallingRainSprite::moveSprite(float horizontalAcceleration) {
 	  // calculate random recoil direction with a velocity equal in
 	  // magnitude to the velocity at which it hit
 	  float recoilMag = sqrt(_vX*_vX+_vY*_vY)*_recoilElasticity;
-	  float recoilAng = ((float)jrand()%((int)(PI*10000)))/10000.0;
+	  float recoilAng = ((float)(jrand()%((int)(PI*10000))))/10000.0;
 	  float vX = recoilMag*cos(recoilAng);
 	  float vY = recoilMag*cos(recoilAng);
 
 	  // calculate position
 	  float pY = 0.0;
-	  float pX = 0.0;
+	  float pX = float(_segments[_numSegments-1].x);
+	  
+
+	  // we need to backtrack for pX to the point where pY == 0.0
+	  pX = (((float)_segments[_numSegments-1].y) / (dY*thick)) * 
+	    dX*thick*pX;
+
+	  // adjust position by the remaining clockSteps
+	  pX += ((float)clockStep)*vX;
+	  pY += ((float)clockStep)*vY;
+
+	  // wrap
+	  while(pX < 0) {
+	    pX += scrWidth;
+	  }
+	  while(pX >= scrWidth) {
+	    pX -= scrWidth;
+	  }
 
 	  BouncingRainSprite* tmpSprite = 
-	    new BouncingRainSprite(_screenWidth, _screenHeight, (int)pX,
+	    new BouncingRainSprite(_screenWidth, _screenHeight, pX, pY,
 				   _gravity, _pal, _palWidth, _palHeight,
 				   _colorIdx, _thickness, vX, vY, _palSpeed,
 				   _palYOffset, _bHeadConstantColor);
@@ -324,7 +341,7 @@ void FallingRainSprite::initSprite() {
   initBaseSprite();
   _numSegments = 0;
   _segments = NULL;
-  _recoilAbsorb = 1.0;
+  _recoilElasticity = 1.0;
 }
 
 /**
@@ -334,7 +351,7 @@ void FallingRainSprite::initSprite() {
 RainSprite* FallingRainSprite::getRecoilSprite() {
   if(_recoilSprites != NULL) {
     RainSprite* retVal = _recoilSprites->sprite;
-    recoil_sprite_node tmpNode = _recoilSprites;
+    recoil_sprite_node* tmpNode = _recoilSprites;
     _recoilSprites = _recoilSprites->next;
     tmpNode->next = NULL;
     tmpNode->sprite = NULL;
