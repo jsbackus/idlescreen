@@ -58,7 +58,7 @@ BouncingRainSprite::BouncingRainSprite() {
  */
 BouncingRainSprite::BouncingRainSprite(int width, int height, float startX,
 				       float startY,
-				       float gravity, int** pal, int palWidth,
+				       float gravity, int* pal, int palWidth,
 				       int palHeight, int palIdx,int thickness, 
 				       float initialVX, float initialVY,
 				       float palSpeed, int initialPalYOffset,
@@ -80,11 +80,13 @@ BouncingRainSprite::BouncingRainSprite(int width, int height, float startX,
   _palSpeed = palSpeed;
   _palYOffset = initialPalYOffset;
   _bHeadConstantColor = bHeadConstantColor;
-  _gravity = gravity;
+  _gravity = -1.0*abs(gravity);
   _vX = initialVX;
   _vY = initialVY;
-  _pX = startX;
-  _pY = startY;
+  _x = (int)startX;
+  _pX = startX - (float)_x;
+  _y = (int)startY;
+  _pY = startY - (float)_y;
   _pal = pal;
   _palWidth = palWidth;
   _palHeight = palHeight;
@@ -109,8 +111,8 @@ void BouncingRainSprite::drawSprite(screen_struct* screenObj) {
   if(screenObj == NULL)
     return;
 
-  int x = (int)_pX;
-  int y = (int)_pY;
+  int x = (int)_x;
+  int y = (int)_y;
   int palIdx = (_colorIdx + ((int)_palYOffset)*_palWidth)*4;
   for(int m=0;m<_thickness;m++) {
     int ty = (y+m)*_screenWidth*4;
@@ -119,7 +121,7 @@ void BouncingRainSprite::drawSprite(screen_struct* screenObj) {
       if( (x+j) >= 0 && (x+j) < _screenWidth 
 	  && (m+y) >= 0 && (m+y) < _screenHeight) {
 	for(int k=0; k<4;k++) {
-	  screenObj->_pixels[tx+ty+k] = *_pal[palIdx+k];
+	  screenObj->_pixels[tx+ty+k] = _pal[palIdx+k];
 	}
       }
     }
@@ -160,52 +162,17 @@ void BouncingRainSprite::moveSprite(float horizontalAcceleration) {
   int stepY = (int)_pY;
   _pY -= (float)stepY;
 
-  // when we move the sprite, we need keep the ratio of X to Y movement
-  // constant.  Figure out which is larger, and set clockStep to it,
-  // then figure out how man steps to take in each direction for each
-  // unit of clockStep.  For the larger case, it will be 1.0.
-  float dX = 0;
-  float dY = 0;
-  int clockStep = 0;
-  if(stepX > stepY) {
-    clockStep = stepX;
-    dX = 1.0;
-    dY = ((float)stepY)/((float)stepX);
-  } else {
-    clockStep = stepY;
-    dY = 1.0;
-    dX = ((float)stepX)/((float)stepY);
+  _y += stepY;
+  _x += stepX;
+  // Wrap X around screen if need be.
+  while (_x < 0) {
+    _x += _screenWidth;
   }
-
-  float scrWidth = (float)_screenWidth;
-  float thick = (float)_thickness;
-
-  // move the sprite one step per clockstep.  The head can change
-  // direction at each clock step.  We do this so that there isn't
-  // a break between segments.  Not the most efficient...
-  while(clockStep > 0) {
-    // move head.
-    _pY += dY*thick;
-    _pX += dX*thick;
-
-    // Wrap X around screen if need be.
-    while (_pX < 0) {
-      _pX += scrWidth;
-    }
-    while (_pX >= scrWidth) {
-      _pX -= scrWidth; 
-    }
-
-    // increment head color if not constant
-    if(!_bHeadConstantColor) {
-      _colorIdx = (_colorIdx+1)%_palWidth;
-    }
-
-    // if head reaches the bottom, kill sprite
-    if(_pY < 0) {
-      _bAlive = false;
-    }
-    clockStep--;
+  while (_x >= _screenWidth) {
+    _x -= _screenWidth; 
+  }
+  if(_y < 0) {
+    _bAlive = false;
   }
 }
 
@@ -214,4 +181,6 @@ void BouncingRainSprite::moveSprite(float horizontalAcceleration) {
  */
 void BouncingRainSprite::initSprite() {
   initBaseSprite();
+  _x = 0;
+  _y = 0;
 }

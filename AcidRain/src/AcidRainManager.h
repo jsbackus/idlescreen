@@ -47,10 +47,9 @@ using namespace std;
 
 #include "RainSprite.h"
 #include "FallingRainSprite.h"
-//#include "RecoilSprite.h"
 
 struct rainsprite_style {
-  int** pal;
+  int* pal;
   int palWidth;
   int palHeight;
   int minLength;

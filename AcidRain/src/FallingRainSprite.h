@@ -65,7 +65,7 @@ class FallingRainSprite : public RainSprite {
  * @param recoilElasticity The amount of "bounce" the drops have.
    */
   FallingRainSprite(int width, int height, int startX, float gravity,
-		    int** pal, int palWidth, int palHeight,
+		    int* pal, int palWidth, int palHeight,
 		    int length, int thickness,
 		    float initialV, float palSpeed, int initialPalYOffset,
 		    bool bHeadConstantColor, bool bHeadRandomColor,

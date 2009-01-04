@@ -23,8 +23,8 @@
  */
 
 //begin debug
-//#include <iostream>
-//using namespace std;
+#include <iostream>
+using namespace std;
 //end debug
 
 #include "utility/misc_funcs.h"
@@ -66,7 +66,7 @@ AcidRainManager::AcidRainManager(int sizeX, int sizeY, int maxDensity,
   _maxHorizAccelDelta = maxHorizontalAccelerationDelta;
   _recoilElasticity = recoilElasticity;
 
-  _bSetupFinished = false;
+  _bSetupFinished = true; //false;
 }
 
 AcidRainManager::~AcidRainManager() {
@@ -130,7 +130,6 @@ void AcidRainManager::addRainStyle(IndexedPalette* pal, int minLength,
     return;
   if(_styles == NULL)
     return;
-
   if(_numStyles == _maxNumStyles) {
     growStyleList();
   }
@@ -225,24 +224,25 @@ void AcidRainManager::clocktick() {
   }
 
   // adjust horizontal acceleration
-  float _accelDelta = ((float)((jrand()%200)-100))*(_maxHorizAccelDelta/100.0);
-  if(_accelDelta + _horizAccel > 1.0*_maxHorizAccel) {
-    _horizAccel -= _accelDelta;
-  }
-  if(_accelDelta + _horizAccel < -1.0*_maxHorizAccel) {
-    _horizAccel -= _accelDelta;
+  float accelDelta = ((float)((jrand()%200)-100))*(_maxHorizAccelDelta/100.0);
+  if(accelDelta + _horizAccel > 1.0*_maxHorizAccel) {
+    _horizAccel -= accelDelta;
+  } else if(accelDelta + _horizAccel < -1.0*_maxHorizAccel) {
+    _horizAccel -= accelDelta;
+  } else {
+    _horizAccel += accelDelta;
   }
 
   // move the falling sprites we have and calculate their density
   int i=0;
   int usedPixels = 0;
+
   while(i<_numFallingSprites) {
     if(_fallingSprites[i] != NULL && _fallingSprites[i]->isAlive()) {
       // we've found a valid, live sprite, so move!
       _fallingSprites[i]->moveSprite(_horizAccel);
       // add it to the density calculation
       usedPixels += _fallingSprites[i]->getNumPixelsUsed();
-
       // check to see if it throws off any bouncing sprites
       RainSprite* tmpSprite = _fallingSprites[i]->getRecoilSprite();
       while(tmpSprite != NULL) {
@@ -267,6 +267,7 @@ void AcidRainManager::clocktick() {
   }
 
   // now animate the bouncing sprites (if any)
+  i = 0;
   while(i<_numBouncingSprites) {
     if(_bouncingSprites[i] != NULL && _bouncingSprites[i]->isAlive()) {
       // we've found a valid, live sprite, so move!
@@ -332,6 +333,10 @@ void AcidRainManager::initData() {
  * it to the list.
  */
 void AcidRainManager::spawnSprite() {
+  //begin debug
+  if(_numFallingSprites >= 1)
+  return;
+  //end debug
   if(_fallingSprites == NULL)
     return;
   if(_styles == NULL)
@@ -342,6 +347,7 @@ void AcidRainManager::spawnSprite() {
 
   // determine starting position
   int startX = (jrand()%(_sizeX));
+  cout<<"sizeX: "<<_sizeX<<", startX: "<<startX<<endl;
 
   // determine the length
   int minLength = _styles[idx].minLength;
@@ -516,7 +522,7 @@ void AcidRainManager::convPalette(IndexedPalette* pal,
   int* tmpPal = new int[(style->palWidth*style->palHeight)*4];
   if(tmpPal == NULL)
     return;
-  style->pal = &tmpPal;
+  style->pal = tmpPal;
 
 
   // copy palette
@@ -525,7 +531,7 @@ void AcidRainManager::convPalette(IndexedPalette* pal,
     for(int x=0; x<style->palWidth; x++) {
       pal->getColor(x,y,&buff[0], 4);
       for(int j=0; j<4;j++) {
-	*style->pal[(x+y*style->palWidth)*4+j] = buff[j];
+	style->pal[(x+y*style->palWidth)*4+j] = buff[j];
       }
     }
   }

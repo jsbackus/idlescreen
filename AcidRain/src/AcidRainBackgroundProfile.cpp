@@ -383,6 +383,7 @@ Background* AcidRainBackgroundProfile::getNewBackgroundObj(int height, int width
   if(palHash == NULL)
     return NULL;
 
+  cout<<"in getNewBackgroundObj()"<<endl;
   // create a new CrawliesManager to return
   AcidRainManager* retVal = new AcidRainManager(width, height, _maxRainDensity,
 						_gravity, _maxHorizAccel,
@@ -391,18 +392,19 @@ Background* AcidRainBackgroundProfile::getNewBackgroundObj(int height, int width
   if(retVal == NULL)
     return NULL;
 
+  cout<<"before adding styles: "<<_numStyles<<endl;
   // populate styles list
   for(int i=0; i<_numStyles; i++) {
-    retVal->addCrawliesStyle(palHash->value(_styles[i].pal)->createPalette(),
-			     _styles[i].minLength, 
-			     _styles[i].maxLength, 
-			     _styles[i].thickness,
-			     _styles[i].minInitialV,
-			     _styles[i].maxInitialV, _styles[i].palSpeed,
-			     _styles[i].bHeadConstantColor,
-			     _styles[i].bHeadRandomColor);
+    retVal->addRainStyle(palHash->value(_styles[i].pal)->createPalette(),
+			 _styles[i].minLength, 
+			 _styles[i].maxLength, 
+			 _styles[i].thickness,
+			 _styles[i].minInitialV,
+			 _styles[i].maxInitialV, _styles[i].palSpeed,
+			 _styles[i].bHeadConstantColor,
+			 _styles[i].bHeadRandomColor);
   }
-
+  cout<<"leaving getNewBackgroundObj()"<<endl;
   return retVal;
 }
 
@@ -443,7 +445,7 @@ float AcidRainBackgroundProfile::getMaxHorizontalAcceleration() {
   return _maxHorizAccel;
 }
 void AcidRainBackgroundProfile::setMaxHorizontalAcceleration(float accel) {
-  _maxHorizAccel = acce;
+  _maxHorizAccel = accel;
 }
 float AcidRainBackgroundProfile::getMaxHorizontalAcclerationDelta() {
   return _maxHorizAccelDelta;
@@ -536,12 +538,12 @@ float AcidRainBackgroundProfile::getMinInitialV(int styleIdx) {
 
   return _styles[styleIdx].minInitialV;
 }
-void AcidRainBackgroundProfile::setInitialV(int styleIdx, float veloctiy) 
+void AcidRainBackgroundProfile::setMinInitialV(int styleIdx, float velocity) 
 {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
-  _styles[styleIdx].minInitialV = minInitialV;
+  _styles[styleIdx].minInitialV = velocity;
 }
 float AcidRainBackgroundProfile::getMaxInitialV(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
@@ -549,12 +551,12 @@ float AcidRainBackgroundProfile::getMaxInitialV(int styleIdx) {
 
   return _styles[styleIdx].maxInitialV;
 }
-void AcidRainBackgroundProfile::setMaxSpriteSpeed(int styleIdx, float velocity) 
+void AcidRainBackgroundProfile::setMaxInitialV(int styleIdx, float velocity) 
 {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
-  _styles[styleIdx].maxInitialV = maxInitialV;
+  _styles[styleIdx].maxInitialV = velocity;
 }
 
 float AcidRainBackgroundProfile::getPaletteSpeed(int styleIdx) {
@@ -598,9 +600,18 @@ void AcidRainBackgroundProfile::setHeadRandomColor(int styleIdx, bool bRandom) {
   _styles[styleIdx].bHeadRandomColor = bRandom;
 }
 
-crawly_profile_style AcidRainBackgroundProfile::getStyle(int styleIdx) {
+rain_profile_style AcidRainBackgroundProfile::getStyle(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles) {
-    crawly_profile_style empty;
+    rain_profile_style empty;
+    empty.pal = "";
+    empty.minLength = 0;
+    empty.maxLength = 0;
+    empty.thickness = 0;
+    empty.minInitialV = 0.0;
+    empty.maxInitialV = 0.0;
+    empty.palSpeed = 0;
+    empty.bHeadConstantColor = false;
+    empty.bHeadRandomColor = false;
     return empty;
   }
 
@@ -608,7 +619,7 @@ crawly_profile_style AcidRainBackgroundProfile::getStyle(int styleIdx) {
 }
 
 void AcidRainBackgroundProfile::setStyle(int styleIdx, 
-					 crawly_profile_style& style) {
+					 rain_profile_style& style) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 

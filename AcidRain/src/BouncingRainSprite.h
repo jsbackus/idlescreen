@@ -62,7 +62,7 @@ class BouncingRainSprite : public RainSprite {
    */
   BouncingRainSprite(int width, int height, float startX, float startY,
 		     float gravity,
-		     int** pal, int palWidth, int palHeight, int palIdx,
+		     int* pal, int palWidth, int palHeight, int palIdx,
 		     int thickness, float initialVX, float initialVY,
 		     float palSpeed, int initialPalYOffset,
 		     bool bHeadConstantColor);
@@ -89,6 +89,10 @@ class BouncingRainSprite : public RainSprite {
    * Initializes the data structures.
    */
   void initSprite();
+
+  // position
+  int _x;
+  int _y;
 
 };
 

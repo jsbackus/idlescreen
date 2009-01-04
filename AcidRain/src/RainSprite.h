@@ -79,7 +79,7 @@ class RainSprite {
  
   int _screenWidth;
   int _screenHeight;
-  int** _pal;  //!< Not created, but passed into the derived class and set!
+  int* _pal;  //!< Not created, but passed into the derived class and set!
   int _palWidth;
   int _palHeight;
   float _palYOffset;

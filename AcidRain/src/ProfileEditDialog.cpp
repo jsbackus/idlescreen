@@ -429,7 +429,7 @@ void ProfileEditDialog::okClicked(bool checked) {
     tmpProfile.addStyle();
     tmpProfile.setStyle(i, _styleList[i]);
   }
-  */
+
   // check for an existing BackgroundProfile.  If none
   // create a new one, otherwise update the current one.
   QString tempName = _mp.getBackgroundProfileName();
@@ -485,7 +485,7 @@ void ProfileEditDialog::okClicked(bool checked) {
   if(_oldName != newName) {
     emit profileNameChange(_oldName, newName);
   }
-
+*/
   accept();
 }
 
@@ -514,7 +514,7 @@ void ProfileEditDialog::addStyleClicked() {
   if(dlg != NULL) {
     if(dlg->exec() == QDialog::Accepted) {
       // put the new style into the list
-      crawly_profile_style tmpStyle = dlg->getStyleData();
+      rain_profile_style tmpStyle = dlg->getStyleData();
 
       if(_numStyles >= _maxNumStyles)
 	growStyleList();
@@ -546,7 +546,7 @@ void ProfileEditDialog::editStyleClicked() {
   if(dlg != NULL) {
     if(dlg->exec() == QDialog::Accepted) {
       // put the edited style back into the list
-      crawly_profile_style tmpStyle = dlg->getStyleData();
+      rain_profile_style tmpStyle = dlg->getStyleData();
 
       _styleList[styleIdx] = tmpStyle;
       updateStyleRow(styleIdx);
@@ -684,7 +684,7 @@ void ProfileEditDialog::updateStyleRow(int styleIdx) {
 
   // min speed
   tmpItem = 
-    new QTableWidgetItem(QString::number(_styleList[styleIdx].minSpriteSpeed));
+    new QTableWidgetItem(QString::number(_styleList[styleIdx].minInitialV));
   if(tmpItem != NULL) {
     tmpItem->setToolTip(_tableToolTips[col]);
     tmpItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
@@ -695,7 +695,7 @@ void ProfileEditDialog::updateStyleRow(int styleIdx) {
 
   // max speed
   tmpItem = 
-    new QTableWidgetItem(QString::number(_styleList[styleIdx].maxSpriteSpeed));
+    new QTableWidgetItem(QString::number(_styleList[styleIdx].maxInitialV));
   if(tmpItem != NULL) {
     tmpItem->setToolTip(_tableToolTips[col]);
     tmpItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
@@ -744,7 +744,7 @@ void ProfileEditDialog::updateStyleRow(int styleIdx) {
 void ProfileEditDialog::growStyleList(int size) {
   if(_styleList == NULL) {
     _maxNumStyles = size;
-    _styleList = new crawly_profile_style[_maxNumStyles];
+    _styleList = new rain_profile_style[_maxNumStyles];
     if(_styleList == NULL) {
       _maxNumStyles = 0;
       return;
@@ -752,7 +752,7 @@ void ProfileEditDialog::growStyleList(int size) {
     _numStyles = 0;
   } else {
     // create a temp list and copy
-    crawly_profile_style* tmpList=new crawly_profile_style[_maxNumStyles+size];
+    rain_profile_style* tmpList = new rain_profile_style[_maxNumStyles+size];
     if(tmpList == NULL) {
       return;
     }
@@ -770,7 +770,7 @@ void ProfileEditDialog::growStyleList(int size) {
 /**
  * Sets up the style table widget.
  */
-void ProfileEditDialog::setupStyleTableWidget(CrawliesBackgroundProfile* profile) {
+void ProfileEditDialog::setupStyleTableWidget(AcidRainBackgroundProfile* profile) {
 
   _styleTable = new QTableWidget(this);
   if(_styleTable == NULL)

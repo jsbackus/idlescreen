@@ -4,10 +4,10 @@
   <type>AcidRainBackground</type>
   <name>BackgroundProfile_Large</name>
   <max_rain_density>50</max_rain_density>
-  <gravity>0.25</gravity>
-  <recoil_elasticity>1.0</recoil_elasticity>
-  <max_horiz_accel>0.5</max_horiz_accel>
-  <max_horiz_accel_delta>0.025</max_horiz_accel_delta>
+  <gravity>1</gravity>
+  <recoil_elasticity>0.5</recoil_elasticity>
+  <max_horiz_accel>2</max_horiz_accel>
+  <max_horiz_accel_delta>0.25</max_horiz_accel_delta>
   <num_styles>1</num_styles>
   <rain_style>
    <rain_style_entry>
@@ -18,8 +18,8 @@
     <min_initial_v>1</min_initial_v>
     <max_initial_v>3</max_initial_v>
     <palette_speed>1</palette_speed>
-    <head_constant_color>false</head_constant_color>
-    <head_random_color>true</head_random_color>
+    <head_constant_color>true</head_constant_color>
+    <head_random_color>false</head_random_color>
    </rain_style_entry>
   </rain_style>
  </BackgroundProfile>
@@ -65,13 +65,13 @@
   <name>RGB Gradient Large</name>
   <width>64</width>
   <height>64</height>
-  <timer_millis>50</timer_millis>
+  <timer_millis>150</timer_millis>
   <background_profile>BackgroundProfile_Large</background_profile>
   <lens_profile></lens_profile>
  </MasterProfile>
  <random_master_profiles>false</random_master_profiles>
- <gpl_accepted>false</gpl_accepted>
- <master_profile_history_size>1</master_profile_history_size>
+ <gpl_accepted>true</gpl_accepted>
+ <master_profile_history_size>0</master_profile_history_size>
  <master_profile_history/>
  <selected_master_profile_list>
   <selected_entry>
@@ -79,5 +79,5 @@
    <location>0</location>
   </selected_entry>
  </selected_master_profile_list>
-</Crawlies_Configuration>
+</AcidRain_Configuration>
 
