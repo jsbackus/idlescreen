@@ -224,7 +224,8 @@ void AcidRainManager::clocktick() {
   }
 
   // adjust horizontal acceleration
-  float accelDelta = ((float)((jrand()%200)-100))*(_maxHorizAccelDelta/100.0);
+  float accelDelta = ((float)((jrand()%2000)-1000))*
+    (_maxHorizAccelDelta/1000.0);
   if(accelDelta + _horizAccel > 1.0*_maxHorizAccel) {
     _horizAccel -= accelDelta;
   } else if(accelDelta + _horizAccel < -1.0*_maxHorizAccel) {
@@ -292,14 +293,61 @@ void AcidRainManager::clocktick() {
   // by 100.  Now, take a random number between 0 and 100.  If that
   // random number is less than the difference in densities * 100,
   // then spawn.
+  /*
   _curDensity = ((float)usedPixels)/_screenArea;
+  cout<<"cur density: "<<_curDensity<<" of "<<_maxDensity
+      <<" -> "<<(1.0-_curDensity)/_maxDensity<<endl;
   if(_curDensity < _maxDensity) {
-    int spawnChance = (int)((_maxDensity - _curDensity)*100.0);
-    if(jrand()%101 < spawnChance) {
+    //int spawnChance = (int)((_maxDensity - _curDensity)*200.0);
+    int spawnChance = (int)( 100.0*(1.0-_curDensity)/_maxDensity );
+    cout<<"spawn chance: "<<spawnChance<<endl;
+    //if(jrand()%101 < spawnChance) {
+    while(jrand()%101 < spawnChance) {
+      cout<<"spawned!"<<endl;
       spawnSprite();
     }
   }
+  */
+  // better:
+  /*
+  _curDensity = ((float)usedPixels)/_screenArea;
+  int spawnChance = (int)( 100.0*(1.0-_curDensity)/_maxDensity );
+  //int spawnChance = (int)((_maxDensity - _curDensity)*200.0);
+  //cout<<"cur density: "<<_curDensity<<" of "<<_maxDensity
+  //    <<" -> "<<(1.0-_curDensity)/_maxDensity<<endl;
+  while(_curDensity < _maxDensity && jrand()%101 < spawnChance) {
+    //cout<<"cur density: "<<_curDensity<<" of "<<_maxDensity
+    //	<<" -> "<<(1.0-_curDensity)/_maxDensity<<endl;
+    //int spawnChance = (int)((_maxDensity - _curDensity)*200.0);
+    //cout<<"spawn chance: "<<spawnChance<<endl;
+    //if(jrand()%101 < spawnChance) {
+    //while(jrand()%101 < spawnChance) {
+    //cout<<"spawned!"<<endl;
+    usedPixels += spawnSprite();
+    _curDensity = ((float)usedPixels)/_screenArea;
+    spawnChance = (int)( 100.0*(1.0-_curDensity)/_maxDensity );
+    //spawnChance = (int)((_maxDensity - _curDensity)*200.0);
+  }
+  */
+  i=0; //!< simple escape
+  while(shouldSpawn(usedPixels) && i < _sizeX*2) {
+    i++;
+    usedPixels+= spawnSprite();
+  }
 }
+
+/**
+ * Recalculates the current screen density and decides whether
+ * or not to spawn based upon that density.
+ */
+bool AcidRainManager::shouldSpawn(int usedPixels) {
+  _curDensity = ((float)usedPixels)/_screenArea;
+  int spawnChance = (int)( 100.0*(_maxDensity-_curDensity)/_maxDensity );
+  //cout<<"cur density: "<<_curDensity<<" of "<<_maxDensity
+  //    <<" -> "<<spawnChance<<endl;
+  return (_curDensity < _maxDensity && jrand()%100 <= spawnChance);
+}
+
 
 /**
  * Inits data structures.
@@ -331,23 +379,23 @@ void AcidRainManager::initData() {
 /**
  * Creates a new falling sprite from the styles available  and adds
  * it to the list.
+ * Returns the number of pixels the new sprite uses.
  */
-void AcidRainManager::spawnSprite() {
+int AcidRainManager::spawnSprite() {
   //begin debug
-  if(_numFallingSprites >= 1)
-  return;
+  //if(_numFallingSprites >= 1)
+  //return;
   //end debug
   if(_fallingSprites == NULL)
-    return;
+    return 0;
   if(_styles == NULL)
-    return;
+    return 0;
 
   // determine which style we are going to use
   int idx = jrand()%_numStyles;
 
   // determine starting position
   int startX = (jrand()%(_sizeX));
-  cout<<"sizeX: "<<_sizeX<<", startX: "<<startX<<endl;
 
   // determine the length
   int minLength = _styles[idx].minLength;
@@ -390,8 +438,9 @@ void AcidRainManager::spawnSprite() {
   }
   _fallingSprites[_numFallingSprites] = tmpSprite;
   if(_fallingSprites[_numFallingSprites] == NULL)
-    return;
+    return 0;
   _numFallingSprites++;
+  int retVal = tmpSprite->getNumPixelsUsed();
   tmpSprite = NULL;
 }
 

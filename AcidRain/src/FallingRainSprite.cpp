@@ -84,8 +84,8 @@ FallingRainSprite::FallingRainSprite(int width, int height, int startX,
   _palSpeed = palSpeed;
   _palYOffset = initialPalYOffset;
   _bHeadConstantColor = bHeadConstantColor;
-  _gravity = -1.0*abs(gravity);
-  _vY = -1.0*abs(initialV);
+  _gravity = -1.0*fabs(gravity);
+  _vY = -1.0*fabs(initialV);
   _pal = pal;
   _palWidth = palWidth;
   _palHeight = palHeight;
@@ -195,50 +195,42 @@ void FallingRainSprite::moveSprite(float horizontalAcceleration) {
   _pX += _vX;
   _pY += _vY;
 
-  // we only want the integer part of the position.  Once we
-  // have it, subtract it out.
-  int stepX = (int)_pX;
-  _pX -= (float)stepX;
-  int stepY = (int)_pY;
-  _pY -= (float)stepY;
+  float dX = 0.0;
+  float dY = 0.0;
+  float absY = fabs(_pY);
+  float absX = fabs(_pX);
 
-  //cout<<"px: "<<_pX<<", stepX: "<<stepX<<", py: "<<_pY<<", stepY: "<<stepY
-  //    <<endl;
-
-  // when we move the sprite, we need keep the ratio of X to Y movement
-  // constant.  Figure out which is larger, and set clockStep to it,
-  // then figure out how man steps to take in each direction for each
-  // unit of clockStep.  For the larger case, it will be 1.0.
-  float dX = 0;
-  float dY = -1.0; //0;
-  int clockStep = abs(stepY); //0;
-  /*
-  if(abs(stepX) > abs(stepY)) {
-    clockStep = abs(stepX);
-    dX = clockStep/stepY;
-    if(stepX != 0) {
-      dY = ((float)stepY)/((float)stepX);
+  // Check to see if mag(X) is larger than 1 and it is larger than Y
+  if(absX > absY && (_pX <= -1.0 || _pX >= 1.0) ) {
+    dX = _pX/absX; // make sure we have the right sign...
+    if(_pY <= -1.0 || _pY >= 1.0) {
+      // change in position along Y is non-zero, so we need
+      // to move along at a ratio of dY = Y/X
+      dY = fabs(_pY / _pX)*(_pY/absY);
     }
-  } else {
-    clockStep = abs(stepY);
-    dY = clockStep/stepY;
-    if(stepY != 0) {
-      dX = ((float)stepX)/((float)stepY);
+  } else if(absY > absX && (_pY <= -1.0 || _pY >= 1.0) ) {
+    dY = _pY/absY; // make sure we have the right sign...
+    if(_pX <= -1.0 || _pX >= 1.0) {
+      // change in position along X is non-zero, so we need
+      // to move along at a ratio of dX = X/Y
+      dX = fabs(_pX / _pY)*(_pX/absX);
     }
+  } else if(absY == absX) {
+    dX = _pX/absX;
+    dY = _pY/absY;
   }
-  */
-  //cout<<"dX: "<<dX<<", dY: "<<dY<<endl;
+
   float hX = _segments[_numSegments-1].x;
   float hY = _segments[_numSegments-1].y;
-  //cout<<"hX: "<<hX<<", hY: "<<hY<<endl;
   float scrWidth = (float)_screenWidth;
   float thick = (float)_thickness;
-  // move the sprite one step per clockstep.  The head can change
-  // direction at each clock step.  We do this so that there isn't
-  // a break between segments.  Not the most efficient...
-  while(clockStep > 0 && _numSegments > 0) {
-    // check to see if head and tail equal.  If so, then this worm is alive,
-    // otherwise, assume it is dead.
+
+  // while there are still whole steps to take along either
+  // axis, move the sprite trail along.  Maybe not the most
+  // efficient, but it does keep breaks from appearing.
+  while( (_pX > 1.0 || _pX < -1.0 || _pY > 1.0 || _pY < -1.0) 
+	 && _numSegments > 0) { 
+    
     _bAlive = (_numSegments > 0 &&
 	       _segments[0].x == _segments[_numSegments-1].x &&
 	       _segments[0].y == _segments[_numSegments-1].y);
@@ -256,6 +248,10 @@ void FallingRainSprite::moveSprite(float horizontalAcceleration) {
 	}
       }
       
+      // update position differential
+      _pX -= dX;
+      _pY -= dY;
+    
       // move head.
       hY += dY*thick;
       hX += dX*thick;
@@ -268,9 +264,10 @@ void FallingRainSprite::moveSprite(float horizontalAcceleration) {
 	hX -= scrWidth; 
       }
       
+      // update head position
       _segments[_numSegments-1].x = (int)hX;
       _segments[_numSegments-1].y = (int)hY;
-    
+
       // increment head color if not constant
       if(!_bHeadConstantColor) {
 	_colorIdx = (_colorIdx+1)%_palWidth;
@@ -284,65 +281,60 @@ void FallingRainSprite::moveSprite(float horizontalAcceleration) {
 
       // if head reaches the bottom, create new recoil sprite
       while(_numSegments > 0 && _segments[_numSegments-1].y < 0) {
-	if(_segments[_numSegments-1].y < 0) {
-	  // calculate random recoil direction with a velocity equal in
-	  // magnitude to the velocity at which it hit
-	  float recoilMag = sqrt(_vX*_vX+_vY*_vY)*_recoilElasticity;
-	  float recoilAng = ((float)(jrand()%((int)(PI*10000))))/10000.0;
-	  float vX = recoilMag*cos(recoilAng);
-	  float vY = recoilMag*sin(recoilAng);
+	// calculate random recoil direction with a velocity equal in
+	// magnitude to the velocity at which it hit
+	float recoilMag = sqrt(_vX*_vX+_vY*_vY)*_recoilElasticity;
+	float recoilAng = ((float)(jrand()%((int)(PI*10000))))/10000.0;
+	float vX = recoilMag*cos(recoilAng);
+	float vY = recoilMag*sin(recoilAng);
 
-	  // calculate position
-	  float pY = 0.0;
-	  float pX = float(_segments[_numSegments-1].x);
-	  
-	  // we need to backtrack for pX to the point where pY == 0.0
-	  pX = (((float)_segments[_numSegments-1].y) / (dY*thick)) * 
-	    dX*thick*pX + pX;
+	// calculate position
+	float pY = 0.0;
+	float pX = float(_segments[_numSegments-1].x);
 
-	  // adjust position by the remaining clockSteps
-	  pX += ((float)clockStep)*vX;
-	  pY += ((float)clockStep)*vY;
+	// there is a bug in here, but it looks okay without this...
+	/*
+	// we need to backtrack for pX to the point where pY == 0.0
+	pX = (((float)_segments[_numSegments-1].y) / (dY*thick)) * 
+	dX*thick*pX + pX;
 
-	  //debug
-	  pY = 0.0;
-	  pX = float(_segments[_numSegments-1].x);
-	  //enddebug
+	// adjust position by the remaining clockSteps
+	pX += ((float)clockStep)*vX;
+	pY += ((float)clockStep)*vY;
+	*/
 
-	  // wrap
-	  while(pX < 0) {
-	    pX += scrWidth;
-	  }
-	  while(pX >= scrWidth) {
-	    pX -= scrWidth;
-	  }
-
-	  BouncingRainSprite* tmpSprite =
-	    new BouncingRainSprite(_screenWidth, _screenHeight, pX, pY,
-				   _gravity, _pal, _palWidth, _palHeight,
-				   _colorIdx, _thickness, vX, vY, _palSpeed,
-				   _palYOffset, _bHeadConstantColor);
-
-	  if(tmpSprite != NULL) {
-
-	    // add it to the list
-	    recoil_sprite_node* tmpNode = new recoil_sprite_node;
-	    if(tmpNode != NULL) {
-	      tmpNode->next = _recoilSprites;
-	      tmpNode->sprite = tmpSprite;
-	      _recoilSprites = tmpNode;
-	      tmpNode = NULL;
-	    }
-	  }
-	  _numSegments--;
+	/// end revamp!
+	// wrap
+	while(pX < 0) {
+	  pX += scrWidth;
 	}
+	while(pX >= scrWidth) {
+	  pX -= scrWidth;
+	}
+
+	BouncingRainSprite* tmpSprite =
+	  new BouncingRainSprite(_screenWidth, _screenHeight, pX, pY,
+				 _gravity, _pal, _palWidth, _palHeight,
+				 _colorIdx, _thickness, vX, vY, _palSpeed,
+				 _palYOffset, _bHeadConstantColor);
+
+	if(tmpSprite != NULL) {
+
+	  // add it to the list
+	  recoil_sprite_node* tmpNode = new recoil_sprite_node;
+	  if(tmpNode != NULL) {
+	    tmpNode->next = _recoilSprites;
+	    tmpNode->sprite = tmpSprite;
+	    _recoilSprites = tmpNode;
+	    tmpNode = NULL;
+	  }
+	}
+	_numSegments--;
       }
       if(_numSegments == 0 || _segments[_numSegments-1].y < 0) {
 	// we're not alive anymore
 	_bAlive = false;
       }
-      // END TO DO
-      clockStep--;
     }
   }
 }

@@ -86,7 +86,7 @@ class RainSprite {
   int _colorIdx;
   int _thickness;
   float _vX, _vY;
-  float _pX, _pY;
+  float _pX, _pY; //!< These aren't so much "position" as "position remainder"
   float _gravity;
   float _palSpeed;
   bool _bHeadConstantColor;

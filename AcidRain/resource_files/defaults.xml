@@ -5,9 +5,9 @@
   <name>BackgroundProfile_Large</name>
   <max_rain_density>50</max_rain_density>
   <gravity>1</gravity>
-  <recoil_elasticity>0.5</recoil_elasticity>
-  <max_horiz_accel>2</max_horiz_accel>
-  <max_horiz_accel_delta>0.25</max_horiz_accel_delta>
+  <recoil_elasticity>0.25</recoil_elasticity>
+  <max_horiz_accel>1</max_horiz_accel>
+  <max_horiz_accel_delta>0.075</max_horiz_accel_delta>
   <num_styles>1</num_styles>
   <rain_style>
    <rain_style_entry>
@@ -16,7 +16,7 @@
     <max_length>31</max_length>
     <thickness>1</thickness>
     <min_initial_v>1</min_initial_v>
-    <max_initial_v>3</max_initial_v>
+    <max_initial_v>5</max_initial_v>
     <palette_speed>1</palette_speed>
     <head_constant_color>true</head_constant_color>
     <head_random_color>false</head_random_color>
@@ -63,9 +63,9 @@
  </IndexedPaletteProfile>
  <MasterProfile>
   <name>RGB Gradient Large</name>
-  <width>64</width>
-  <height>64</height>
-  <timer_millis>150</timer_millis>
+  <width>256</width>
+  <height>256</height>
+  <timer_millis>50</timer_millis>
   <background_profile>BackgroundProfile_Large</background_profile>
   <lens_profile></lens_profile>
  </MasterProfile>

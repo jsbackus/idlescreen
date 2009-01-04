@@ -27,6 +27,8 @@
 //using namespace std;
 //end debug
 
+#include <math.h>
+
 #include "utility/misc_funcs.h"
 #include "BouncingRainSprite.h"
 
@@ -80,7 +82,7 @@ BouncingRainSprite::BouncingRainSprite(int width, int height, float startX,
   _palSpeed = palSpeed;
   _palYOffset = initialPalYOffset;
   _bHeadConstantColor = bHeadConstantColor;
-  _gravity = -1.0*abs(gravity);
+  _gravity = -1.0*fabs(gravity);
   _vX = initialVX;
   _vY = initialVY;
   _x = (int)startX;

@@ -383,7 +383,6 @@ Background* AcidRainBackgroundProfile::getNewBackgroundObj(int height, int width
   if(palHash == NULL)
     return NULL;
 
-  cout<<"in getNewBackgroundObj()"<<endl;
   // create a new CrawliesManager to return
   AcidRainManager* retVal = new AcidRainManager(width, height, _maxRainDensity,
 						_gravity, _maxHorizAccel,
@@ -392,7 +391,6 @@ Background* AcidRainBackgroundProfile::getNewBackgroundObj(int height, int width
   if(retVal == NULL)
     return NULL;
 
-  cout<<"before adding styles: "<<_numStyles<<endl;
   // populate styles list
   for(int i=0; i<_numStyles; i++) {
     retVal->addRainStyle(palHash->value(_styles[i].pal)->createPalette(),
@@ -404,7 +402,6 @@ Background* AcidRainBackgroundProfile::getNewBackgroundObj(int height, int width
 			 _styles[i].bHeadConstantColor,
 			 _styles[i].bHeadRandomColor);
   }
-  cout<<"leaving getNewBackgroundObj()"<<endl;
   return retVal;
 }
 

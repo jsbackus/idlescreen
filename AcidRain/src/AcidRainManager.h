@@ -146,8 +146,9 @@ class AcidRainManager : public Background {
   /**
    * Creates a new falling sprite from the styles available  and adds
    * it to the list.
+   * Returns the number of pixels the new sprite uses.
    */
-  void spawnSprite();
+  int spawnSprite();
 
   /**
    * Grows the list of rain styles.
@@ -169,6 +170,12 @@ class AcidRainManager : public Background {
    * information into the specified style.
    */
   void convPalette(IndexedPalette* pal, rainsprite_style* style);
+
+  /**
+   * Recalculates the current screen density and decides whether
+   * or not to spawn based upon that density.
+   */
+  bool shouldSpawn(int usedPixels);
 
   rainsprite_style* _styles;
   int _numStyles;

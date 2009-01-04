@@ -26,7 +26,7 @@
  * This class represents the recoiling rain.  It is responsible for
  * moving and drawing the sprite.  The AcidRainManager class is responsible
  * for maintaining the sprites, however, FallingRainSprite will create
- * these sprites.  Uses base class _pX and _pY for position.
+ * these sprites.
  */
 
 #ifndef __BOUNCINGRAINSPRITE_H__
