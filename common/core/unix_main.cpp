@@ -389,7 +389,9 @@ void processArgs(int argc, char** argv) {
       } else if(!strcmp(argv[i], "-c")) {
 	doConfigDlg();
 	exit(0);
-      } else if((!strcmp(argv[i], "-root")) || (!strcmp(argv[i], "-r"))) {
+      } else if(!strcmp(argv[i], "-root")) {
+	rootWindow = true;
+      } else if(!strcmp(argv[i], "-r")) {
 	rootWindow = true;
       } else if(!strcmp(argv[i], "-n")) {
 	be_nice = true;
