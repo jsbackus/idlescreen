@@ -383,7 +383,7 @@ Background* AcidRainBackgroundProfile::getNewBackgroundObj(int height, int width
   if(palHash == NULL)
     return NULL;
 
-  // create a new CrawliesManager to return
+  // create a new AcidRainManager to return
   AcidRainManager* retVal = new AcidRainManager(width, height, _maxRainDensity,
 						_gravity, _maxHorizAccel,
 						_maxHorizAccelDelta,
@@ -421,7 +421,7 @@ void AcidRainBackgroundProfile::setMaxRainDensity(int density) {
 float AcidRainBackgroundProfile::getGravity() {
   return _gravity;
 }
-void AcidRainBackgroundProfile::setGravity(int gravity) {
+void AcidRainBackgroundProfile::setGravity(float gravity) {
   _gravity = gravity;
 }
 
@@ -431,7 +431,7 @@ void AcidRainBackgroundProfile::setGravity(int gravity) {
 float AcidRainBackgroundProfile::getRecoilElasticity() {
   return _recoilElasticity;
 }
-void AcidRainBackgroundProfile::setRecoilElasticity(int recoil) {
+void AcidRainBackgroundProfile::setRecoilElasticity(float recoil) {
   _recoilElasticity = recoil;
 }
 
@@ -444,7 +444,7 @@ float AcidRainBackgroundProfile::getMaxHorizontalAcceleration() {
 void AcidRainBackgroundProfile::setMaxHorizontalAcceleration(float accel) {
   _maxHorizAccel = accel;
 }
-float AcidRainBackgroundProfile::getMaxHorizontalAcclerationDelta() {
+float AcidRainBackgroundProfile::getMaxHorizontalAccelerationDelta() {
   return _maxHorizAccelDelta;
 }
 void AcidRainBackgroundProfile::setMaxHorizontalAccelerationDelta(float delta) {

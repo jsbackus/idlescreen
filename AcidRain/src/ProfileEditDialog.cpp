@@ -43,8 +43,11 @@ using namespace std;
 ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr, QWidget* parent, Qt::WindowFlags f) {
   QDialog(parent, f);
 
-  _numCrawlies = NULL;
-  _spawnSlider = NULL;
+  _gravitySlider = NULL;
+  _recoilSlider = NULL;
+  _densitySlider = NULL;
+  _horizAccelSlider = NULL;
+  _horizAccelDeltaSlider = NULL;
   _styleTable = NULL;
 
   _styleList = NULL;
@@ -178,59 +181,85 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   mainLayout->addWidget(tempWidget);
   tempWidget = NULL;
 
-  // Begin CrawliesBackgroundProfile related
-  /*	
+  // Begin AcidRainBackgroundProfile related
   // get the backgroundprofile in order to populate the data fields.
-
-  AcidRainBackgroundProfile* rainProfile = NULL;
+  AcidRainBackgroundProfile* profile = NULL;
   QString bkgndProfileName = _mp.getBackgroundProfileName();
   if(_confMgr->doesBackgroundProfileExist(bkgndProfileName)) {
-    crawliesProfile = new CrawliesBackgroundProfile();
-    if(crawliesProfile != NULL) {
-      CrawliesBackgroundProfile* tempProfile = (CrawliesBackgroundProfile*)
+    profile = new AcidRainBackgroundProfile();
+    if(profile != NULL) {
+      AcidRainBackgroundProfile* tempProfile = (AcidRainBackgroundProfile*)
 	(_confMgr->getBackgroundProfile(bkgndProfileName));
-      *crawliesProfile = *tempProfile;
+      *profile = *tempProfile;
     }
+  }
+
+  /*
+	QSlider* _horizAccelSlider;
+	QSlider* _horizAccelDeltaSlider;
+  */
+
+  // instantiate sliders and set initial values
+  _densitySlider = new QSlider(Qt::Horizontal);
+  if(_densitySlider == NULL)
+    return;
+  _densitySlider->setMinimum(1);
+  _densitySlider->setMaximum(100);
+  _densitySlider->setTickInterval(1);
+
+  _gravitySlider = new QSlider(Qt::Horizontal);
+  if(_gravitySlider == NULL)
+    return;
+  _gravitySlider->setMinimum((int)(0.1*GRAVITY_SLIDER_MUL));
+  _gravitySlider->setMaximum((int)(10.0*GRAVITY_SLIDER_MUL));
+  _gravitySlider->setTickInterval((int)(0.1*GRAVITY_SLIDER_MUL));
+
+  _recoilSlider = new QSlider(Qt::Horizontal);
+  if(_recoilSlider == NULL)
+    return;
+  _recoilSlider->setMinimum((int)(0.01*RECOIL_SLIDER_MUL));
+  _recoilSlider->setMaximum((int)(1.0*RECOIL_SLIDER_MUL));
+  _recoilSlider->setTickInterval((int)(0.01*RECOIL_SLIDER_MUL));
+
+  _horizAccelSlider = new QSlider(Qt::Horizontal);
+  if(_horizAccelSlider == NULL)
+    return;
+  _horizAccelSlider->setMinimum((int)(0.1*HORIZ_ACCEL_SLIDER_MUL));
+  _horizAccelSlider->setMaximum((int)(3.0*HORIZ_ACCEL_SLIDER_MUL));
+  _horizAccelSlider->setTickInterval((int)(0.1*HORIZ_ACCEL_SLIDER_MUL));
+
+  _horizAccelDeltaSlider = new QSlider(Qt::Horizontal);
+  if(_horizAccelDeltaSlider == NULL)
+    return;
+  _horizAccelDeltaSlider->setMinimum((int)(0.01*HORIZ_ACCEL_DELTA_SLIDER_MUL));
+  _horizAccelDeltaSlider->setMaximum((int)(1.0*HORIZ_ACCEL_DELTA_SLIDER_MUL));
+  _horizAccelDeltaSlider->setTickInterval((int)(0.01*
+						HORIZ_ACCEL_DELTA_SLIDER_MUL));
+
+  if(profile == NULL) {
+    _densitySlider->setValue(50);
+    _gravitySlider->setValue((int)(1.0*GRAVITY_SLIDER_MUL));
+    _recoilSlider->setValue((int)(0.25*RECOIL_SLIDER_MUL));
+    _horizAccelSlider->setValue((int)(1.0*HORIZ_ACCEL_SLIDER_MUL));
+    _horizAccelDeltaSlider->setValue((int)(0.08*HORIZ_ACCEL_DELTA_SLIDER_MUL));
+  } else {
+    _densitySlider->setValue(profile->getMaxRainDensity());
+    _gravitySlider->setValue((int)(profile->getGravity()*GRAVITY_SLIDER_MUL));
+    _recoilSlider->setValue((int)(profile->getRecoilElasticity()
+				  *RECOIL_SLIDER_MUL));
+    _horizAccelSlider->setValue((int)(profile->getMaxHorizontalAcceleration()
+				      *HORIZ_ACCEL_SLIDER_MUL));
+    _horizAccelDeltaSlider->setValue((int)
+				     (profile->getMaxHorizontalAccelerationDelta()
+				      *HORIZ_ACCEL_DELTA_SLIDER_MUL));
   }
 
   tmpHBox = new QHBoxLayout();
   if(tmpHBox == NULL)
     return;
 
-  _numCrawlies = new QSpinBox();
-  if(_numCrawlies == NULL)
-    return;
-  _numCrawlies->setMinimum(1);
-  _numCrawlies->setMaximum(10000);
-
-  _spawnSlider = new QSlider(Qt::Horizontal);
-  if(_spawnSlider == NULL)
-    return;
-  _spawnSlider->setMinimum(1);
-  _spawnSlider->setMaximum(100);
-  _spawnSlider->setTickInterval(1);
-
-  if(crawliesProfile == NULL) {
-    _numCrawlies->setValue(400);
-    _spawnSlider->setValue(75);
-  } else {
-    _numCrawlies->setValue(crawliesProfile->getMaxNumberCrawlies());
-    _spawnSlider->setValue(101-crawliesProfile->getSpawnChance());
-  }
-
-  tempToolTip = 
-    tr("Determines the maximum number of crawlies on screen at one time.");
-  tempWidget = new QLabel(tr("Max Number:"));
-  tempWidget->setToolTip(tempToolTip);
-  tmpHBox->addWidget(tempWidget);
-  tempWidget = NULL;
-  _numCrawlies->setToolTip(tempToolTip);
-  tmpHBox->addWidget(_numCrawlies);
-
-  tmpHBox->addStretch(0);
-
-  tempToolTip = tr("The percent chance a crawly will spawn.");
-  tempWidget = new QLabel(tr("Spawn Chance:"));
+  tempToolTip = tr("The maximum rain density allowed.");
+  tempWidget = new QLabel(tr("Maximum Rain Density:"));
   if(tempWidget == NULL)
     return;
   tempWidget->setToolTip(tempToolTip);
@@ -244,8 +273,8 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   tmpHBox->addWidget(tempWidget);
   tempWidget = NULL;
 
-  _spawnSlider->setToolTip(tempToolTip);
-  tmpHBox->addWidget(_spawnSlider);
+  _densitySlider->setToolTip(tempToolTip);
+  tmpHBox->addWidget(_densitySlider);
 
   tempWidget = new QLabel(tr("Max"));
   if(tempWidget == NULL)
@@ -258,9 +287,134 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   tempWidget->setLayout(tmpHBox);
   mainLayout->addWidget(tempWidget);
   tempWidget = NULL;
+  tmpHBox = NULL;
+
+  tmpHBox = new QHBoxLayout();
+  if(tmpHBox == NULL)
+    return;
+
+  tempToolTip = tr("The acceleration due to gravity.");
+  tempWidget = new QLabel(tr("Gravity:"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QLabel(tr("Min"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  _gravitySlider->setToolTip(tempToolTip);
+  tmpHBox->addWidget(_gravitySlider);
+
+  tempWidget = new QLabel(tr("Max"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tmpHBox->addStretch(0);
+
+  tempToolTip = tr("The amount of bounce the rain drops have on contact.");
+  tempWidget = new QLabel(tr("Bounce:"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QLabel(tr("Min"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  _gravitySlider->setToolTip(tempToolTip);
+  tmpHBox->addWidget(_recoilSlider);
+
+  tempWidget = new QLabel(tr("Max"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QWidget();
+  tempWidget->setLayout(tmpHBox);
+  mainLayout->addWidget(tempWidget);
+  tempWidget = NULL;
+  tmpHBox = NULL;
+
+  tmpHBox = new QHBoxLayout();
+  if(tmpHBox == NULL)
+    return;
+
+  tempToolTip = tr("The maximum acceleration due to wind.");
+  tempWidget = new QLabel(tr("Max Wind Accel:"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QLabel(tr("Min"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  _horizAccelSlider->setToolTip(tempToolTip);
+  tmpHBox->addWidget(_horizAccelSlider);
+
+  tempWidget = new QLabel(tr("Max"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tmpHBox->addStretch(0);
+
+  tempToolTip = tr("The maximum amount that the wind can change by per tick.");
+  tempWidget = new QLabel(tr("Max Wind Change:"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QLabel(tr("Min"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  _horizAccelDeltaSlider->setToolTip(tempToolTip);
+  tmpHBox->addWidget(_horizAccelDeltaSlider);
+
+  tempWidget = new QLabel(tr("Max"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QWidget();
+  tempWidget->setLayout(tmpHBox);
+  mainLayout->addWidget(tempWidget);
+  tempWidget = NULL;
+  tmpHBox = NULL;
 
   // style table
-  setupStyleTableWidget(crawliesProfile);
+  setupStyleTableWidget(profile);
   if(_styleTable == NULL)
     return;
 
@@ -319,7 +473,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   mainLayout->addWidget(tempWidget);
   tempWidget = NULL;
   tmpHBox = NULL;
-  */
+
   //Help, OK and Cancel buttons
   QHBoxLayout* botButtonsLayout = new QHBoxLayout();
   if(botButtonsLayout == NULL)
@@ -386,13 +540,25 @@ ProfileEditDialog::~ProfileEditDialog() {
     delete _screenYBox;
     _screenYBox = NULL;
   }
-  if(_numCrawlies != NULL) {
-    delete _numCrawlies;
-    _numCrawlies = NULL;
+  if(_gravitySlider != NULL) {
+    delete _gravitySlider;
+    _gravitySlider = NULL;
   }
-  if(_spawnSlider != NULL) {
-    delete _spawnSlider;
-    _spawnSlider = NULL;
+  if(_recoilSlider != NULL) {
+    delete _recoilSlider;
+    _recoilSlider = NULL;
+  }
+  if(_densitySlider != NULL) {
+    delete _densitySlider;
+    _densitySlider = NULL;
+  }
+  if(_horizAccelSlider != NULL) {
+    delete _horizAccelSlider;
+    _horizAccelSlider = NULL;
+  }
+  if(_horizAccelDeltaSlider != NULL) {
+    delete _horizAccelDeltaSlider;
+    _horizAccelDeltaSlider = NULL;
   }
   if(_styleTable != NULL) {
     delete _styleTable;
@@ -418,11 +584,16 @@ void ProfileEditDialog::okClicked(bool checked) {
 
   // BackgroundProfile related
   // populate data fields
-  /*
-  CrawliesBackgroundProfile tmpProfile;
-  tmpProfile.setMaxNumberCrawlies(_numCrawlies->value());
-  tmpProfile.setSpawnChance(101-_spawnSlider->value());
-
+  AcidRainBackgroundProfile tmpProfile;
+  tmpProfile.setMaxRainDensity(_densitySlider->value());
+  tmpProfile.setGravity(((float)_gravitySlider->value()) / GRAVITY_SLIDER_MUL);
+  tmpProfile.setRecoilElasticity(((float)_recoilSlider->value())
+				 / RECOIL_SLIDER_MUL);
+  tmpProfile.setMaxHorizontalAcceleration(((float)_horizAccelSlider->value())
+					  / HORIZ_ACCEL_SLIDER_MUL);
+  tmpProfile.setMaxHorizontalAccelerationDelta(((float)
+						_horizAccelDeltaSlider->value())
+					       / HORIZ_ACCEL_DELTA_SLIDER_MUL);
   // copy styles
   tmpProfile.clearStyleList();
   for(int i=0; i<_numStyles;i++) {
@@ -485,7 +656,6 @@ void ProfileEditDialog::okClicked(bool checked) {
   if(_oldName != newName) {
     emit profileNameChange(_oldName, newName);
   }
-*/
   accept();
 }
 
@@ -739,7 +909,7 @@ void ProfileEditDialog::updateStyleRow(int styleIdx) {
 }
 
 /**
- * Grows the list of crawly styles.
+ * Grows the list of rain styles.
  */
 void ProfileEditDialog::growStyleList(int size) {
   if(_styleList == NULL) {

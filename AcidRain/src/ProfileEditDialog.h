@@ -52,6 +52,11 @@
 #include "StyleEditDialog.h"
 #include "AcidRainBackgroundProfile.h"
 
+#define GRAVITY_SLIDER_MUL 10.0
+#define RECOIL_SLIDER_MUL 100.0
+#define HORIZ_ACCEL_SLIDER_MUL 10.0
+#define HORIZ_ACCEL_DELTA_SLIDER_MUL 100.0
+
 class ProfileEditDialog : public QDialog {
 
 	Q_OBJECT
@@ -102,9 +107,12 @@ private:
 
 	MasterProfile _mp;
 
-	// CrawliesBackgroundProfile related
-	QSpinBox* _numCrawlies;
-	QSlider* _spawnSlider; //!< Note: reversed!
+	// AcidRainBackgroundProfile related
+	QSlider* _gravitySlider;
+	QSlider* _densitySlider;
+	QSlider* _recoilSlider;
+	QSlider* _horizAccelSlider;
+	QSlider* _horizAccelDeltaSlider;
 	QTableWidget* _styleTable;
 
 	// list of tool tips for the table

@@ -24,7 +24,7 @@
 
 /**
  * This background profile is responsible for setting up and returning a new 
- * CrawliesManager background object.
+ * AcidRainManager background object.
  *
  * @author jeff backus
  * @date 12/28/2008
@@ -84,20 +84,20 @@ public:
 	 * Get/set the acceleration "downward".  Must be a positive number!
 	 */
 	float getGravity();
-	void setGravity(int gravity);
+	void setGravity(float gravity);
 
 	/**
 	 * Get/set the amount of rain "bounce".  Must be a positive number!
 	 */
 	float getRecoilElasticity();
-	void setRecoilElasticity(int recoil);
+	void setRecoilElasticity(float recoil);
 
 	/**
 	 * Get/set the max horizontal acceleration and delta acceleration.
 	 */
 	float getMaxHorizontalAcceleration();
 	void setMaxHorizontalAcceleration(float accel);
-	float getMaxHorizontalAcclerationDelta();
+	float getMaxHorizontalAccelerationDelta();
 	void setMaxHorizontalAccelerationDelta(float delta);
 
 	/**
