@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="Crawlies_scr"
-	ProjectGUID="{72B831D6-7CFF-4614-990C-3DA015146765}"
+	Name="AcidRain_scr"
+	ProjectGUID="{92CA66E9-1B93-4569-AFD5-07E9C3634B36}"
 	Keyword="MakeFileProj">
 	<Platforms>
 		<Platform
@@ -17,21 +17,21 @@
 			ConfigurationType="0">
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Debug\scr.res&quot; ..\..\project_files\Crawlies_scr.pro
+				BuildCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Debug\scr.res&quot; ..\..\project_files\AcidRain_scr.pro
 rc /fo&quot;Debug\scr.res&quot; ..\..\resource_files\win_resource.rc
 nmake debug
 "
-				ReBuildCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Debug\scr.res&quot; ..\..\project_files\Crawlies_scr.pro
+				ReBuildCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Debug\scr.res&quot; ..\..\project_files\AcidRain_scr.pro
 del /F Debug\*.res
 nmake debug-clean
 rc /fo&quot;Debug\scr.res&quot; ..\..\resource_files\win_resource.rc
 nmake debug
 "
-				CleanCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Debug\scr.res&quot; ..\..\project_files\Crawlies_scr.pro
+				CleanCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Debug\scr.res&quot; ..\..\project_files\AcidRain_scr.pro
 del /F Debug\*.res
 nmake debug-clean
 "
-				Output="debug\Crawlies.exe"/>
+				Output="debug\AcidRain.exe"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -40,21 +40,21 @@ nmake debug-clean
 			ConfigurationType="0">
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Release\scr.res&quot; ..\..\project_files\Crawlies_scr.pro
+				BuildCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Release\scr.res&quot; ..\..\project_files\AcidRain_scr.pro
 rc /fo&quot;Release\scr.res&quot; ..\..\resource_files\win_resource.rc
 nmake release
 "
-				ReBuildCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Release\scr.res&quot; ..\..\project_files\Crawlies_scr.pro
+				ReBuildCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Release\scr.res&quot; ..\..\project_files\AcidRain_scr.pro
 del /F Release\*.res
-nmake debug-clean
+nmake release-clean
 rc /fo&quot;Release\scr.res&quot; ..\..\resource_files\win_resource.rc
 nmake release
 "
-				CleanCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Release\scr.res&quot; ..\..\project_files\Crawlies_scr.pro
+				CleanCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Release\scr.res&quot; ..\..\project_files\AcidRain_scr.pro
 del /F Release\*.res
 nmake release-clean
 "
-				Output="release\Crawlies.exe"/>
+				Output="release\AcidRain.exe"/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -71,10 +71,19 @@ nmake release-clean
 				RelativePath="..\..\..\common\utility\AboutDialog.h">
 			</File>
 			<File
+				RelativePath="..\..\src\AcidRainBackgroundProfile.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\AcidRainManager.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\Background.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\BackgroundProfile.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\BouncingRainSprite.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\configdlg_main.cpp">
@@ -86,13 +95,7 @@ nmake release-clean
 				RelativePath="..\..\src\ConfigWidget.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\CrawliesBackgroundProfile.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\CrawliesManager.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\CrawliesSprite.cpp">
+				RelativePath="..\..\src\FallingRainSprite.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\lens_engine\GenericLensObject.cpp">
@@ -173,6 +176,9 @@ nmake release-clean
 				RelativePath="..\..\src\project_specific_externs.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\RainSprite.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\StyleEditDialog.cpp">
 			</File>
 			<File
@@ -187,10 +193,19 @@ nmake release-clean
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
+				RelativePath="..\..\src\AcidRainBackgroundProfile.h">
+			</File>
+			<File
+				RelativePath="..\..\src\AcidRainManager.h">
+			</File>
+			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\Background.h">
 			</File>
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\BackgroundProfile.h">
+			</File>
+			<File
+				RelativePath="..\..\src\BouncingRainSprite.h">
 			</File>
 			<File
 				RelativePath="..\..\..\common\core\configdlg_main.h">
@@ -202,13 +217,7 @@ nmake release-clean
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\ConfigWidget.h">
 			</File>
 			<File
-				RelativePath="..\..\src\CrawliesBackgroundProfile.h">
-			</File>
-			<File
-				RelativePath="..\..\src\CrawliesManager.h">
-			</File>
-			<File
-				RelativePath="..\..\src\CrawliesSprite.h">
+				RelativePath="..\..\src\FallingRainSprite.h">
 			</File>
 			<File
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\lens_engine\GenericLensObject.h">
@@ -292,6 +301,9 @@ nmake release-clean
 				RelativePath="..\..\..\common\2d_bgnd_w_lens\project_specific_extern_defs.h">
 			</File>
 			<File
+				RelativePath="..\..\src\RainSprite.h">
+			</File>
+			<File
 				RelativePath="..\..\resource_files\resource.h">
 			</File>
 			<File
@@ -313,13 +325,13 @@ nmake release-clean
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\project_files\Crawlies_scr.pro">
+			RelativePath="..\..\project_files\AcidRain_scr.pro">
 		</File>
 		<File
 			RelativePath="..\..\resource_files\defaults.xml">
 		</File>
 		<File
-			RelativePath="..\..\resource_files\qt_resource.qrc">
+			RelativePath="..\..\..\resource_files\qt_resource.qrc">
 		</File>
 	</Files>
 	<Globals>

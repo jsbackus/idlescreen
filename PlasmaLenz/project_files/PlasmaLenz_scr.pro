@@ -94,8 +94,7 @@ TARGET		= PlasmaLenz
 //RC_FILE		= $$RESOURCE_PATH/win_resource.rc
 RESOURCES	= $$RESOURCE_PATH/qt_resource.qrc
 
-win32:LIBS	+= user32.lib shell32.lib Advapi32.lib gdi32.lib scrnsavw.lib opengl32.lib glu32.lib comctl32.lib Debug/scr.res
-//win32:LIBS	+=  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib scrnsavw.lib opengl32.lib glu32.lib comctl32.lib
+win32:LIBS      += user32.lib shell32.lib Advapi32.lib gdi32.lib scrnsavw.lib opengl32.lib glu32.lib comctl32.lib $$IDLSCR_RES_LOC
 
 unix:DESTDIR	= ../../bin
 unix:OBJECTS_DIR = ../compiled_objects

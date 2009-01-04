@@ -17,16 +17,18 @@
 			ConfigurationType="0">
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="set PATH=%PATH%;C:\MinGW\bin
-rc /fo&quot;Debug\scr.res&quot; ..\..\..\resource_files\win_resource.rc
-%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+				BuildCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Debug\scr.res&quot; ..\..\project_files\PlasmaLenz_scr.pro
+rc /fo&quot;Debug\scr.res&quot; ..\..\resource_files\win_resource.rc
 nmake debug
 "
-				ReBuildCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+				ReBuildCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Debug\scr.res&quot; ..\..\project_files\PlasmaLenz_scr.pro
+del /F Debug\*.res
 nmake debug-clean
+rc /fo&quot;Debug\scr.res&quot; ..\..\resource_files\win_resource.rc
 nmake debug
 "
-				CleanCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+				CleanCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Debug\scr.res&quot; ..\..\project_files\PlasmaLenz_scr.pro
+del /F Debug\*.res
 nmake debug-clean
 "
 				Output="debug\PlasmaLenz.exe"/>
@@ -38,16 +40,17 @@ nmake debug-clean
 			ConfigurationType="0">
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="rc /fo&quot;Release\scr.res&quot; ..\..\resource_files\win_resource.rc
-%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+				BuildCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Release\scr.res&quot; ..\..\project_files\PlasmaLenz_scr.pro
+rc /fo&quot;Release\scr.res&quot; ..\..\resource_files\win_resource.rc
 nmake release
 "
-				ReBuildCommandLine="del /F Release\*.res
-%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
-namke release-clean
+				ReBuildCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Release\scr.res&quot; ..\..\project_files\PlasmaLenz_scr.pro
+del /F Release\*.res
+nmake release-clean
 rc /fo&quot;Release\scr.res&quot; ..\..\resource_files\win_resource.rc
-nmake release"
-				CleanCommandLine="%QTDIR%\bin\qmake ..\..\project_files\PlasmaLenz_scr.pro
+nmake release
+"
+				CleanCommandLine="%QTDIR%\bin\qmake &quot;IDLSCR_RES_LOC = Release\scr.res&quot; ..\..\project_files\PlasmaLenz_scr.pro
 del /F Release\*.res
 nmake release-clean
 "

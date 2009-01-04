@@ -370,6 +370,7 @@ void AcidRainManager::initData() {
   _maxHorizAccel = 0.0;
   _maxHorizAccelDelta = 0.0;
   _recoilElasticity = 0.0;
+  _palYOffset = 0;
 
   growStyleList();
   growFallingSpriteList();

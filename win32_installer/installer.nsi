@@ -124,6 +124,26 @@ Section "Qt Libraries"
 SectionEnd
 
 SectionGroup "Screen Savers"
+
+#List alphabetically!
+
+Section "AcidRain"
+  # main scr file
+  SetOutPath "$TARGET_DIR\bin"
+  File /oname=AcidRain.scr "..\AcidRain\msvc\scr\release\AcidRain.exe"
+
+  # redirector file
+  SetOutPath "$REDIRECTOR_TARGET"
+  File /oname=AcidRain.scr "..\AcidRain\msvc\redirector\Release\redirector.exe"
+
+  # machine defaults file
+  SetOutPath "$TARGET_DIR\defaults"
+  File /oname=AcidRain.xml "..\config_files\AcidRain.xml"
+
+  # registry entry for the redirector
+  WriteRegStr SHCTX "Software\IdleScreen\Redirector" "AcidRain" "$TARGET_DIR\bin\AcidRain.scr"
+SectionEnd
+
 Section "Crawlies"
   # main scr file
   SetOutPath "$TARGET_DIR\bin"
@@ -203,6 +223,8 @@ Section "Uninstall"
   DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\IdleScreen" \
 
   # delete files and directories
+  Delete $REDIRECTOR_TARGET\AcidRain.scr
+  Delete $REDIRECTOR_TARGET\Crawlies.scr
   Delete $REDIRECTOR_TARGET\PlasmaLenz.scr
   Delete $REDIRECTOR_TARGET\Redirector.scr
   Delete "$INSTDIR\doc\*"

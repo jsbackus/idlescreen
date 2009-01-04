@@ -1,0 +1,37 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AcidRain_scr", "scr\AcidRain_scr.vcproj", "{92CA66E9-1B93-4569-AFD5-07E9C3634B36}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glut_demo", "glut_demo\AcidRain_glut.vcproj", "{AC2F152E-98EE-4660-A632-E1CB73C67B80}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AcidRain_redirector", "redirector\AcidRain_redirector.vcproj", "{A0BA9D47-E8FC-4E8C-AD8C-642B1F45F1F3}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{92CA66E9-1B93-4569-AFD5-07E9C3634B36}.Debug.ActiveCfg = Debug|Win32
+		{92CA66E9-1B93-4569-AFD5-07E9C3634B36}.Debug.Build.0 = Debug|Win32
+		{92CA66E9-1B93-4569-AFD5-07E9C3634B36}.Release.ActiveCfg = Release|Win32
+		{92CA66E9-1B93-4569-AFD5-07E9C3634B36}.Release.Build.0 = Release|Win32
+		{AC2F152E-98EE-4660-A632-E1CB73C67B80}.Debug.ActiveCfg = Debug|Win32
+		{AC2F152E-98EE-4660-A632-E1CB73C67B80}.Debug.Build.0 = Debug|Win32
+		{AC2F152E-98EE-4660-A632-E1CB73C67B80}.Release.ActiveCfg = Release|Win32
+		{AC2F152E-98EE-4660-A632-E1CB73C67B80}.Release.Build.0 = Release|Win32
+		{A0BA9D47-E8FC-4E8C-AD8C-642B1F45F1F3}.Debug.ActiveCfg = Debug|Win32
+		{A0BA9D47-E8FC-4E8C-AD8C-642B1F45F1F3}.Debug.Build.0 = Debug|Win32
+		{A0BA9D47-E8FC-4E8C-AD8C-642B1F45F1F3}.Release.ActiveCfg = Release|Win32
+		{A0BA9D47-E8FC-4E8C-AD8C-642B1F45F1F3}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
