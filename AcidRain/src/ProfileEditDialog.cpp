@@ -266,7 +266,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
     return;
 
   tempToolTip = tr("The maximum rain density allowed.");
-  tempWidget = new QLabel(tr("Maximum Rain Density:"));
+  tempWidget = new QLabel(tr("Max Density:"));
   if(tempWidget == NULL)
     return;
   tempWidget->setToolTip(tempToolTip);
