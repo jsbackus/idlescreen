@@ -237,6 +237,8 @@ void FallingRainSprite::moveSprite(float horizontalAcceleration) {
 
     if(_numSegments != 0) {
 
+      // need to calculate current color index of head for sprite spawn
+      int curColorIdx = _colorIdx;
       // for segments 0 to N-1, we just shift down.
       for(int i=0; i<_numSegments-1; i++) {
 	_segments[i] = _segments[i+1];
@@ -245,6 +247,10 @@ void FallingRainSprite::moveSprite(float horizontalAcceleration) {
 	if(0 <= _segments[i].x && _segments[i].x < _screenWidth &&
 	   0 <= _segments[i].y && _segments[i].y < _screenHeight) {
 	  _bAlive = true;
+	}
+	curColorIdx--;
+	if(curColorIdx < 0) {
+	  curColorIdx = _palWidth-1;
 	}
       }
       
@@ -315,10 +321,12 @@ void FallingRainSprite::moveSprite(float horizontalAcceleration) {
 	BouncingRainSprite* tmpSprite =
 	  new BouncingRainSprite(_screenWidth, _screenHeight, pX, pY,
 				 _gravity, _pal, _palWidth, _palHeight,
-				 _colorIdx, _thickness, vX, vY, _palSpeed,
+				 curColorIdx, _thickness, vX, vY, _palSpeed,
 				 _palYOffset, _bHeadConstantColor);
 
 	if(tmpSprite != NULL) {
+	  // in case there are multiple segments that have gone off screen.
+	  curColorIdx = (curColorIdx++) %_palWidth;
 
 	  // add it to the list
 	  recoil_sprite_node* tmpNode = new recoil_sprite_node;

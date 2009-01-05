@@ -52,6 +52,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   _palRandButton = NULL;
   _palSyncStartButton = NULL;
   _palSyncAllButton = NULL;
+  _palMode = RANDOM;
 
   _styleList = NULL;
   _numStyles = 0;
@@ -366,9 +367,76 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   tempWidget = NULL;
   tmpHBox = NULL;
 
+  // wind section
   tmpHBox = new QHBoxLayout();
   if(tmpHBox == NULL)
     return;
+
+  tempToolTip = tr("The maximum acceleration due to wind.");
+  tempWidget = new QLabel(tr("Max Wind Accel:"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QLabel(tr("Min"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  _horizAccelSlider->setToolTip(tempToolTip);
+  tmpHBox->addWidget(_horizAccelSlider);
+
+  tempWidget = new QLabel(tr("Max"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QWidget();
+  tempWidget->setLayout(tmpHBox);
+  tmpVBox->addWidget(tempWidget);
+  tempWidget = NULL;
+  tmpHBox = NULL;
+
+  tmpHBox = new QHBoxLayout();
+  if(tmpHBox == NULL)
+    return;
+
+  tempToolTip = tr("The maximum amount that the wind can change by per tick.");
+  tempWidget = new QLabel(tr("Max Wind Change:"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QLabel(tr("Min"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  _horizAccelDeltaSlider->setToolTip(tempToolTip);
+  tmpHBox->addWidget(_horizAccelDeltaSlider);
+
+  tempWidget = new QLabel(tr("Max"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QWidget();
+  tempWidget->setLayout(tmpHBox);
+  tmpVBox->addWidget(tempWidget);
+  tempWidget = NULL;
+  tmpHBox = NULL;
 
   tempWidget = new QWidget();
   tempWidget->setLayout(tmpVBox);
@@ -376,15 +444,11 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   tempWidget = NULL;
   tmpVBox = NULL;
 
-  tmpHBox = new QHBoxLayout();
-  if(tmpHBox == NULL)
-    return;
-
   // radio buttons
   QButtonGroup* radioButtonGroup = new QButtonGroup();
   if(radioButtonGroup == NULL)
     return;
-  QGroupBox* radioGroupBox = new QGroupBox("Secondary Palette Sync");
+  QGroupBox* radioGroupBox = new QGroupBox("Y Palette Sync");
   if(radioGroupBox == NULL)
     return;
   tmpVBox = new QVBoxLayout();
@@ -437,69 +501,6 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   mainLayout->addWidget(tempWidget);
   tempWidget = NULL;
   sliderRadioBox = NULL;
-
-  // wind section
-  tmpHBox = new QHBoxLayout();
-  if(tmpHBox == NULL)
-    return;
-
-  tempToolTip = tr("The maximum acceleration due to wind.");
-  tempWidget = new QLabel(tr("Max Wind Accel:"));
-  if(tempWidget == NULL)
-    return;
-  tempWidget->setToolTip(tempToolTip);
-  tmpHBox->addWidget(tempWidget);
-  tempWidget = NULL;
-
-  tempWidget = new QLabel(tr("Min"));
-  if(tempWidget == NULL)
-    return;
-  tempWidget->setToolTip(tempToolTip);
-  tmpHBox->addWidget(tempWidget);
-  tempWidget = NULL;
-
-  _horizAccelSlider->setToolTip(tempToolTip);
-  tmpHBox->addWidget(_horizAccelSlider);
-
-  tempWidget = new QLabel(tr("Max"));
-  if(tempWidget == NULL)
-    return;
-  tempWidget->setToolTip(tempToolTip);
-  tmpHBox->addWidget(tempWidget);
-  tempWidget = NULL;
-
-  tmpHBox->addStretch(0);
-
-  tempToolTip = tr("The maximum amount that the wind can change by per tick.");
-  tempWidget = new QLabel(tr("Max Wind Change:"));
-  if(tempWidget == NULL)
-    return;
-  tempWidget->setToolTip(tempToolTip);
-  tmpHBox->addWidget(tempWidget);
-  tempWidget = NULL;
-
-  tempWidget = new QLabel(tr("Min"));
-  if(tempWidget == NULL)
-    return;
-  tempWidget->setToolTip(tempToolTip);
-  tmpHBox->addWidget(tempWidget);
-  tempWidget = NULL;
-
-  _horizAccelDeltaSlider->setToolTip(tempToolTip);
-  tmpHBox->addWidget(_horizAccelDeltaSlider);
-
-  tempWidget = new QLabel(tr("Max"));
-  if(tempWidget == NULL)
-    return;
-  tempWidget->setToolTip(tempToolTip);
-  tmpHBox->addWidget(tempWidget);
-  tempWidget = NULL;
-
-  tempWidget = new QWidget();
-  tempWidget->setLayout(tmpHBox);
-  mainLayout->addWidget(tempWidget);
-  tempWidget = NULL;
-  tmpHBox = NULL;
 
   // style table
   setupStyleTableWidget(profile);
@@ -846,8 +847,9 @@ void ProfileEditDialog::copyStyleClicked() {
     growStyleList();
   
   _styleList[_numStyles] = _styleList[styleIdx];
-  updateStyleRow(_numStyles);
   _numStyles++;
+  updateStyleRow(_numStyles-1);
+  _styleTable->resizeColumnsToContents();
 }
 void ProfileEditDialog::deleteStyleClicked() {
   //QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
