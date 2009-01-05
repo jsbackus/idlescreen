@@ -23,8 +23,8 @@
  */
 
 //debug
-#include<iostream>
-using namespace std;
+//#include<iostream>
+//using namespace std;
 //end debug
 
 #include <math.h>
@@ -82,13 +82,13 @@ FallingRainSprite::FallingRainSprite(int width, int height, int startX,
   _screenHeight = height;
   _thickness = thickness;
   _palSpeed = palSpeed;
-  _palYOffset = initialPalYOffset;
   _bHeadConstantColor = bHeadConstantColor;
   _gravity = -1.0*fabs(gravity);
   _vY = -1.0*fabs(initialV);
   _pal = pal;
   _palWidth = palWidth;
   _palHeight = palHeight;
+  _palYOffset = initialPalYOffset % palHeight;
   _recoilElasticity = recoilElasticity;
 
   // initialize segment list.

@@ -23,8 +23,8 @@
  */
 
 // begin debug
-#include<iostream>
-using namespace std;
+//#include<iostream>
+//using namespace std;
 //end debug
 
 #include <QtXml/QDomElement>
@@ -53,6 +53,7 @@ AcidRainBackgroundProfile::AcidRainBackgroundProfile() {
   _maxHorizAccel = 0.0;
   _maxHorizAccelDelta = 0.0;
   _recoilElasticity = 0.0;
+  _palYSyncMode = RANDOM;
 
   // make an initially empty list of default size
   growStyleList();
@@ -97,41 +98,37 @@ BackgroundProfile* AcidRainBackgroundProfile::load(QDomNode &node) {
   tempElem = node.firstChildElement("max_rain_density");
   if(!tempElem.isNull()) {
     tmpI = tempElem.text().toInt();
-    if(tmpI >= 0 && tmpI <= 100) {
-      retVal->_maxRainDensity = tmpI;
-    }
+    retVal->setMaxRainDensity(tmpI);
   }
 
   tempElem = node.firstChildElement("gravity");
   if(!tempElem.isNull()) {
     tmpF = tempElem.text().toFloat();
-    if(tmpF > -100.0 && tmpF < 100.0) {
-      retVal->_gravity = tmpF;
-    }
+    retVal->setGravity(tmpF);
   }
 
   tempElem = node.firstChildElement("recoil_elasticity");
   if(!tempElem.isNull()) {
     tmpF = tempElem.text().toFloat();
-    if(tmpF > -100.0 && tmpF < 100.0) {
-      retVal->_recoilElasticity = tmpF;
-    }
+    retVal->setRecoilElasticity(tmpF);
+  }
+
+  tempElem = node.firstChildElement("pal_y_sync_mode");
+  if(!tempElem.isNull()) {
+    retVal->setPalYSyncMode(AcidRainManager::stringToPalYMode(tempElem.text().
+							      toStdString()));
   }
 
   tempElem = node.firstChildElement("max_horiz_accel");
   if(!tempElem.isNull()) {
     tmpF = tempElem.text().toFloat();
-    if(tmpF > -100.0 && tmpF < 100.0) {
-      retVal->_maxHorizAccel = tmpF;
-    }
+    retVal->setMaxHorizontalAcceleration(tmpF);
   }
 
   tempElem = node.firstChildElement("max_horiz_accel_delta");
   if(!tempElem.isNull()) {
     tmpF = tempElem.text().toFloat();
-    if(tmpF > -100.0 && tmpF < 100.0) {
-      retVal->_maxHorizAccelDelta = tmpF;
-    }
+    retVal->setMaxHorizontalAccelerationDelta(tmpF);
   }
 
   // get style information
@@ -165,49 +162,37 @@ BackgroundProfile* AcidRainBackgroundProfile::load(QDomNode &node) {
     tempElem = tempNode.firstChildElement("min_length");
     if(!tempElem.isNull()) {
       tmpI = tempElem.text().toInt();
-      if(tmpI < 30000) {
-	retVal->setMinLength(index, tmpI);
-      }
+      retVal->setMinLength(index, tmpI);
     }
 
     tempElem = tempNode.firstChildElement("max_length");
     if(!tempElem.isNull()) {
       tmpI = tempElem.text().toInt();
-      if(tmpI < 30000) {
-	retVal->setMaxLength(index, tmpI);
-      }
+      retVal->setMaxLength(index, tmpI);
     }
 
     tempElem = tempNode.firstChildElement("thickness");
     if(!tempElem.isNull()) {
       tmpI = tempElem.text().toInt();
-      if(0 < tmpI && tmpI < 30000) {
-	retVal->setThickness(index, tmpI);
-      }
+      retVal->setThickness(index, tmpI);
     }
 
     tempElem = tempNode.firstChildElement("min_initial_v");
     if(!tempElem.isNull()) {
       tmpF = tempElem.text().toFloat();
-      if(0.0 < tmpF && tmpF < 100.0) {
-	retVal->setMinInitialV(index, tmpF);
-      }
+      retVal->setMinInitialV(index, tmpF);
     }
 
     tempElem = tempNode.firstChildElement("max_initial_v");
     if(!tempElem.isNull()) {
       tmpF = tempElem.text().toFloat();
-      if(0.0 < tmpF && tmpF < 100.0) {
-	retVal->setMaxInitialV(index, tmpF);
-      }
+      retVal->setMaxInitialV(index, tmpF);
     }
 
     tempElem = tempNode.firstChildElement("palette_speed");
     if(!tempElem.isNull()) {
       tmpF = tempElem.text().toFloat();
-      if(0.0 < tmpF && tmpF < 10000.0) {
-	retVal->setPaletteSpeed(index, tmpF);
-      }
+      retVal->setPaletteSpeed(index, tmpF);
     }
 
     tempElem = tempNode.firstChildElement("head_constant_color");
@@ -268,6 +253,14 @@ QDomNode AcidRainBackgroundProfile::save(QDomDocument* doc) {
   tempStr.setNum(_recoilElasticity);
   tempNode = doc->createTextNode(tempStr);
   tempElem = doc->createElement("recoil_elasticity");
+  tempElem.appendChild(tempNode);
+  retVal.appendChild(tempElem);
+
+  // palette sync mode
+  tempStr = 
+    QString::fromAscii(AcidRainManager::palYModeToString(_palYSyncMode).data());
+  tempNode = doc->createTextNode(tempStr);
+  tempElem = doc->createElement("pal_y_sync_mode");
   tempElem.appendChild(tempNode);
   retVal.appendChild(tempElem);
 
@@ -387,7 +380,8 @@ Background* AcidRainBackgroundProfile::getNewBackgroundObj(int height, int width
   AcidRainManager* retVal = new AcidRainManager(width, height, _maxRainDensity,
 						_gravity, _maxHorizAccel,
 						_maxHorizAccelDelta,
-						_recoilElasticity);
+						_recoilElasticity,
+						_palYSyncMode);
   if(retVal == NULL)
     return NULL;
 
@@ -412,7 +406,9 @@ int AcidRainBackgroundProfile::getMaxRainDensity() {
   return _maxRainDensity;
 }
 void AcidRainBackgroundProfile::setMaxRainDensity(int density) {
-  _maxRainDensity = density;
+  if(0 < density && density <= 100) {
+    _maxRainDensity = density;
+  }
 }
 
 /**
@@ -422,7 +418,9 @@ float AcidRainBackgroundProfile::getGravity() {
   return _gravity;
 }
 void AcidRainBackgroundProfile::setGravity(float gravity) {
-  _gravity = gravity;
+  if(0.0 < gravity && gravity <= 10.0) {
+    _gravity = gravity;
+  }
 }
 
 /**
@@ -432,8 +430,21 @@ float AcidRainBackgroundProfile::getRecoilElasticity() {
   return _recoilElasticity;
 }
 void AcidRainBackgroundProfile::setRecoilElasticity(float recoil) {
-  _recoilElasticity = recoil;
+  if(0.0 <= recoil && recoil <= 100.0) {
+    _recoilElasticity = recoil;
+  }
 }
+
+/**
+ * Get/set the palette secondary index sync mode.
+ */
+initial_pal_Y_mode AcidRainBackgroundProfile::getPalYSyncMode() {
+  return _palYSyncMode;
+}
+void AcidRainBackgroundProfile::setPalYSyncMode(initial_pal_Y_mode mode) {
+  _palYSyncMode = mode;
+}
+
 
 /**
  * Get/set the max horizontal acceleration and delta acceleration.
@@ -442,13 +453,17 @@ float AcidRainBackgroundProfile::getMaxHorizontalAcceleration() {
   return _maxHorizAccel;
 }
 void AcidRainBackgroundProfile::setMaxHorizontalAcceleration(float accel) {
-  _maxHorizAccel = accel;
+  if(0.1 <= accel && accel <= 3.0) {
+    _maxHorizAccel = accel;
+  }
 }
 float AcidRainBackgroundProfile::getMaxHorizontalAccelerationDelta() {
   return _maxHorizAccelDelta;
 }
 void AcidRainBackgroundProfile::setMaxHorizontalAccelerationDelta(float delta) {
-  _maxHorizAccelDelta = delta;
+  if(0.01 <= delta && delta <= 1.0) {
+    _maxHorizAccelDelta = delta;
+  }
 }
 
 /**
@@ -501,7 +516,9 @@ int AcidRainBackgroundProfile::getMinLength(int styleIdx) {
 void AcidRainBackgroundProfile::setMinLength(int styleIdx, int minLength) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
-  _styles[styleIdx].minLength = minLength;
+  if(minLength < 3000) {
+    _styles[styleIdx].minLength = minLength;
+  }
 }
 int AcidRainBackgroundProfile::getMaxLength(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
@@ -512,8 +529,9 @@ int AcidRainBackgroundProfile::getMaxLength(int styleIdx) {
 void AcidRainBackgroundProfile::setMaxLength(int styleIdx, int maxLength) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
-
-  _styles[styleIdx].maxLength = maxLength;
+  if(maxLength < 3000) {
+    _styles[styleIdx].maxLength = maxLength;
+  }
 }
 
 int AcidRainBackgroundProfile::getThickness(int styleIdx) {
@@ -526,7 +544,9 @@ void AcidRainBackgroundProfile::setThickness(int styleIdx, int thickness) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
   
-  _styles[styleIdx].thickness = thickness;
+  if(0 < thickness && thickness <= 100) {
+    _styles[styleIdx].thickness = thickness;
+  }
 }
 
 float AcidRainBackgroundProfile::getMinInitialV(int styleIdx) {
@@ -540,7 +560,9 @@ void AcidRainBackgroundProfile::setMinInitialV(int styleIdx, float velocity)
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
-  _styles[styleIdx].minInitialV = velocity;
+  if(0.0 < velocity && velocity <= 100.0) {
+    _styles[styleIdx].minInitialV = velocity;
+  }
 }
 float AcidRainBackgroundProfile::getMaxInitialV(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
@@ -553,7 +575,9 @@ void AcidRainBackgroundProfile::setMaxInitialV(int styleIdx, float velocity)
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
-  _styles[styleIdx].maxInitialV = velocity;
+  if(0.0 < velocity && velocity <= 100.0) {
+    _styles[styleIdx].maxInitialV = velocity;
+  }
 }
 
 float AcidRainBackgroundProfile::getPaletteSpeed(int styleIdx) {
@@ -566,7 +590,9 @@ void AcidRainBackgroundProfile::setPaletteSpeed(int styleIdx, float palSpeed) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
-  _styles[styleIdx].palSpeed = palSpeed;
+  if(0.0 <= palSpeed && palSpeed <= 100.0) {
+    _styles[styleIdx].palSpeed = palSpeed;
+  }
 }
 
 bool AcidRainBackgroundProfile::isHeadConstantColor(int styleIdx)  {
@@ -645,6 +671,7 @@ AcidRainBackgroundProfile& AcidRainBackgroundProfile::operator=(AcidRainBackgrou
   _maxHorizAccel = other._maxHorizAccel;
   _maxHorizAccelDelta = other._maxHorizAccelDelta;
   _recoilElasticity = other._recoilElasticity;
+  _palYSyncMode = other._palYSyncMode;
 
   int i;
 
@@ -704,6 +731,40 @@ void AcidRainBackgroundProfile::growStyleList(int size) {
     _styles = tmpList;
     tmpList = NULL;
     _maxNumStyles += size;
+  }
+}
+
+/**
+ * Called whenever palette names change
+ */
+void AcidRainBackgroundProfile::paletteNameChanged(QString oldName, 
+						   QString newName) {
+  
+  if(_styles == NULL)
+    return;
+
+  // search through all of the styles and see if the palette name
+  // matches the old name.  If so, update!
+  for(int i=0; i<_numStyles;i++) {
+    if(_styles[i].pal == oldName) {
+      _styles[i].pal = newName;
+    }
+  }
+}
+	
+/**
+ * Called whenever a palette is removed.
+ */
+void AcidRainBackgroundProfile::paletteRemoved(QString palName) {
+  if(_styles == NULL)
+    return;
+
+  // search through all of the styles and see if the palette name
+  // matches the removed name.  If so, "null out".
+  for(int i=0; i<_numStyles;i++) {
+    if(_styles[i].pal == palName) {
+      _styles[i].pal = "";
+    }
   }
 }
 

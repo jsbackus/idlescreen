@@ -112,6 +112,16 @@ public:
 	 */
 	BackgroundProfile* clone();
 
+	/**
+	 * Called whenever palette names change
+	 */
+	virtual void paletteNameChanged(QString oldName, QString newName);
+	
+	/**
+	 * Called whenever a palette is removed.
+	 */
+	virtual void paletteRemoved(QString palName);
+
 private:
 	QString _palName;
 	float _coarseness;

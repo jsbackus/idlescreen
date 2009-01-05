@@ -23,8 +23,8 @@
  */
 
 //begin debug
-#include <iostream>
-using namespace std;
+//#include <iostream>
+//using namespace std;
 //end debug
 
 #include "utility/misc_funcs.h"
@@ -49,12 +49,14 @@ AcidRainManager::AcidRainManager() {
  * @param maxHorizontalAcceleration The maximum "wind" acceleration
  * @param maxHorizontalAcclerationDelta The maximum change in "wind" accel.
  * @param recoilElasticity The amount of "bounce" the rain has.
+ * @param secondaryPalSyncMode How the secondary palettes start on spawn.
  */
 AcidRainManager::AcidRainManager(int sizeX, int sizeY, int maxDensity,
 				 float gravity,
 				 float maxHorizontalAcceleration,
 				 float maxHorizontalAccelerationDelta,
-				 float recoilElasticity) {
+				 float recoilElasticity,
+				 initial_pal_Y_mode secondaryPalSyncMode) {
   initData();
   initBackground(sizeX, sizeY);
 
@@ -65,8 +67,9 @@ AcidRainManager::AcidRainManager(int sizeX, int sizeY, int maxDensity,
   _maxHorizAccel = maxHorizontalAcceleration;
   _maxHorizAccelDelta = maxHorizontalAccelerationDelta;
   _recoilElasticity = recoilElasticity;
+  _palYSyncMode = secondaryPalSyncMode;
 
-  _bSetupFinished = true; //false;
+  _bSetupFinished = true;
 }
 
 AcidRainManager::~AcidRainManager() {
@@ -223,6 +226,10 @@ void AcidRainManager::clocktick() {
     return;
   }
 
+  // increment secondary palette starting value and check for roll-over.
+  if(++_palYOffset < 0)
+    _palYOffset = 0;
+
   // adjust horizontal acceleration
   float accelDelta = ((float)((jrand()%2000)-1000))*
     (_maxHorizAccelDelta/1000.0);
@@ -288,47 +295,6 @@ void AcidRainManager::clocktick() {
     }
   }
 
-  // next, if there is space, consider making a new one.  To do so,
-  // subtract the current density from the max density and multiply
-  // by 100.  Now, take a random number between 0 and 100.  If that
-  // random number is less than the difference in densities * 100,
-  // then spawn.
-  /*
-  _curDensity = ((float)usedPixels)/_screenArea;
-  cout<<"cur density: "<<_curDensity<<" of "<<_maxDensity
-      <<" -> "<<(1.0-_curDensity)/_maxDensity<<endl;
-  if(_curDensity < _maxDensity) {
-    //int spawnChance = (int)((_maxDensity - _curDensity)*200.0);
-    int spawnChance = (int)( 100.0*(1.0-_curDensity)/_maxDensity );
-    cout<<"spawn chance: "<<spawnChance<<endl;
-    //if(jrand()%101 < spawnChance) {
-    while(jrand()%101 < spawnChance) {
-      cout<<"spawned!"<<endl;
-      spawnSprite();
-    }
-  }
-  */
-  // better:
-  /*
-  _curDensity = ((float)usedPixels)/_screenArea;
-  int spawnChance = (int)( 100.0*(1.0-_curDensity)/_maxDensity );
-  //int spawnChance = (int)((_maxDensity - _curDensity)*200.0);
-  //cout<<"cur density: "<<_curDensity<<" of "<<_maxDensity
-  //    <<" -> "<<(1.0-_curDensity)/_maxDensity<<endl;
-  while(_curDensity < _maxDensity && jrand()%101 < spawnChance) {
-    //cout<<"cur density: "<<_curDensity<<" of "<<_maxDensity
-    //	<<" -> "<<(1.0-_curDensity)/_maxDensity<<endl;
-    //int spawnChance = (int)((_maxDensity - _curDensity)*200.0);
-    //cout<<"spawn chance: "<<spawnChance<<endl;
-    //if(jrand()%101 < spawnChance) {
-    //while(jrand()%101 < spawnChance) {
-    //cout<<"spawned!"<<endl;
-    usedPixels += spawnSprite();
-    _curDensity = ((float)usedPixels)/_screenArea;
-    spawnChance = (int)( 100.0*(1.0-_curDensity)/_maxDensity );
-    //spawnChance = (int)((_maxDensity - _curDensity)*200.0);
-  }
-  */
   i=0; //!< simple escape
   while(shouldSpawn(usedPixels) && i < _sizeX*2) {
     i++;
@@ -343,8 +309,6 @@ void AcidRainManager::clocktick() {
 bool AcidRainManager::shouldSpawn(int usedPixels) {
   _curDensity = ((float)usedPixels)/_screenArea;
   int spawnChance = (int)( 100.0*(_maxDensity-_curDensity)/_maxDensity );
-  //cout<<"cur density: "<<_curDensity<<" of "<<_maxDensity
-  //    <<" -> "<<spawnChance<<endl;
   return (_curDensity < _maxDensity && jrand()%100 <= spawnChance);
 }
 
@@ -371,6 +335,7 @@ void AcidRainManager::initData() {
   _maxHorizAccelDelta = 0.0;
   _recoilElasticity = 0.0;
   _palYOffset = 0;
+  _palYSyncMode = RANDOM;
 
   growStyleList();
   growFallingSpriteList();
@@ -424,11 +389,25 @@ int AcidRainManager::spawnSprite() {
     spriteV = ((float)(jrand()%((int)((maxV-minV)*100.0))))/100.0;
   }
 
+  int palY = 0; //_palYOffset
+  switch(_palYSyncMode) {
+  case RANDOM:
+    palY = jrand()%_styles[idx].palHeight;
+    break;
+  case SYNC_ALL:
+    palY = _palYOffset%_styles[idx].palHeight;
+    break;
+  case SYNC_START:
+  default:
+    palY = 0;
+    break;
+  }
+
   FallingRainSprite* tmpSprite = 
     new FallingRainSprite(_sizeX, _sizeY, startX, _gravity,_styles[idx].pal,
 			  _styles[idx].palWidth, _styles[idx].palHeight, 
 			  length, _styles[idx].thickness, spriteV,
-			  _styles[idx].palSpeed, _palYOffset,
+			  _styles[idx].palSpeed, palY,
 			  _styles[idx].bHeadConstantColor,
 			  _styles[idx].bHeadRandomColor,
 			  _recoilElasticity);
@@ -443,6 +422,7 @@ int AcidRainManager::spawnSprite() {
   _numFallingSprites++;
   int retVal = tmpSprite->getNumPixelsUsed();
   tmpSprite = NULL;
+  return retVal;
 }
 
 /**
@@ -585,4 +565,34 @@ void AcidRainManager::convPalette(IndexedPalette* pal,
       }
     }
   }
+}
+
+/**
+ * Converts initial_pal_Y_mode to/from QString.
+ */
+string AcidRainManager::palYModeToString(initial_pal_Y_mode mode) {
+  switch(mode) {
+  case RANDOM:
+    return string("Random");
+    break;
+  case SYNC_ALL:
+    return string("Sync_All");
+    break;
+  case SYNC_START:
+  default:
+    return string("Sync_Start");
+    break;
+  }
+}
+initial_pal_Y_mode AcidRainManager::stringToPalYMode(string str) {
+  initial_pal_Y_mode retVal;
+  
+  if(str == string("Random")) {
+    retVal = RANDOM;
+  } else if(str == string("Sync_All")) {
+    retVal = SYNC_ALL;
+  } else {
+    retVal = SYNC_START;
+  }
+  return retVal;
 }

@@ -34,6 +34,8 @@
 #include <stdlib.h>
 #include <ctime>
 
+#include <string>
+
 using namespace std;
 
 #ifndef __ACIDRAINMANAGER_H__
@@ -62,6 +64,8 @@ struct rainsprite_style {
   bool bHeadRandomColor;
 };
 
+enum initial_pal_Y_mode { RANDOM, SYNC_START, SYNC_ALL};
+
 class AcidRainManager : public Background {
 
  public:
@@ -83,11 +87,13 @@ class AcidRainManager : public Background {
    * @param maxHorizontalAcceleration The maximum "wind" acceleration
    * @param maxHorizontalAcclerationDelta The maximum change in "wind" accel.
    * @param recoilElasticity The amount of "bounce" the rain has.
+   * @param secondaryPalSyncMode How the secondary palettes start on spawn.
    */
   AcidRainManager(int sizeX, int sizeY, int maxDensity, float gravity,
 		  float maxHorizontalAcceleration,
 		  float maxHorizontalAccelerationDelta,
-		  float recoilElasticity);
+		  float recoilElasticity,
+		  initial_pal_Y_mode secondaryPalSyncMode);
 
   ~AcidRainManager();
 
@@ -136,6 +142,13 @@ class AcidRainManager : public Background {
    */
   void clocktick();
   // *** End Extended Methods ***
+
+  // static methods
+  /**
+   * Converts initial_pal_Y_mode to/from string.
+   */
+  static string palYModeToString(initial_pal_Y_mode mode);
+  static initial_pal_Y_mode stringToPalYMode(string str);
 
  private:
   /**
@@ -192,6 +205,8 @@ class AcidRainManager : public Background {
   int _spawnChance;
 
   int _palYOffset;
+  initial_pal_Y_mode _palYSyncMode;
+  
   float _maxDensity;
   float _curDensity;
   float _screenArea;

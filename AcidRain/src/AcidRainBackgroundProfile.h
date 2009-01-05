@@ -75,6 +75,16 @@ public:
 	Background* getNewBackgroundObj(int height, int width, QHash<QString, IndexedPaletteProfile*>* palHash);
 
 	/**
+	 * Called whenever palette names change
+	 */
+	void paletteNameChanged(QString oldName, QString newName);
+	
+	/**
+	 * Called whenever a palette is removed.
+	 */
+	void paletteRemoved(QString palName);
+
+	/**
 	 * get/set max rain density as an integer number between 0-100.
 	 */
 	int getMaxRainDensity();
@@ -91,6 +101,12 @@ public:
 	 */
 	float getRecoilElasticity();
 	void setRecoilElasticity(float recoil);
+
+	/**
+	 * Get/set the palette secondary index sync mode.
+	 */
+	initial_pal_Y_mode getPalYSyncMode();
+	void setPalYSyncMode(initial_pal_Y_mode mode);
 
 	/**
 	 * Get/set the max horizontal acceleration and delta acceleration.
@@ -155,6 +171,8 @@ private:
   rain_profile_style* _styles;
   int _numStyles;
   int _maxNumStyles;
+
+  initial_pal_Y_mode _palYSyncMode;
 
   int _maxRainDensity;
   float _gravity;

@@ -19,6 +19,12 @@ following from the base directory:
     make
     make install
 
+If you do not install as root, you will need to manually add the screen savers
+to ~/.xscreensaver.  Installing as root will add all of the screen savers to
+the system list, if ./configure can find update-xscreensaver-hacks.  If it
+cannot, you will need to either execute the command yourself or manually
+update the system config.
+
 The ./configure script has several options, which can be viewed by typing
     ./configure --help
 Each screen saver can be enabled or disabled.  The same goes for the GLUT

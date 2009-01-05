@@ -23,9 +23,9 @@
  */
 
 // begin debug
-#include <iostream>
-using namespace std;
-#include <QMessageBox>
+//#include <iostream>
+//using namespace std;
+//#include <QMessageBox>
 // end debug
 
 #include <QVBoxLayout>

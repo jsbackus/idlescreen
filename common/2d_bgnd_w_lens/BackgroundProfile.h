@@ -60,6 +60,16 @@ public:
 	 */
 	virtual Background* getNewBackgroundObj(int height, int width, QHash<QString, IndexedPaletteProfile*>* palHash);
 
+	/**
+	 * Called whenever palette names change
+	 */
+	virtual void paletteNameChanged(QString oldName, QString newName);
+	
+	/**
+	 * Called whenever a palette is removed.
+	 */
+	virtual void paletteRemoved(QString palName);
+
 	/*
 	 * Get/set the name of this profile.
 	 */

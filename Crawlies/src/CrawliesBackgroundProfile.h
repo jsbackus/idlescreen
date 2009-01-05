@@ -75,6 +75,16 @@ public:
 	Background* getNewBackgroundObj(int height, int width, QHash<QString, IndexedPaletteProfile*>* palHash);
 
 	/**
+	 * Called whenever palette names change
+	 */
+	void paletteNameChanged(QString oldName, QString newName);
+	
+	/**
+	 * Called whenever a palette is removed.
+	 */
+	void paletteRemoved(QString palName);
+
+	/**
 	 * get/set max number of crawlies.
 	 */
 	int getMaxNumberCrawlies();

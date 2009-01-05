@@ -743,10 +743,22 @@ QStringList ConfigManager::getPaletteNames() {
 }
 
 /**
- * Removes the palette with the specified name from the hash.  Returns
- * whether successfull.
+ * Removes the palette with the specified name from the hash.
+ * If bUpdateProfiles is true, it will iterate through all
+ * background profiles alerting them to the removal.  When
+ * replacing a palette, this should be false!
  */
-bool ConfigManager::removePalette(QString name) {
+bool ConfigManager::removePalette(QString name, bool bUpdateProfiles) {
+  // first, alert all background profiles that a palette is being
+  // removed if bUpdateProfiles is true.
+  if(bUpdateProfiles) {
+    QList<QString> keys = _backgroundHash.keys();
+    for(int i=0; i<keys.size();i++) {
+      _backgroundHash.value(keys.at(i))->paletteRemoved(name);
+    }
+  }
+
+  // now attempt to remove the palette and return success status.
   return (_paletteHash.remove(name) > 0);
 }
 
@@ -787,8 +799,16 @@ bool ConfigManager::replacePalette(QString oldPaletteName, IndexedPaletteProfile
 
   //now check to see if the old palette name is in the list.  if so, replace, otherwise add.
   if(doesPaletteExist(oldPaletteName)) {
-    removePalette(oldPaletteName);
+    removePalette(oldPaletteName, false);
     addPalette(newPalette);
+    
+    // alert all background profiles that a palette is being
+    // replaced
+    QList<QString> keys = _backgroundHash.keys();
+    for(int i=0; i<keys.size();i++) {
+      _backgroundHash.value(keys.at(i))->paletteNameChanged(oldPaletteName,
+							    newPalName);
+    }
   } else {
     addPalette(newPalette);
   }

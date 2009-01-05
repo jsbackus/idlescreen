@@ -44,6 +44,7 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QStringList>
+#include <QRadioButton>
 
 #include "2d_bgnd_w_lens/ConfigManager.h"
 #include "2d_bgnd_w_lens/MasterProfile.h"
@@ -79,6 +80,8 @@ public slots:
 	void cellSelected(int row=0, int column=0);
 	void cellDoubleClicked(int row=0, int column=0);
 
+	void palModeToggled();
+
 signals:
 	void profileNameChange(QString oldName, QString newName);
 
@@ -113,6 +116,9 @@ private:
 	QSlider* _recoilSlider;
 	QSlider* _horizAccelSlider;
 	QSlider* _horizAccelDeltaSlider;
+	QRadioButton* _palRandButton;
+	QRadioButton* _palSyncStartButton;
+	QRadioButton* _palSyncAllButton;
 	QTableWidget* _styleTable;
 
 	// list of tool tips for the table
@@ -121,6 +127,8 @@ private:
 	rain_profile_style* _styleList;
 	int _numStyles;
 	int _maxNumStyles;
+
+	initial_pal_Y_mode _palMode;
 	
 	ConfigManager* _confMgr;
 

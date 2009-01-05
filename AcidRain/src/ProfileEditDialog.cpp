@@ -23,10 +23,9 @@
  */
 
 // begin debug
-#include <iostream>
-using namespace std;
-
-#include <QMessageBox>
+//#include <iostream>
+//using namespace std;
+//#include <QMessageBox>
 // end debug
 
 
@@ -34,6 +33,7 @@ using namespace std;
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QGroupBox>
+#include <QButtonGroup>
 #include <QLabel>
 
 #include "ProfileEditDialog.h"
@@ -49,6 +49,9 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   _horizAccelSlider = NULL;
   _horizAccelDeltaSlider = NULL;
   _styleTable = NULL;
+  _palRandButton = NULL;
+  _palSyncStartButton = NULL;
+  _palSyncAllButton = NULL;
 
   _styleList = NULL;
   _numStyles = 0;
@@ -76,7 +79,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   QPushButton* tempButton = NULL;
   QVBoxLayout* mainLayout = new QVBoxLayout();
   QHBoxLayout* tmpHBox = NULL;
-  //QVBoxLayout* tmpVBox = NULL;
+  QVBoxLayout* tmpVBox = NULL;
   QString tempToolTip;
 
   // Begin MasterProfile related.
@@ -194,11 +197,6 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
     }
   }
 
-  /*
-	QSlider* _horizAccelSlider;
-	QSlider* _horizAccelDeltaSlider;
-  */
-
   // instantiate sliders and set initial values
   _densitySlider = new QSlider(Qt::Horizontal);
   if(_densitySlider == NULL)
@@ -252,7 +250,16 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
     _horizAccelDeltaSlider->setValue((int)
 				     (profile->getMaxHorizontalAccelerationDelta()
 				      *HORIZ_ACCEL_DELTA_SLIDER_MUL));
+    _palMode = profile->getPalYSyncMode();
   }
+
+  QHBoxLayout* sliderRadioBox = new QHBoxLayout();
+  if(sliderRadioBox == NULL)
+    return;
+
+  tmpVBox = new QVBoxLayout();
+  if(tmpVBox == NULL)
+    return;
 
   tmpHBox = new QHBoxLayout();
   if(tmpHBox == NULL)
@@ -285,7 +292,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 
   tempWidget = new QWidget();
   tempWidget->setLayout(tmpHBox);
-  mainLayout->addWidget(tempWidget);
+  tmpVBox->addWidget(tempWidget);
   tempWidget = NULL;
   tmpHBox = NULL;
 
@@ -318,7 +325,15 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   tmpHBox->addWidget(tempWidget);
   tempWidget = NULL;
 
-  tmpHBox->addStretch(0);
+  tempWidget = new QWidget();
+  tempWidget->setLayout(tmpHBox);
+  tmpVBox->addWidget(tempWidget);
+  tempWidget = NULL;
+  tmpHBox = NULL;
+
+  tmpHBox = new QHBoxLayout();
+  if(tmpHBox == NULL)
+    return;
 
   tempToolTip = tr("The amount of bounce the rain drops have on contact.");
   tempWidget = new QLabel(tr("Bounce:"));
@@ -347,10 +362,83 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 
   tempWidget = new QWidget();
   tempWidget->setLayout(tmpHBox);
-  mainLayout->addWidget(tempWidget);
+  tmpVBox->addWidget(tempWidget);
   tempWidget = NULL;
   tmpHBox = NULL;
 
+  tmpHBox = new QHBoxLayout();
+  if(tmpHBox == NULL)
+    return;
+
+  tempWidget = new QWidget();
+  tempWidget->setLayout(tmpVBox);
+  sliderRadioBox->addWidget(tempWidget);
+  tempWidget = NULL;
+  tmpVBox = NULL;
+
+  tmpHBox = new QHBoxLayout();
+  if(tmpHBox == NULL)
+    return;
+
+  // radio buttons
+  QButtonGroup* radioButtonGroup = new QButtonGroup();
+  if(radioButtonGroup == NULL)
+    return;
+  QGroupBox* radioGroupBox = new QGroupBox("Secondary Palette Sync");
+  if(radioGroupBox == NULL)
+    return;
+  tmpVBox = new QVBoxLayout();
+  if(tmpVBox == NULL)
+    return;
+
+  
+  tempToolTip = tr("Secondary palette initial value will be random on spawn.");
+  _palRandButton = new QRadioButton("Random");
+  if(_palRandButton == NULL)
+    return;
+  _palRandButton->setToolTip(tempToolTip);
+  radioButtonGroup->addButton(_palRandButton);
+  _palRandButton->setChecked(_palMode == RANDOM);
+  QObject::connect(_palRandButton, SIGNAL(toggled(bool)), this, 
+		   SLOT(palModeToggled()));
+  tmpVBox->addWidget(_palRandButton);
+
+  tempToolTip = tr("Secondary palette initial value will be 0 on spawn.");
+  _palSyncStartButton = new QRadioButton("Sync Start");
+  if(_palSyncStartButton == NULL)
+    return;
+  _palSyncStartButton->setToolTip(tempToolTip);
+  radioButtonGroup->addButton(_palSyncStartButton);
+  _palSyncStartButton->setChecked(_palMode == SYNC_START);
+  QObject::connect(_palSyncStartButton, SIGNAL(toggled(bool)), this, 
+		   SLOT(palModeToggled()));
+  tmpVBox->addWidget(_palSyncStartButton);
+
+  tempToolTip =
+    tr("Secondary palette initial value will by synchronous with all sprites.");
+  _palSyncAllButton = new QRadioButton("Sync All");
+  if(_palSyncAllButton == NULL)
+    return;
+  _palSyncAllButton->setToolTip(tempToolTip);
+  radioButtonGroup->addButton(_palSyncAllButton);
+  _palSyncAllButton->setChecked(_palMode == SYNC_ALL);
+  QObject::connect(_palSyncAllButton, SIGNAL(toggled(bool)), this, 
+		   SLOT(palModeToggled()));
+  tmpVBox->addWidget(_palSyncAllButton);
+
+  radioGroupBox->setLayout(tmpVBox);
+  radioGroupBox->
+    setToolTip(tr("Sets how the secondary palette initial value is determined."));
+  sliderRadioBox->addWidget(radioGroupBox);
+  tmpVBox = NULL;
+
+  tempWidget = new QWidget();
+  tempWidget->setLayout(sliderRadioBox);
+  mainLayout->addWidget(tempWidget);
+  tempWidget = NULL;
+  sliderRadioBox = NULL;
+
+  // wind section
   tmpHBox = new QHBoxLayout();
   if(tmpHBox == NULL)
     return;
@@ -548,6 +636,18 @@ ProfileEditDialog::~ProfileEditDialog() {
     delete _recoilSlider;
     _recoilSlider = NULL;
   }
+  if(_palRandButton != NULL) {
+    delete _palRandButton;
+    _palRandButton = NULL;
+  }
+  if(_palSyncAllButton != NULL) {
+    delete _palSyncAllButton;
+    _palSyncAllButton = NULL;
+  }
+  if(_palSyncStartButton != NULL) {
+    delete _palSyncStartButton;
+    _palSyncStartButton = NULL;
+  }
   if(_densitySlider != NULL) {
     delete _densitySlider;
     _densitySlider = NULL;
@@ -594,6 +694,8 @@ void ProfileEditDialog::okClicked(bool checked) {
   tmpProfile.setMaxHorizontalAccelerationDelta(((float)
 						_horizAccelDeltaSlider->value())
 					       / HORIZ_ACCEL_DELTA_SLIDER_MUL);
+  tmpProfile.setPalYSyncMode(_palMode);
+
   // copy styles
   tmpProfile.clearStyleList();
   for(int i=0; i<_numStyles;i++) {
@@ -1080,4 +1182,14 @@ void ProfileEditDialog::setupStyleTableWidget(AcidRainBackgroundProfile* profile
     updateStyleRow(i);
   }
   _styleTable->resizeColumnsToContents();
+}
+
+void ProfileEditDialog::palModeToggled() {
+  _palMode = SYNC_START;
+  if(_palRandButton->isChecked()) {
+    _palMode = RANDOM;
+  }
+  if(_palSyncAllButton->isChecked()) {
+    _palMode = SYNC_ALL;
+  }
 }

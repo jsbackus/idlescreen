@@ -81,3 +81,18 @@ QString BackgroundProfile::getBackgroundType() {
 BackgroundProfile* BackgroundProfile::clone() {
 	return new BackgroundProfile();
 }
+
+	/**
+	 * Called whenever palette names change
+	 */
+void BackgroundProfile::paletteNameChanged(QString oldName, QString newName) {
+  // nada
+}
+	
+	/**
+	 * Called whenever a palette is removed.
+	 */
+void BackgroundProfile::paletteRemoved(QString palName) {
+  // nada
+}
+

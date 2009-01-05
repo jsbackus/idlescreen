@@ -93,17 +93,13 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
   tempElem = node.firstChildElement("max_num_crawlies");
   if(!tempElem.isNull()) {
     tmpI = tempElem.text().toInt();
-    if(tmpI > 0 && tmpI < 30000) {
-      retVal->_maxNumCrawlies = tmpI;
-    }
+    retVal->setMaxNumberCrawlies(tmpI);
   }
 
   tempElem = node.firstChildElement("spawn_chance");
   if(!tempElem.isNull()) {
     tmpI = tempElem.text().toInt();
-    if(tmpI > 0 && tmpI < 100) {
-      retVal->_spawnChance = tmpI;
-    }
+    retVal->setSpawnChance(tmpI);
   }
 
   // get style information
@@ -137,49 +133,37 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
     tempElem = tempNode.firstChildElement("min_length");
     if(!tempElem.isNull()) {
       tmpI = tempElem.text().toInt();
-      if(tmpI < 30000) {
-	retVal->setMinLength(index, tmpI);
-      }
+      retVal->setMinLength(index, tmpI);
     }
 
     tempElem = tempNode.firstChildElement("max_length");
     if(!tempElem.isNull()) {
       tmpI = tempElem.text().toInt();
-      if(tmpI < 30000) {
-	retVal->setMaxLength(index, tmpI);
-      }
+      retVal->setMaxLength(index, tmpI);
     }
 
     tempElem = tempNode.firstChildElement("thickness");
     if(!tempElem.isNull()) {
       tmpI = tempElem.text().toInt();
-      if(0 < tmpI && tmpI < 30000) {
 	retVal->setThickness(index, tmpI);
-      }
     }
 
     tempElem = tempNode.firstChildElement("min_sprite_speed");
     if(!tempElem.isNull()) {
       tmpF = tempElem.text().toFloat();
-      if(0.0 < tmpF && tmpF < 100.0) {
-	retVal->setMinSpriteSpeed(index, tmpF);
-      }
+      retVal->setMinSpriteSpeed(index, tmpF);
     }
 
     tempElem = tempNode.firstChildElement("max_sprite_speed");
     if(!tempElem.isNull()) {
       tmpF = tempElem.text().toFloat();
-      if(0.0 < tmpF && tmpF < 100.0) {
-	retVal->setMaxSpriteSpeed(index, tmpF);
-      }
+      retVal->setMaxSpriteSpeed(index, tmpF);
     }
 
     tempElem = tempNode.firstChildElement("palette_speed");
     if(!tempElem.isNull()) {
       tmpF = tempElem.text().toFloat();
-      if(0.0 < tmpF && tmpF < 10000.0) {
-	retVal->setPaletteSpeed(index, tmpF);
-      }
+      retVal->setPaletteSpeed(index, tmpF);
     }
 
     tempElem = tempNode.firstChildElement("head_constant_color");
@@ -362,7 +346,9 @@ int CrawliesBackgroundProfile::getMaxNumberCrawlies() {
   return _maxNumCrawlies;
 }
 void CrawliesBackgroundProfile::setMaxNumberCrawlies(int numCrawlies) {
-  _maxNumCrawlies = numCrawlies;
+  if(0 < numCrawlies && numCrawlies < 30000) {
+    _maxNumCrawlies = numCrawlies;
+  }
 }
 
 /**
@@ -373,7 +359,9 @@ int CrawliesBackgroundProfile::getSpawnChance() {
   return _spawnChance;
 }
 void CrawliesBackgroundProfile::setSpawnChance(int spawnChance) {
-  _spawnChance = spawnChance;
+  if(0 < spawnChance && spawnChance <= 100) {
+    _spawnChance = spawnChance;
+  }
 }
 
 /**
@@ -426,7 +414,10 @@ int CrawliesBackgroundProfile::getMinLength(int styleIdx) {
 void CrawliesBackgroundProfile::setMinLength(int styleIdx, int minLength) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
-  _styles[styleIdx].minLength = minLength;
+
+  if(minLength < 30000) {
+    _styles[styleIdx].minLength = minLength;
+  }
 }
 int CrawliesBackgroundProfile::getMaxLength(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
@@ -438,7 +429,9 @@ void CrawliesBackgroundProfile::setMaxLength(int styleIdx, int maxLength) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
-  _styles[styleIdx].maxLength = maxLength;
+  if(maxLength < 30000) {
+    _styles[styleIdx].maxLength = maxLength;
+  }
 }
 
 int CrawliesBackgroundProfile::getThickness(int styleIdx) {
@@ -451,7 +444,9 @@ void CrawliesBackgroundProfile::setThickness(int styleIdx, int thickness) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
   
-  _styles[styleIdx].thickness = thickness;
+  if(0 < thickness && thickness < 30000) {
+    _styles[styleIdx].thickness = thickness;
+  }
 }
 
 
@@ -466,7 +461,9 @@ void CrawliesBackgroundProfile::setMinSpriteSpeed(int styleIdx, float minSpeed)
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
-  _styles[styleIdx].minSpriteSpeed = minSpeed;
+  if(0.0 < minSpeed && minSpeed < 100.0) {
+    _styles[styleIdx].minSpriteSpeed = minSpeed;
+  }
 }
 float CrawliesBackgroundProfile::getMaxSpriteSpeed(int styleIdx) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
@@ -479,7 +476,9 @@ void CrawliesBackgroundProfile::setMaxSpriteSpeed(int styleIdx, float maxSpeed)
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
-  _styles[styleIdx].maxSpriteSpeed = maxSpeed;
+  if(0.0 < maxSpeed && maxSpeed < 100.0) {
+    _styles[styleIdx].maxSpriteSpeed = maxSpeed;
+  }
 }
 
 float CrawliesBackgroundProfile::getPaletteSpeed(int styleIdx) {
@@ -492,7 +491,9 @@ void CrawliesBackgroundProfile::setPaletteSpeed(int styleIdx, float palSpeed) {
   if(_styles == NULL || styleIdx < 0 || styleIdx >= _numStyles)
     return;
 
-  _styles[styleIdx].palSpeed = palSpeed;
+  if(0.0 <= palSpeed && palSpeed < 10000.0) {
+    _styles[styleIdx].palSpeed = palSpeed;
+  }
 }
 
 bool CrawliesBackgroundProfile::isHeadConstantColor(int styleIdx)  {
@@ -618,6 +619,40 @@ void CrawliesBackgroundProfile::growStyleList(int size) {
     _styles = tmpList;
     tmpList = NULL;
     _maxNumStyles += size;
+  }
+}
+
+/**
+ * Called whenever palette names change
+ */
+void CrawliesBackgroundProfile::paletteNameChanged(QString oldName, 
+						   QString newName) {
+  
+  if(_styles == NULL)
+    return;
+
+  // search through all of the styles and see if the palette name
+  // matches the old name.  If so, update!
+  for(int i=0; i<_numStyles;i++) {
+    if(_styles[i].pal == oldName) {
+      _styles[i].pal = newName;
+    }
+  }
+}
+	
+/**
+ * Called whenever a palette is removed.
+ */
+void CrawliesBackgroundProfile::paletteRemoved(QString palName) {
+  if(_styles == NULL)
+    return;
+
+  // search through all of the styles and see if the palette name
+  // matches the removed name.  If so, "null out".
+  for(int i=0; i<_numStyles;i++) {
+    if(_styles[i].pal == palName) {
+      _styles[i].pal = "";
+    }
   }
 }
 

@@ -7,6 +7,7 @@ need to be installed:
 * The OpenGL User Toolkit (GLUT) (for the GLUT demos only) available at:
   http://www.opengl.org/resources/libraries/glut
 * NSIS (to build the installer) available at http://nsis.sourceforge.net
+* MinGW (to compile Qt) available at http://www.mingw.org/
 
 In order to compile the source code in Microsoft Visual Studio .NET 2003 and
 later, including Microsoft Visual Studio Express, first set the environment

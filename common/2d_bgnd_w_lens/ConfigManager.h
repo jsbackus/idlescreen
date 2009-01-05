@@ -256,14 +256,18 @@ public:
 	//*** Begin Palette Related ***
 
 	/**
-	 * Returns a list of the names of the palettes currently in the palette hash.
+	 * Returns a list of the names of the palettes currently 
+	 * in the palette hash.
 	 */
 	QStringList getPaletteNames();
 
 	/**
 	 * Removes the palette with the specified name from the hash.
+	 * If bUpdateProfiles is true, it will iterate through all
+	 * background profiles alerting them to the removal.  When
+	 * replacing a palette, this should be false!
 	 */
-	bool removePalette(QString name);
+	bool removePalette(QString name, bool bUpdateProfiles=true);
 
 	/**
 	 * Adds the specified palette to the hash if it isn't already

@@ -39,3 +39,11 @@ Since 0.03:
 * Fixed a bug that when editing a palette but not changing its name, it
   was added to the end of the list in the Palette Editor Chooser, until
   the Chooser was closed and reopened.
+* Fixed issue 21: Palette Profile Name Changes Not Propagating Through
+* Added AcidRain
+* Fixed an issue with MSVC projects not properly creating and linking 
+  the resource file.
+* Added ability to "make install" to update XScreensaver when installed
+  by superuser.
+* Fixed issue 19: Add sanity checking to CrawliesBackgroundProfile.
+
