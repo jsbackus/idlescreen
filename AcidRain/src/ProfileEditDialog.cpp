@@ -25,7 +25,6 @@
 // begin debug
 //#include <iostream>
 //using namespace std;
-//#include <QMessageBox>
 // end debug
 
 
@@ -35,6 +34,7 @@
 #include <QGroupBox>
 #include <QButtonGroup>
 #include <QLabel>
+#include <QMessageBox>
 
 #include "ProfileEditDialog.h"
 #include "utility/misc_funcs.h"

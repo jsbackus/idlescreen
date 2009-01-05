@@ -25,7 +25,6 @@
 // begin debug
 //#include <iostream>
 //using namespace std;
-//#include <QMessageBox>
 // end debug
 
 #include <QVBoxLayout>
@@ -33,6 +32,7 @@
 #include <QPushButton>
 #include <QGroupBox>
 #include <QLabel>
+#include <QMessageBox>
 
 #include "StyleEditDialog.h"
 #include "utility/misc_funcs.h"
