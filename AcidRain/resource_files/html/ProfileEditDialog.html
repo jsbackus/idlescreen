@@ -4,11 +4,11 @@
 </HEAD>
 <BODY>
 <H2>Profile Editor</H2><br>
-<img src="ProfileEditDialog.jpg" width="454" height="511" border="0" alt="" align="middle">
+<img src="ProfileEditDialog.jpg" width="454" height="716" border="0" alt="" align="middle">
 <h3>The Basics</h3>
-<p>In addition to parameters such as screen size and and the
-number of Crawlies to spawn, each profile contains a list of
-Crawly "styles".  Every time a Crawly is spawned, a style
+<p>In addition to parameters such as screen size and the maximum amount
+ of the screen to cover with rain, each profile contains a list of
+rain "styles".  Every time a rain sprite is spawned, a style
 is randomly picked from the styles available in this profile.
 These styles are listed in the table in the
 middle of the dialog box.  Styles are added, copied, modified,
@@ -34,11 +34,29 @@ maximum framerate can be calculated by dividing 1000
 by the value of this parameter.  For example, for a value of
 50, the maximum framerate will be 1000 / 50 = 20 frames per
 second.</li>
-<li><b>Max Number</b> - This parameter controls the maximum
-number of Crawlies allowed on the screen at any given time.</li>
-<li><b>Spawn Chance</b> - This parameter controls the likelihood
-that a Crawly will come into existence.  The closer to Max, the
-more populous the screen will become.</li>
+<li><b>Max Density</b> - This parameter controls the maximum
+amount of the screen that can be covered by rain sprites.</li>
+<li><b>Gravity</b> - This parameter controls how quickly the sprites
+are accelerated toward the bottom of the screen.</li>
+<li><b>Bounce</b> - This parameter controls the elasticity of the "ground".
+The more bounce, the higher the particles will bounce when they hit the
+"ground".</li>
+<li><b>Max Wind Accel</b> - This parameter controls the maximum amount of
+"wind" or horizontal acceleration.</li>
+<li><b>Max Wind Change</b> - This parameter controls how quickly the
+"wind" can change.  The less of this parameter, the more gradual the change
+in "wind".</li>
+<li><b>Y Palette Sync</b> - For 2D palettes, this parameter controls how
+the secondary axis of new sprites is synchronized.  After a sprite is
+spawned, the secondary axis will rotate at the rate specified by the
+style.  The Y Palette Sync options are:
+<li><i>Random</i> - The palette index on the secondary axis will be chosen
+randomly for each sprite on spawn.</li>
+<li><i>Sync Start</i> - The palette index on the secondary axis will always
+be 0 for each sprite on spawn.</li>
+<li><i>Sync All</i> - A "master clock" is maintained that increments by 1 at
+each clock tick.  The value of this "master clock" is what is passed to each
+sprite on spawn.</li></li>
 </ul>
 <h3>Performance</h3>
 <p>The two parameters that affect performance the most are
@@ -48,7 +66,11 @@ number of milliseconds between frames and reducing the screen
 dimensions.  Raw CPU power is part of the equation, but the
 biggest bottleneck is the speed of your computer's front-side
 bus.  For slower buses, reducing the dimensions of the
-screen will have a huge effect.</p>
+screen will have a huge effect.  The number of sprites on screen
+can affect performance as well.  Decreasing the Max Density can
+increase performance.  Bounce and Max Wind Accel play a big part
+in determining how long a sprite is on the screen.  Reducing these
+values may also help increase performance.</p>
 <h3>Where To Look For More Info</h3>
 <p>For more help, feel free to visit us at
 http://sites.google.com/site/idlescreenproject/, where

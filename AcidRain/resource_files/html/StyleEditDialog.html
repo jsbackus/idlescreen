@@ -6,65 +6,69 @@
 <H2>Style Editor</H2><br>
 <img src="StyleEditorDialog.jpg" width="404" height="428" border="0" alt="" align="middle">
 <h3>The Basics</h3>
-<p>Crawly styles control things such as coloring, Crawly length,
-Crawly thickness, movement speed, and the secondary rotational speed
-of the palette.  The Crawly coloring comes from a palette specified
-in the drop-down box at the top.  Each Crawly must have a length,
+<p>Rain styles control things such as coloring, sprite length,
+sprite thickness, initial velocity, and the secondary rotational speed
+of the palette.  The sprite coloring comes from a palette specified
+in the drop-down box at the top.  Each rain sprite must have a length,
 which is randomly picked from between the Min and Max length parameters.
-When animating the Crawly, it will "inch along" at a speed randomly
-chosen from between the Min and Max speed parameters.  As the
-Crawly moves, it can be configured such that the "head" keeps the
+When animating the sprite, it will "fall from the sky" starting at
+a velocity chosen at random between Min and Max velocity and then
+accelerate toward the "ground" according to the Gravity setting in the
+<a href="ProfileEditDialog.html">Profile Editor</a>.  As the
+sprite falls, it can be configured such that the "head" keeps the
 same palette color index, or it can rotate through the palette.
-When the Crawly is spawned, it can be configured such that
+When the sprite is spawned, it can be configured such that
 the head color palette index is randomly chosen or will always
-be color index 0.  Lastly, the Crawly color can be rotated
+be color index 0.  Lastly, the sprite color can be rotated
 through the palette's secondary color axis at the speed indicated
-by the Palette Speed.  For more information on palettes,
-please refer to the help for the
+by the Palette Speed.  The initial value for the secondary color index
+is dependent upon the Y Palette Sync setting in the
+<a href="ProfileEditDialog.html">Profile Editor</a>.
+For more information on palettes, please refer to the help for the
 <a href="IndexedPaletteDialog.html">Palette Editor</a>.</P>
 <h3>The Nitty-Gritty</h3>
 <p>Here we will discuss the specifics of each parameter.</p>
 <ul><li><b>Palette</b> - This is the palette to use to color the
-Crawlies.  Use the drop-down list to select one of
+sprites.  Use the drop-down list to select one of
 the available palettes, or you can add a new palette by
 clicking the "Add" button to the right.  Clicking the "Edit"
 button will edit the palette currently selected.  For more
 information on palettes and the Palette Editor, please
 click <a href="IndexedPaletteDialog.html">here</a>.  For
 more suggestions on designing a palette, please see below.</li>
-<li><b>Min Crawly Length</b> - This is the minimum allowed
-length of the Crawly.  If you wish to use the length of the
+<li><b>Min Sprite Length</b> - This is the minimum allowed
+length of the sprite.  If you wish to use the length of the
 palette for the minimum length, check "Use Palette For Min".  If
-the length of the Crawly exceeds the length of the palette, the 
+the length of the sprite exceeds the length of the palette, the 
 palette will wrap around.</li>
 <li><b>Use Palette Length For Min</b> - When this is checked,
-the Min Crawly Length will be set to the length of the palette.
+the Min Sprite Length will be set to the length of the palette.
 This happens at render time, so if the palette changes, so
-will the minimum length of the Crawly.</li>
-<li><b>Max Crawly Length</b> - This is the maximum allowed length
-of the Crawly.  If you wish to use the length of the palette for
+will the minimum length of the sprite.</li>
+<li><b>Max Sprite Length</b> - This is the maximum allowed length
+of the sprite.  If you wish to use the length of the palette for
 the maximum length, check "Use Palette For Max".  If the length of
-the Crawly exceeds the length of the palette, the palette will wrap
+the sprite exceeds the length of the palette, the palette will wrap
 around.</li>
 <li><b>Use Palette Length For Max</b> - When this is checked,
-the Max Crawly Length will be set to the length of the palette.
+the Max Sprite Length will be set to the length of the palette.
 This happens at render time, so if the palette changes, so
-will the maximum length of the Crawly.</li>
-<li><b>Min Crawly Speed</b> - This is the minimum allowed speed
-that the Crawly can move at.</li>
-<li><b>Max Crawly Speed</b> - This is the maximum allowed speed
-that the Crawly can move at.</li>
-<li><b>Thickness</b> - This is the thickness of the Crawly.  This will
-also effect the length of the crawly.  This is essentially a multiplier
+will the maximum length of the sprite.</li>
+<li><b>Min Initial Velocity</b> - This is the minimum allowed initial
+velocity that the sprite can have.</li>
+<li><b>Max Initial Velocity</b> - This is the maximum allowed initial
+velocity that the sprite can have.</li>
+<li><b>Thickness</b> - This is the thickness of the sprite.  This will
+also effect the length of the sprite.  This is essentially a multiplier
 that determines how many pixels each color segment will be.</li>
-<li><b>Palette Speed</b> - This is the speed at which the Crawly colors
+<li><b>Palette Speed</b> - This is the speed at which the sprite colors
 will rotate through the secondary palette.</li>
 <li><b>Head Keeps Constant Color</b> - When this box is checked, the
-Crawly's head will maintain the same palette primary-axis index as it
+sprite's head will maintain the same palette primary-axis index as it
 moves, as opposed to rotating through the primary axis.  This will
 not affect the rotation through the secondary palette axis.</li>
 <li><b>Random Head Color On Spawn</b> - When this box is checked, the
-Crawly's head palette primary-axis index will be randomly chosen, as
+sprite's head palette primary-axis index will be randomly chosen, as
 opposed to always starting out at index 0.</li></ul>
 <h3>Palette Considerations</h3>
 <p>Palette design is a bit of an artform, but some guidelines
