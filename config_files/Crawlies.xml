@@ -1209,7 +1209,7 @@
   <lens_profile></lens_profile>
  </MasterProfile>
  <random_master_profiles>false</random_master_profiles>
- <gpl_accepted>true</gpl_accepted>
+ <gpl_accepted>false</gpl_accepted>
  <master_profile_history_size>1</master_profile_history_size>
  <master_profile_history>
   <history_entry>
