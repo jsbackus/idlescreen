@@ -51,13 +51,15 @@ CrawliesSprite::CrawliesSprite() {
  * @param palSpeed The speed at which the secondary palette rotates.
  * @param bHeadConstantColor Whether the head keeps the same pal index.
  * @param bHeadRandomColor Whether the head color is random or 0.
+ * @param dirChangeChance Chance of changing direction between 0 & 100.
  */
 CrawliesSprite::CrawliesSprite(int width, int height, int startX,
 			       int startY, IndexedPalette* pal, 
 			       int length, int thickness,
 			       float spriteSpeed,
 			       float palSpeed, bool bHeadConstantColor,
-			       bool bHeadRandomColor) {
+			       bool bHeadRandomColor,
+			       int dirChangeChance) {
   initSprite();
 
   if(pal == NULL)
@@ -75,7 +77,7 @@ CrawliesSprite::CrawliesSprite(int width, int height, int startX,
   _spriteSpeed = spriteSpeed;
   _palSpeed = palSpeed;
   _bHeadConstantColor = bHeadConstantColor;
-
+  _dirChangeChance = dirChangeChance;
   convPalette(pal);
 
   // initialize segment list.
@@ -230,7 +232,13 @@ void CrawliesSprite::moveCrawly() {
 	  dir = (crawlies_dir)(jrand()%4);
 	}
       } else {
-	dir = (crawlies_dir)(jrand()%4);
+	// randomly pick a new direction if we make our "change roll".
+	if(_dirChangeChance > 0 && jrand()%100 < _dirChangeChance) {
+	  dir = (crawlies_dir)(jrand()%4);
+	} else {
+	  // continue in the last direction we were going.
+	  dir = _lastDir;
+	}
       }
       switch(dir) {
       case LEFT:
@@ -305,6 +313,7 @@ void CrawliesSprite::moveCrawly() {
     _thickness = 0;
     _tailColorIdx = 0;
     _lastDir = NONE;
+    _dirChangeChance = 30;
   }
 
   /**

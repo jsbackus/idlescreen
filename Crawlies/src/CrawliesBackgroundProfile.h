@@ -91,11 +91,18 @@ public:
 	void setMaxNumberCrawlies(int numCrawlies);
 
 	/**
-	 * Get/set spawn chance.  This number is the denominator, i.e.
-	 * percent chance = 1/numCrawlies * 100%.
+	 * Get/set spawn chance.  This number is an integer between
+	 * 1 and 100 indicating chance to change direction.
 	 */
 	int getSpawnChance();
 	void setSpawnChance(int spawnChance);
+
+	/**
+	 * Get/set chance to change direction.  This is an integer
+	 * between 0 and 100 indicating percent chance to change.
+	 */
+	int getDirChangeChance();
+	void setDirChangeChance(int chance);
 
 	/**
 	 * Get/set functions related for style subprofiles.
@@ -154,5 +161,6 @@ private:
   int _maxNumStyles;
   int _maxNumCrawlies;
   int _spawnChance;
+  int _dirChangeChance;
 };
 #endif

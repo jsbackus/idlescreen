@@ -49,6 +49,7 @@ CrawliesBackgroundProfile::CrawliesBackgroundProfile() {
   _maxNumStyles = 0;
   _maxNumCrawlies = 0;
   _spawnChance = 0;
+  _dirChangeChance = 50;
 
   // make an initially empty list of default size
   growStyleList();
@@ -100,6 +101,12 @@ BackgroundProfile* CrawliesBackgroundProfile::load(QDomNode &node) {
   if(!tempElem.isNull()) {
     tmpI = tempElem.text().toInt();
     retVal->setSpawnChance(tmpI);
+  }
+
+  tempElem = node.firstChildElement("dir_change_chance");
+  if(!tempElem.isNull()) {
+    tmpI = tempElem.text().toInt();
+    retVal->setDirChangeChance(tmpI);
   }
 
   // get style information
@@ -220,6 +227,13 @@ QDomNode CrawliesBackgroundProfile::save(QDomDocument* doc) {
   tempElem.appendChild(tempNode);
   retVal.appendChild(tempElem);
 
+  // dir change chance
+  tempStr.setNum(_dirChangeChance);
+  tempNode = doc->createTextNode(tempStr);
+  tempElem = doc->createElement("dir_change_chance");
+  tempElem.appendChild(tempNode);
+  retVal.appendChild(tempElem);
+
   // store the style information
   if(_styles == NULL) {
     // should never get to this point with these set to
@@ -320,7 +334,7 @@ Background* CrawliesBackgroundProfile::getNewBackgroundObj(int height, int width
 
   // create a new CrawliesManager to return
   CrawliesManager* retVal = new CrawliesManager(width, height, _maxNumCrawlies,
-						_spawnChance);
+						_spawnChance, _dirChangeChance);
   if(retVal == NULL)
     return NULL;
 
@@ -352,8 +366,8 @@ void CrawliesBackgroundProfile::setMaxNumberCrawlies(int numCrawlies) {
 }
 
 /**
- * Get/set spawn chance.  This number is the denominator, i.e.
- * percent chance = 1/numCrawlies * 100%.
+ * Get/set chance to change direction.  This is an integer
+ * between 0 and 100 indicating percent chance to change.
  */
 int CrawliesBackgroundProfile::getSpawnChance() {
   return _spawnChance;
@@ -363,6 +377,21 @@ void CrawliesBackgroundProfile::setSpawnChance(int spawnChance) {
     _spawnChance = spawnChance;
   }
 }
+
+/**
+ * Get/set chance to change direction.  This is an integer
+ * between 0 and 100 indicating percent chance to change.
+ */
+int CrawliesBackgroundProfile::getDirChangeChance() {
+  return _dirChangeChance;
+}
+void CrawliesBackgroundProfile::setDirChangeChance(int chance){
+  if(0 <= chance && chance <= 100) {
+    _dirChangeChance = chance;
+  }
+}
+
+
 
 /**
  * Get/set functions related for style subprofiles.
@@ -560,6 +589,7 @@ CrawliesBackgroundProfile& CrawliesBackgroundProfile::operator=(CrawliesBackgrou
 
   _maxNumCrawlies = other._maxNumCrawlies;
   _spawnChance = other._spawnChance;
+  _dirChangeChance = other._dirChangeChance;
 
   int i;
 

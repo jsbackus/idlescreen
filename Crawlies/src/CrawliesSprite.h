@@ -63,11 +63,12 @@ class CrawliesSprite {
    * @param palSpeed The speed at which the secondary palette rotates.
    * @param bHeadConstantColor Whether the head keeps the same pal index.
    * @param bHeadRandomColor Whether the head color is random or 0.
+   * @param dirChangeChance Chance of changing direction between 0 & 100.
    */
   CrawliesSprite(int width, int height, int startX, int startY,
 		 IndexedPalette* pal, int length, int thickness,
 		 float spriteSpeed, float palSpeed, bool bHeadConstantColor,
-		 bool bHeadRandomColor);
+		 bool bHeadRandomColor, int dirChangeChance);
 
   ~CrawliesSprite();
 
@@ -113,6 +114,8 @@ class CrawliesSprite {
   crawlies_dir _lastDir;
   bool _bHeadConstantColor;
   bool _bAlive;
+  int _dirChangeChance;
+
   int _numSegments;
   crawlies_tuple* _segments; //!< Worm segments.  Index 0 is tail!
 };

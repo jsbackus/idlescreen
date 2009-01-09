@@ -45,18 +45,22 @@ CrawliesManager::CrawliesManager() {
  * @param sizeX The width of the screen in pixels.
  * @param sizeY The height of the screen in pixels.
  * @param maxCrawlies The maximum number of worms allowed on the screen.
- * @param spawnChance There is a 1/spawnChance chance for a spawn.
+ * @param spawnChance There is (spawnChance in 100) chance for a spawn.
+ * @param dirChangeChance Chance of changing direction between 0 & 100.
  */
 CrawliesManager::CrawliesManager(int sizeX, int sizeY, int maxCrawlies,
-				 int spawnChance) {
+				 int spawnChance, int dirChangeChance) {
   initData();
   initBackground(sizeX, sizeY);
   _maxNumCrawlies = maxCrawlies;
+  _maxNumCrawliesFloat = (float) _maxNumCrawlies;
   _crawlies = new CrawliesSprite*[maxCrawlies];
   _numCrawlies = 0;
-  _spawnChance = spawnChance;
+  _spawnChance = ((float)spawnChance)/100.0;
+  _currentSpawnChance = spawnChance;
   _numStyles = 0;
   _bSetupFinished = true;
+  _dirChangeChance = dirChangeChance;
 }
 
 CrawliesManager::~CrawliesManager() {
@@ -185,7 +189,7 @@ void CrawliesManager::clocktick() {
   moveCrawlies();
 
   // next, if there is space, consider making a new one.
-  if(_numCrawlies < _maxNumCrawlies && jrand()%_spawnChance == 0) {
+  if((_numCrawlies < _maxNumCrawlies) && (jrand()%100 < _currentSpawnChance)) {
     spawnCrawly();
   }
 }
@@ -201,6 +205,7 @@ void CrawliesManager::initData() {
   _crawlies = NULL;
   _numCrawlies = 0;
   _maxNumCrawlies = 0;
+  _dirChangeChance = 0;
 
   growStyleList();
 }
@@ -254,7 +259,8 @@ void CrawliesManager::spawnCrawly() {
 						 spriteSpeed,
 						 _styles[idx].palSpeed,
 						 _styles[idx].bHeadConstantColor,
-						 _styles[idx].bHeadRandomColor);
+						 _styles[idx].bHeadRandomColor,
+						 _dirChangeChance);
 
   // append to list of crawlies
   _crawlies[_numCrawlies] = tmpCrawly;
@@ -262,6 +268,10 @@ void CrawliesManager::spawnCrawly() {
     return;
   _numCrawlies++;
   tmpCrawly = NULL;
+
+  _currentSpawnChance = (int)( ((float) (_maxNumCrawlies - _numCrawlies)) /
+			       _maxNumCrawliesFloat * _spawnChance +
+			       _maxNumCrawliesFloat);
 }
 
 /**

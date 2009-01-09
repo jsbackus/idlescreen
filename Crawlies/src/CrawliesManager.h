@@ -76,8 +76,10 @@ class CrawliesManager : public Background {
    * @param sizeY The height of the screen in pixels.
    * @param maxCrawlies The maximum number of worms allowed on the screen.
    * @param spawnChance There is a 1/spawnChance chance for a spawn.
+   * @param dirChangeChance Chance of changing direction between 0 & 100.
    */
-  CrawliesManager(int sizeX, int sizeY, int maxCrawlies, int spawnChance);
+  CrawliesManager(int sizeX, int sizeY, int maxCrawlies, int spawnChance,
+		  int dirChangeChance);
 
   ~CrawliesManager();
 
@@ -156,8 +158,11 @@ class CrawliesManager : public Background {
   CrawliesSprite** _crawlies;
   int _numCrawlies;
   int _maxNumCrawlies;
+  float _maxNumCrawliesFloat;
 
-  int _spawnChance;
+  float _spawnChance;
+  int _currentSpawnChance; //!< Depends on the ratio of numCrawlies/maxNum
+  int _dirChangeChance;
 };
 
 #endif

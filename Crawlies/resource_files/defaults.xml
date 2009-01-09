@@ -4,7 +4,7 @@
   <type>CrawliesBackground</type>
   <name>BackgroundProfile_KDU6aSjmYVaSJqgU0xGn</name>
   <max_num_crawlies>100</max_num_crawlies>
-  <spawn_chance>16</spawn_chance>
+  <spawn_chance>84</spawn_chance>
   <num_styles>1</num_styles>
   <crawly_style>
    <crawly_style_entry>
@@ -24,7 +24,7 @@
   <type>CrawliesBackground</type>
   <name>BackgroundProfile_BQNc735gdGtItdYS8p9X</name>
   <max_num_crawlies>200</max_num_crawlies>
-  <spawn_chance>17</spawn_chance>
+  <spawn_chance>83</spawn_chance>
   <num_styles>1</num_styles>
   <crawly_style>
    <crawly_style_entry>

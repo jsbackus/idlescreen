@@ -104,7 +104,8 @@ private:
 
 	// CrawliesBackgroundProfile related
 	QSpinBox* _numCrawlies;
-	QSlider* _spawnSlider; //!< Note: reversed!
+	QSlider* _spawnSlider;
+	QSlider* _dirSlider;
 	QTableWidget* _styleTable;
 
 	// list of tool tips for the table

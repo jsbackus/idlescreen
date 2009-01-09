@@ -45,6 +45,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 
   _numCrawlies = NULL;
   _spawnSlider = NULL;
+  _dirSlider = NULL;
   _styleTable = NULL;
 
   _styleList = NULL;
@@ -73,7 +74,7 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   QPushButton* tempButton = NULL;
   QVBoxLayout* mainLayout = new QVBoxLayout();
   QHBoxLayout* tmpHBox = NULL;
-  //QVBoxLayout* tmpVBox = NULL;
+  QVBoxLayout* tmpVBox = NULL;
   QString tempToolTip;
 
   // Begin MasterProfile related.
@@ -210,12 +211,21 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
   _spawnSlider->setMaximum(100);
   _spawnSlider->setTickInterval(1);
 
+  _dirSlider = new QSlider(Qt::Horizontal);
+  if(_dirSlider == NULL)
+    return;
+  _dirSlider->setMinimum(0);
+  _dirSlider->setMaximum(100);
+  _dirSlider->setTickInterval(1);
+
   if(crawliesProfile == NULL) {
     _numCrawlies->setValue(400);
     _spawnSlider->setValue(75);
+    _dirSlider->setValue(50);
   } else {
     _numCrawlies->setValue(crawliesProfile->getMaxNumberCrawlies());
-    _spawnSlider->setValue(101-crawliesProfile->getSpawnChance());
+    _spawnSlider->setValue(crawliesProfile->getSpawnChance());
+    _dirSlider->setValue(crawliesProfile->getDirChangeChance());
   }
 
   tempToolTip = 
@@ -229,34 +239,90 @@ ProfileEditDialog::ProfileEditDialog(QString targetName, ConfigManager* confMgr,
 
   tmpHBox->addStretch(0);
 
+  tmpVBox = new QVBoxLayout();
+  if(tmpVBox == NULL)
+    return;
+
+  QHBoxLayout* tmpHBox2 = new QHBoxLayout();
+  if(tmpHBox2 == NULL)
+    return;
+
   tempToolTip = tr("The percent chance a crawly will spawn.");
   tempWidget = new QLabel(tr("Spawn Chance:"));
   if(tempWidget == NULL)
     return;
   tempWidget->setToolTip(tempToolTip);
-  tmpHBox->addWidget(tempWidget);
+  tmpHBox2->addWidget(tempWidget);
   tempWidget = NULL;
 
   tempWidget = new QLabel(tr("Min"));
   if(tempWidget == NULL)
     return;
   tempWidget->setToolTip(tempToolTip);
-  tmpHBox->addWidget(tempWidget);
+  tmpHBox2->addWidget(tempWidget);
   tempWidget = NULL;
 
   _spawnSlider->setToolTip(tempToolTip);
-  tmpHBox->addWidget(_spawnSlider);
+  tmpHBox2->addWidget(_spawnSlider);
 
   tempWidget = new QLabel(tr("Max"));
   if(tempWidget == NULL)
     return;
   tempWidget->setToolTip(tempToolTip);
+  tmpHBox2->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QWidget();
+  tempWidget->setLayout(tmpHBox2);
+  tmpVBox->addWidget(tempWidget);
+  tmpHBox2 = NULL;
+  tempWidget = NULL;
+
+  tmpHBox2 = new QHBoxLayout();
+  if(tmpHBox2 == NULL)
+    return;
+
+  tempToolTip = tr("The percent chance a crawly will change direction.");
+  tempWidget = new QLabel(tr("Turn Chance:"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox2->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QLabel(tr("Min"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox2->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  _dirSlider->setToolTip(tempToolTip);
+  tmpHBox2->addWidget(_dirSlider);
+
+  tempWidget = new QLabel(tr("Max"));
+  if(tempWidget == NULL)
+    return;
+  tempWidget->setToolTip(tempToolTip);
+  tmpHBox2->addWidget(tempWidget);
+  tempWidget = NULL;
+
+  tempWidget = new QWidget();
+  tempWidget->setLayout(tmpHBox2);
+  tmpVBox->addWidget(tempWidget);
+  tmpHBox2 = NULL;
+  tempWidget = NULL;
+
+  tempWidget = new QWidget();
+  tempWidget->setLayout(tmpVBox);
   tmpHBox->addWidget(tempWidget);
   tempWidget = NULL;
+  tmpVBox = NULL;
 
   tempWidget = new QWidget();
   tempWidget->setLayout(tmpHBox);
   mainLayout->addWidget(tempWidget);
+  tmpHBox = NULL;
   tempWidget = NULL;
 
   // style table
@@ -420,7 +486,7 @@ void ProfileEditDialog::okClicked(bool checked) {
   // populate data fields
   CrawliesBackgroundProfile tmpProfile;
   tmpProfile.setMaxNumberCrawlies(_numCrawlies->value());
-  tmpProfile.setSpawnChance(101-_spawnSlider->value());
+  tmpProfile.setSpawnChance(_spawnSlider->value());
 
   // copy styles
   tmpProfile.clearStyleList();

@@ -46,5 +46,7 @@ Since 0.03:
 * Added ability to "make install" to update XScreensaver when installed
   by superuser.
 * Fixed issue 19: Add sanity checking to CrawliesBackgroundProfile.
-* Fixed isseu 15: Adding help to PlasmaLenz.
+* Fixed issue 15: Adding help to PlasmaLenz.
+* Fixed issue 22: GLUT Demo segfaults without a filename when using -C.
+
 
