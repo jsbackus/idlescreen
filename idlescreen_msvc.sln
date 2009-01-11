@@ -11,35 +11,35 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "installer", "win32_installe
 		{92CA66E9-1B93-4569-AFD5-07E9C3634B36} = {92CA66E9-1B93-4569-AFD5-07E9C3634B36}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlasmaLenz_scr", "PlasmaLenz\msvc\scr\PlasmaLenz_scr.vcproj", "{40673460-AD38-42EA-BB87-65AAD770DD20}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlasmaLenz_scr", "src\PlasmaLenz\msvc\scr\PlasmaLenz_scr.vcproj", "{40673460-AD38-42EA-BB87-65AAD770DD20}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlasmaLenz_redirector", "PlasmaLenz\msvc\redirector\PlasmaLenz_redirector.vcproj", "{EA7E874D-D7ED-4DAC-B8F8-75917A53A1E2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlasmaLenz_redirector", "src\PlasmaLenz\msvc\redirector\PlasmaLenz_redirector.vcproj", "{EA7E874D-D7ED-4DAC-B8F8-75917A53A1E2}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Randomizer_scr", "Randomizer\msvc\scr\Randomizer_scr.vcproj", "{9B523112-6FA5-4533-A01C-88AD94E5C856}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Randomizer_scr", "src\Randomizer\msvc\scr\Randomizer_scr.vcproj", "{9B523112-6FA5-4533-A01C-88AD94E5C856}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Randomizer_redirector", "Randomizer\msvc\redirector\Randomizer_redirector.vcproj", "{FB9A1B36-98B9-4741-B460-9FB505D5FEDF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Randomizer_redirector", "src\Randomizer\msvc\redirector\Randomizer_redirector.vcproj", "{FB9A1B36-98B9-4741-B460-9FB505D5FEDF}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Crawlies_redirector", "Crawlies\msvc\redirector\Crawlies_redirector.vcproj", "{84E3981B-6049-478A-BB8C-71BC75DFB8EA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Crawlies_redirector", "src\Crawlies\msvc\redirector\Crawlies_redirector.vcproj", "{84E3981B-6049-478A-BB8C-71BC75DFB8EA}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Crawlies_scr", "Crawlies\msvc\scr\Crawlies_scr.vcproj", "{72B831D6-7CFF-4614-990C-3DA015146765}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Crawlies_scr", "src\Crawlies\msvc\scr\Crawlies_scr.vcproj", "{72B831D6-7CFF-4614-990C-3DA015146765}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AcidRain_redirector", "AcidRain\msvc\redirector\AcidRain_redirector.vcproj", "{A0BA9D47-E8FC-4E8C-AD8C-642B1F45F1F3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AcidRain_redirector", "src\AcidRain\msvc\redirector\AcidRain_redirector.vcproj", "{A0BA9D47-E8FC-4E8C-AD8C-642B1F45F1F3}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AcidRain_scr", "AcidRain\msvc\scr\AcidRain_scr.vcproj", "{92CA66E9-1B93-4569-AFD5-07E9C3634B36}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AcidRain_scr", "src\AcidRain\msvc\scr\AcidRain_scr.vcproj", "{92CA66E9-1B93-4569-AFD5-07E9C3634B36}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

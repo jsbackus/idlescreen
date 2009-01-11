@@ -9,7 +9,7 @@
   <num_styles>3</num_styles>
   <crawly_style>
    <crawly_style_entry>
-    <palette>Blue16</palette>
+    <palette>Red16</palette>
     <min_length>-1</min_length>
     <max_length>-1</max_length>
     <thickness>1</thickness>
@@ -31,7 +31,7 @@
     <head_random_color>false</head_random_color>
    </crawly_style_entry>
    <crawly_style_entry>
-    <palette>Red16</palette>
+    <palette>Blue16</palette>
     <min_length>-1</min_length>
     <max_length>-1</max_length>
     <thickness>1</thickness>
@@ -73,7 +73,7 @@
   <num_styles>3</num_styles>
   <crawly_style>
    <crawly_style_entry>
-    <palette>Steel16_1</palette>
+    <palette>Steel16_3</palette>
     <min_length>-1</min_length>
     <max_length>-1</max_length>
     <thickness>1</thickness>
@@ -95,7 +95,7 @@
     <head_random_color>false</head_random_color>
    </crawly_style_entry>
    <crawly_style_entry>
-    <palette>Steel16_3</palette>
+    <palette>Steel16_1</palette>
     <min_length>-1</min_length>
     <max_length>-1</max_length>
     <thickness>1</thickness>
@@ -116,7 +116,7 @@
   <num_styles>3</num_styles>
   <crawly_style>
    <crawly_style_entry>
-    <palette>Steel16_1</palette>
+    <palette>Steel16_3</palette>
     <min_length>-1</min_length>
     <max_length>-1</max_length>
     <thickness>1</thickness>
@@ -138,7 +138,7 @@
     <head_random_color>false</head_random_color>
    </crawly_style_entry>
    <crawly_style_entry>
-    <palette>Steel16_3</palette>
+    <palette>Steel16_1</palette>
     <min_length>-1</min_length>
     <max_length>-1</max_length>
     <thickness>1</thickness>
@@ -222,29 +222,7 @@
   <num_styles>5</num_styles>
   <crawly_style>
    <crawly_style_entry>
-    <palette>Tuscan16_5</palette>
-    <min_length>-1</min_length>
-    <max_length>-1</max_length>
-    <thickness>1</thickness>
-    <min_sprite_speed>1</min_sprite_speed>
-    <max_sprite_speed>3</max_sprite_speed>
-    <palette_speed>1</palette_speed>
-    <head_constant_color>true</head_constant_color>
-    <head_random_color>false</head_random_color>
-   </crawly_style_entry>
-   <crawly_style_entry>
-    <palette>Tuscan16_4</palette>
-    <min_length>-1</min_length>
-    <max_length>-1</max_length>
-    <thickness>1</thickness>
-    <min_sprite_speed>1</min_sprite_speed>
-    <max_sprite_speed>3</max_sprite_speed>
-    <palette_speed>1</palette_speed>
-    <head_constant_color>true</head_constant_color>
-    <head_random_color>false</head_random_color>
-   </crawly_style_entry>
-   <crawly_style_entry>
-    <palette>Tuscan16_3</palette>
+    <palette>Tuscan16_1</palette>
     <min_length>-1</min_length>
     <max_length>-1</max_length>
     <thickness>1</thickness>
@@ -266,7 +244,29 @@
     <head_random_color>false</head_random_color>
    </crawly_style_entry>
    <crawly_style_entry>
-    <palette>Tuscan16_1</palette>
+    <palette>Tuscan16_3</palette>
+    <min_length>-1</min_length>
+    <max_length>-1</max_length>
+    <thickness>1</thickness>
+    <min_sprite_speed>1</min_sprite_speed>
+    <max_sprite_speed>3</max_sprite_speed>
+    <palette_speed>1</palette_speed>
+    <head_constant_color>true</head_constant_color>
+    <head_random_color>false</head_random_color>
+   </crawly_style_entry>
+   <crawly_style_entry>
+    <palette>Tuscan16_4</palette>
+    <min_length>-1</min_length>
+    <max_length>-1</max_length>
+    <thickness>1</thickness>
+    <min_sprite_speed>1</min_sprite_speed>
+    <max_sprite_speed>3</max_sprite_speed>
+    <palette_speed>1</palette_speed>
+    <head_constant_color>true</head_constant_color>
+    <head_random_color>false</head_random_color>
+   </crawly_style_entry>
+   <crawly_style_entry>
+    <palette>Tuscan16_5</palette>
     <min_length>-1</min_length>
     <max_length>-1</max_length>
     <thickness>1</thickness>
@@ -287,29 +287,7 @@
   <num_styles>5</num_styles>
   <crawly_style>
    <crawly_style_entry>
-    <palette>Tuscan16_1</palette>
-    <min_length>-1</min_length>
-    <max_length>-1</max_length>
-    <thickness>1</thickness>
-    <min_sprite_speed>1</min_sprite_speed>
-    <max_sprite_speed>3</max_sprite_speed>
-    <palette_speed>1</palette_speed>
-    <head_constant_color>true</head_constant_color>
-    <head_random_color>false</head_random_color>
-   </crawly_style_entry>
-   <crawly_style_entry>
-    <palette>Tuscan16_2</palette>
-    <min_length>-1</min_length>
-    <max_length>-1</max_length>
-    <thickness>1</thickness>
-    <min_sprite_speed>1</min_sprite_speed>
-    <max_sprite_speed>3</max_sprite_speed>
-    <palette_speed>1</palette_speed>
-    <head_constant_color>true</head_constant_color>
-    <head_random_color>false</head_random_color>
-   </crawly_style_entry>
-   <crawly_style_entry>
-    <palette>Tuscan16_3</palette>
+    <palette>Tuscan16_5</palette>
     <min_length>-1</min_length>
     <max_length>-1</max_length>
     <thickness>1</thickness>
@@ -331,7 +309,29 @@
     <head_random_color>false</head_random_color>
    </crawly_style_entry>
    <crawly_style_entry>
-    <palette>Tuscan16_5</palette>
+    <palette>Tuscan16_3</palette>
+    <min_length>-1</min_length>
+    <max_length>-1</max_length>
+    <thickness>1</thickness>
+    <min_sprite_speed>1</min_sprite_speed>
+    <max_sprite_speed>3</max_sprite_speed>
+    <palette_speed>1</palette_speed>
+    <head_constant_color>true</head_constant_color>
+    <head_random_color>false</head_random_color>
+   </crawly_style_entry>
+   <crawly_style_entry>
+    <palette>Tuscan16_2</palette>
+    <min_length>-1</min_length>
+    <max_length>-1</max_length>
+    <thickness>1</thickness>
+    <min_sprite_speed>1</min_sprite_speed>
+    <max_sprite_speed>3</max_sprite_speed>
+    <palette_speed>1</palette_speed>
+    <head_constant_color>true</head_constant_color>
+    <head_random_color>false</head_random_color>
+   </crawly_style_entry>
+   <crawly_style_entry>
+    <palette>Tuscan16_1</palette>
     <min_length>-1</min_length>
     <max_length>-1</max_length>
     <thickness>1</thickness>
@@ -436,7 +436,7 @@
   <num_styles>3</num_styles>
   <crawly_style>
    <crawly_style_entry>
-    <palette>Red16</palette>
+    <palette>Blue16</palette>
     <min_length>-1</min_length>
     <max_length>-1</max_length>
     <thickness>1</thickness>
@@ -458,7 +458,7 @@
     <head_random_color>false</head_random_color>
    </crawly_style_entry>
    <crawly_style_entry>
-    <palette>Blue16</palette>
+    <palette>Red16</palette>
     <min_length>-1</min_length>
     <max_length>-1</max_length>
     <thickness>1</thickness>
@@ -1208,9 +1208,9 @@
   <background_profile>BackgroundProfile_n0zSc7OiEYidS0HcBidp</background_profile>
   <lens_profile></lens_profile>
  </MasterProfile>
- <random_master_profiles>false</random_master_profiles>
+ <random_master_profiles>true</random_master_profiles>
  <gpl_accepted>false</gpl_accepted>
- <master_profile_history_size>1</master_profile_history_size>
+ <master_profile_history_size>3</master_profile_history_size>
  <master_profile_history>
   <history_entry>
    <name>Tuscan16 Large</name>

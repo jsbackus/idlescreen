@@ -54,33 +54,33 @@ forceall :
 
 all : $(TRG)
 
-bin/PlasmaLenz : PlasmaLenz/project_files/PlasmaLenz_scr.pro
-	cd $(srcdir)/PlasmaLenz/project_files/ && $(QMAKE) PlasmaLenz_scr.pro \
+bin/PlasmaLenz : src/PlasmaLenz/project_files/PlasmaLenz_scr.pro
+	cd $(srcdir)/src/PlasmaLenz/project_files/ && $(QMAKE) PlasmaLenz_scr.pro \
 	-o Makefile.PlasmaLenz_scr && \
 	$(MAKE) -f Makefile.PlasmaLenz_scr
 
-bin/PlasmaLenz_glut : PlasmaLenz/project_files/PlasmaLenz_glut.pro
-	cd $(srcdir)/PlasmaLenz/project_files/ && $(QMAKE) PlasmaLenz_glut.pro \
+bin/PlasmaLenz_glut : src/PlasmaLenz/project_files/PlasmaLenz_glut.pro
+	cd $(srcdir)src/PlasmaLenz/project_files/ && $(QMAKE) PlasmaLenz_glut.pro \
 	-o Makefile.PlasmaLenz_glut && \
 	$(MAKE) -f Makefile.PlasmaLenz_glut
 
-bin/Crawlies : Crawlies/project_files/Crawlies_scr.pro
-	cd $(srcdir)/Crawlies/project_files/ && $(QMAKE) Crawlies_scr.pro \
+bin/Crawlies : src/Crawlies/project_files/Crawlies_scr.pro
+	cd $(srcdir)/src/Crawlies/project_files/ && $(QMAKE) Crawlies_scr.pro \
 	-o Makefile.Crawlies_scr && \
 	$(MAKE) -f Makefile.Crawlies_scr
 
-bin/Crawlies_glut : Crawlies/project_files/Crawlies_glut.pro
-	cd $(srcdir)/Crawlies/project_files/ && $(QMAKE) Crawlies_glut.pro \
+bin/Crawlies_glut : src/Crawlies/project_files/Crawlies_glut.pro
+	cd $(srcdir)/src/Crawlies/project_files/ && $(QMAKE) Crawlies_glut.pro \
 	-o Makefile.Crawlies_glut && \
 	$(MAKE) -f Makefile.Crawlies_glut
 
-bin/AcidRain : AcidRain/project_files/AcidRain_scr.pro
-	cd $(srcdir)/AcidRain/project_files/ && $(QMAKE) AcidRain_scr.pro \
+bin/AcidRain : src/AcidRain/project_files/AcidRain_scr.pro
+	cd $(srcdir)/src/AcidRain/project_files/ && $(QMAKE) AcidRain_scr.pro \
 	-o Makefile.AcidRain_scr && \
 	$(MAKE) -f Makefile.AcidRain_scr
 
-bin/AcidRain_glut : AcidRain/project_files/AcidRain_glut.pro
-	cd $(srcdir)/AcidRain/project_files/ && $(QMAKE) AcidRain_glut.pro \
+bin/AcidRain_glut : src/AcidRain/project_files/AcidRain_glut.pro
+	cd $(srcdir)/src/AcidRain/project_files/ && $(QMAKE) AcidRain_glut.pro \
 	-o Makefile.AcidRain_glut && \
 	$(MAKE) -f Makefile.AcidRain_glut
 
@@ -92,12 +92,12 @@ clean :
 	-rm bin/PlasmaLenz bin/PlasmaLenz_glut
 	-rm bin/Crawlies bin/Crawlies_glut
 	-rm bin/AcidRain bin/AcidRain_glut
-	-cd $(srcdir)/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_scr clean
-	-cd $(srcdir)/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_glut clean
-	-cd $(srcdir)/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_scr clean
-	-cd $(srcdir)/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_glut clean
-	-cd $(srcdir)/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_scr clean
-	-cd $(srcdir)/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_glut clean
+	-cd $(srcdir)/src/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_scr clean
+	-cd $(srcdir)/src/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_glut clean
+	-cd $(srcdir)/src/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_scr clean
+	-cd $(srcdir)/src/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_glut clean
+	-cd $(srcdir)/src/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_scr clean
+	-cd $(srcdir)/src/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_glut clean
 	-cd doc; $(MAKE) -f Makefile clean
 
 distclean:
@@ -105,12 +105,12 @@ distclean:
 	-rm bin/PlasmaLenz bin/PlasmaLenz_glut
 	-rm bin/Crawlies bin/Crawlies_glut
 	-rm bin/AcidRain bin/AcidRain_glut
-	-cd $(srcdir)/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_scr distclean
-	-cd $(srcdir)/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_glut distclean
-	-cd $(srcdir)/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_scr distclean
-	-cd $(srcdir)/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_glut distclean
-	-cd $(srcdir)/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_scr distclean
-	-cd $(srcdir)/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_glut distclean
+	-cd $(srcdir)/src/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_scr distclean
+	-cd $(srcdir)/src/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_glut distclean
+	-cd $(srcdir)/src/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_scr distclean
+	-cd $(srcdir)/src/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_glut distclean
+	-cd $(srcdir)/src/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_scr distclean
+	-cd $(srcdir)/src/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_glut distclean
 	-cd doc; $(MAKE) -f Makefile distclean
 	-rm -rf autom4te.cache
 	-rm configure Makefile config.status config.log

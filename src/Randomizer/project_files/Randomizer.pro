@@ -40,7 +40,7 @@ RESOURCES	= $$RESOURCE_PATH/qt_resource.qrc
 
 win32:LIBS	+= user32.lib shell32.lib Advapi32.lib gdi32.lib scrnsavw.lib opengl32.lib glu32.lib comctl32.lib scr.res
 
-unix:DESTDIR	= ../../bin
+unix:DESTDIR	= ../../../bin
 unix:OBJECTS_DIR = ../compiled_objects
 unix:MOC_DIR = ../compiled_objects
 unix:LIBS	+= -lGL -lGLU -lX11 -lXmu -lXi -lm

@@ -30,7 +30,7 @@ FunctionEnd
 # page definitions
 PageEx license
   LicenseText "The Idle Screen Project"
-  LicenseData "..\common\gpl_related\gplv2.txt"
+  LicenseData "..src\\common\gpl_related\gplv2.txt"
   LicenseForceSelection checkbox
   #Caption "This is the caption"
 PageExEnd
@@ -64,7 +64,7 @@ section "Base Files"
 
   # general docs
   SetOutPath "$TARGET_DIR\doc"
-  File "..\common\gpl_related\gplv2.txt"
+  File "..\src\common\gpl_related\gplv2.txt"
 
   # uninstaller
   WriteUninstaller $TARGET_DIR\$UNINST_NAME
@@ -130,11 +130,11 @@ SectionGroup "Screen Savers"
 Section "AcidRain"
   # main scr file
   SetOutPath "$TARGET_DIR\bin"
-  File /oname=AcidRain.scr "..\AcidRain\msvc\scr\release\AcidRain.exe"
+  File /oname=AcidRain.scr "..\src\AcidRain\msvc\scr\release\AcidRain.exe"
 
   # redirector file
   SetOutPath "$REDIRECTOR_TARGET"
-  File /oname=AcidRain.scr "..\AcidRain\msvc\redirector\Release\redirector.exe"
+  File /oname=AcidRain.scr "..\src\AcidRain\msvc\redirector\Release\redirector.exe"
 
   # machine defaults file
   SetOutPath "$TARGET_DIR\defaults"
@@ -147,11 +147,11 @@ SectionEnd
 Section "Crawlies"
   # main scr file
   SetOutPath "$TARGET_DIR\bin"
-  File /oname=Crawlies.scr "..\Crawlies\msvc\scr\release\Crawlies.exe"
+  File /oname=Crawlies.scr "..\src\Crawlies\msvc\scr\release\Crawlies.exe"
 
   # redirector file
   SetOutPath "$REDIRECTOR_TARGET"
-  File /oname=Crawlies.scr "..\Crawlies\msvc\redirector\Release\redirector.exe"
+  File /oname=Crawlies.scr "..\src\Crawlies\msvc\redirector\Release\redirector.exe"
 
   # machine defaults file
   SetOutPath "$TARGET_DIR\defaults"
@@ -164,11 +164,11 @@ SectionEnd
 Section "PlasmaLenz"
   # main scr file
   SetOutPath "$TARGET_DIR\bin"
-  File /oname=PlasmaLenz.scr "..\PlasmaLenz\msvc\scr\release\PlasmaLenz.exe"
+  File /oname=PlasmaLenz.scr "..\src\PlasmaLenz\msvc\scr\release\PlasmaLenz.exe"
 
   # redirector file
   SetOutPath "$REDIRECTOR_TARGET"
-  File /oname=PlasmaLenz.scr "..\PlasmaLenz\msvc\redirector\Release\redirector.exe"
+  File /oname=PlasmaLenz.scr "..\src\PlasmaLenz\msvc\redirector\Release\redirector.exe"
 
   # machine defaults file
   SetOutPath "$TARGET_DIR\defaults"
@@ -181,11 +181,11 @@ SectionEnd
 Section "Randomizer"
   # main scr file
   SetOutPath "$TARGET_DIR\bin"
-  File /oname=Randomizer.scr "..\Randomizer\msvc\scr\release\Randomizer.exe"
+  File /oname=Randomizer.scr "..\src\Randomizer\msvc\scr\release\Randomizer.exe"
 
   # redirector file
   SetOutPath "$REDIRECTOR_TARGET"
-  File /oname=Randomizer.scr "..\Randomizer\msvc\redirector\Release\redirector.exe"
+  File /oname=Randomizer.scr "..\src\Randomizer\msvc\redirector\Release\redirector.exe"
 
   # machine defaults file
   SetOutPath "$TARGET_DIR\defaults"
