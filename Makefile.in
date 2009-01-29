@@ -46,7 +46,7 @@ xscrdatadir = /usr/share/xscreensaver/hacks.conf.d/
 UNINSTALL_XSCR = $(xscrdatadir)/$(INSTALL_XSCR)
 UPDATEXSCR = @UPDATEXSCR@
 
-.PHONY : forceall all clean doc
+.PHONY : forceall all clean doc repoclean distclean
 
 forceall :
 	-rm bin/*
@@ -113,7 +113,10 @@ distclean:
 	-cd $(srcdir)/src/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_glut distclean
 	-cd doc; $(MAKE) -f Makefile distclean
 	-rm -rf autom4te.cache
-	-rm configure Makefile config.status config.log
+	-rm Makefile
+
+repoclean: distclean
+	-rm configure config.status config.log
 
 install : 
 	mkdir -p $(bindir) $(datadir) $(sysconfdir) $(mandir)

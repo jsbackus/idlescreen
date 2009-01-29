@@ -18,6 +18,9 @@ above.
 
 -{Change Log}-
 
+Since 0.08:
+* Fixed issue 23: "distclean doesn't work"
+
 Since 0.03:
 * Added README and INSTALL documentation.
 * Added in a HelpDialog class that provides a generic help viewer to view 
