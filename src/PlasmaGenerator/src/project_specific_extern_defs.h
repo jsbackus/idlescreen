@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008 Jeff Backus.
+ * Copyright (c) 2009 Jeff Backus.
  *
  * Licensed under the GNU General Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,13 +30,13 @@
  * other objects.
  *
  * Revision History:
- * 080214	jsbackus	Initial revision.
+ * 090307	jsbackus	Initial revision.
  */
 
 #include <QString>
 
-#include "BackgroundProfile.h"
-#include "lens_engine/LensProfile.h"
+//#include "2d_bgnd_w_lens/BackgroundProfile.h"
+//#include "2d_bgnd_w_lens/lens_engine/LensProfile.h"
 
 /**
  * This function will create an array that contains the profiles
@@ -44,7 +44,7 @@
  * the number of profiles in the array.  If there is a problem,
  * numProfiles will be set to 0 and NULL will be returned.
  */
-extern BackgroundProfile** getBackgroundTypes(int* numProfiles);
+//extern BackgroundProfile** getBackgroundTypes(int* numProfiles);
 
 /**
  * This function will create an array that contains the profiles
@@ -52,7 +52,7 @@ extern BackgroundProfile** getBackgroundTypes(int* numProfiles);
  * the number of profiles in the array.  If there is a problem,
  * numProfiles will be set to 0 and NULL will be returned.
  */
-extern LensProfile** getLensTypes(int* numProfiles);
+//extern LensProfile** getLensTypes(int* numProfiles);
 
 /**
  * This function returns the string used to create the path for

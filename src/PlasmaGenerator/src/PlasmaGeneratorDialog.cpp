@@ -39,10 +39,10 @@
 
 #include <QString>
 
-#include "IndexedPaletteDialog.h"
+#include "IndexedPalette/IndexedPaletteDialog.h"
 //#include "IndexedPaletteEditorRawWidget.h"
-#include "IndexedPaletteEditorTableWidget.h"
-#include "../utility/HelpDialog.h"
+#include "IndexedPalette/IndexedPaletteEditorTableWidget.h"
+#include "utility/HelpDialog.h"
 
 IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QWidget* parent, Qt::WindowFlags f) {
 	QDialog(parent, f);

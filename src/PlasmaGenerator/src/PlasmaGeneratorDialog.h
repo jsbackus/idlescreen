@@ -35,8 +35,8 @@
 #include <QLabel>
 #include <QSpinBox>
 
-#include "IndexedPaletteProfile.h"
-#include "IndexedPaletteEditorWidget.h"
+#include "IndexedPalette/IndexedPaletteProfile.h"
+#include "IndexedPalette/IndexedPaletteEditorWidget.h"
 
 class PlasmaGeneratorDialog : public QDialog {
 
