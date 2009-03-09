@@ -115,6 +115,18 @@ if test "$enable_acidrain_glut" == "yes";
 	[man_targets="$man_targets AcidRain/man_page/AcidRain.1"]
 fi
 
+AC_ARG_ENABLE([plasmagenerator], [AC_HELP_STRING([--enable-plasmagenerator],
+		      [build PlasmaGenerator utility default=no])],
+		      [enable_plasmagenerator=$enableval],
+		      [enable_plasmagenerator=no])
+
+if test "$enable_plasmagenerator" == "yes";
+   then 
+   	[qt_targets="$qt_targets PlasmaGenerator"]
+	[data_targets="$data_targets PlasmaGenerator.xml"]
+	[man_targets="$man_targets PlasmaGenerator/man_page/PlasmaGenerator.1"]
+fi
+
 AC_SUBST(bintrg, $qt_targets)
 AC_SUBST(datatrg, $data_targets)
 AC_SUBST(mantrg, $man_targets)

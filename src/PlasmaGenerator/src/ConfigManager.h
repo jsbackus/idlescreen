@@ -78,10 +78,10 @@ class ConfigManager {
 
   //*** End Timer Related ***
 
-  //*** Begin Screen Related ***
-  int getTextureWidth();
-  int getTextureHeight();
-  //*** End Screen Related
+  //*** Begin Default Related ***
+  int getDefaultWidth();
+  int getDefaultHeight();
+  //*** End Default Related
 
   //*** Begin PlasmaGeneratorProfile Related ***
 
@@ -133,6 +133,16 @@ class ConfigManager {
   //*** Begin Palette Related ***
 
   /**
+   * Gets the default palette  name.
+   */
+  QString getDefaultPalette();
+
+  /**
+   * Sets the default palette name.
+   */
+  void setDefaultPalette(QString paletteName);
+
+  /**
    * Returns a list of the names of the palettes currently 
    * in the palette hash.
    */
@@ -178,10 +188,6 @@ class ConfigManager {
   bool getGPLAccepted();
   void setGPLAccepted(bool bAccepted);
 
-  //creates a new ConfigManager object that only contains the specified configuration.
-  //it is intended for to be used in generating the preview widget.
-  //  ConfigManager* createPreview(int width = 64, int height = 64, LensProfile* lensProfile = NULL, BackgroundProfile* backgroundProfile = NULL, int timerMillis = 50);
-
   /**
    * Gets the human-readable name of the program.
    */
@@ -194,6 +200,13 @@ class ConfigManager {
    */
   bool GeneratePlasmaFile(QString profileName, QString outFileName, 
 			  bool bOverwriteOverride, bool bOverwrite);
+
+  /**
+   * Retrieves an initialized PlasmaGenerator object for the specified
+   * profile.  Note: genPlasma will not have been called.  Returns NULL
+   * if the profile doesn't exist.
+   */
+  PlasmaGenerator* getGenerator(QString profileName);
 
   //*** End Misc ***
 
@@ -213,6 +226,7 @@ class ConfigManager {
   QString _defaultProfile;
 
   QHash<QString, IndexedPaletteProfile*> _paletteHash;
+  QString _defaultPalette;
 
   bool _bGPLAccepted;
 

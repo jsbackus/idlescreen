@@ -34,7 +34,7 @@ using namespace std;
 
 #include "ConfigManager.h"
 #include "project_specific_extern_defs.h"
-//#include "PlasmaGeneratorDialog.h"
+#include "PlasmaGeneratorDialog.h"
 
 int doHelp(QString* appName, QApplication *app) {
   cout<<getAppFullName().toStdString()<<" v. "<<
@@ -115,19 +115,12 @@ int doDialog(QStringList* args, QApplication *app) {
   //load configuration
   ConfigManager manager;
   manager.load();
-  /*
+
   //set up the dialog
-  PlasmaGeneratorDialog* dlg = new PlasmaGeneratorDialog();
+  PlasmaGeneratorDialog* dlg = new PlasmaGeneratorDialog(&manager);
   if(dlg == NULL) {
     return -1;
   }
-
-  dlg->setManager(&manager);
-	
-  //so that ok/cancel buttons work.
-  QObject::connect(dlg, SIGNAL(dialogFinished()), app, SLOT(quit()));
-
-  dlg->setup();
 
   //make sure that the GPL has been accepted.
   if(!manager.getGPLAccepted()) {
@@ -142,7 +135,7 @@ int doDialog(QStringList* args, QApplication *app) {
 
   //run the dialog box
   app->exec();
-  */
+
   return 0;
 }
 

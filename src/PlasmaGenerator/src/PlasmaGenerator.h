@@ -38,7 +38,7 @@
 #include "IndexedPalette/IndexedPalette.h"
 #include "plasma/PlasmaAlgorithm.h"
 
-#define PLASMAGENERATOR_NUM_ITERS_PER_CALC 2000
+#define PLASMAGENERATOR_NUM_ITERS_PER_CALC 500
 
 class PlasmaGenerator : public QObject {
 

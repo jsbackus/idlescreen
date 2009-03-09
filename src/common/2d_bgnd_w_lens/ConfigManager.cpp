@@ -186,7 +186,7 @@ void ConfigManager::deleteAllSettings() {
     delete tmpPtr;
     tmpPtr = NULL;
   }
-  keys = _lensHash.keys();
+  keys = _profiles.keys();
   for(int i=0; i<keys.size();i++) {
     MasterProfile* tmpPtr = _profiles.take(keys.at(i));
     delete tmpPtr;

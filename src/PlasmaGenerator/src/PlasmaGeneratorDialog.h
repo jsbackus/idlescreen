@@ -29,78 +29,113 @@
 #ifndef __PLASMAGENERATORDIALOG_H__
 #define __PLASMAGENERATORDIALOG_H__
 
+#include <QString>
 #include <QDialog>
 #include <QLineEdit>
 #include <QScrollArea>
 #include <QLabel>
 #include <QSpinBox>
+#include <QComboBox>
+#include <QRadioButton>
+#include <QCheckBox>
+#include <QLabel>
+#include <QPixmap>
+#include <QSlider>
+#include <QProgressDialog>
 
-#include "IndexedPalette/IndexedPaletteProfile.h"
-#include "IndexedPalette/IndexedPaletteEditorWidget.h"
+#include "gpl_related/gpldialog.h"
+
+#include "ConfigManager.h"
+#include "PlasmaGenerator.h"
 
 class PlasmaGeneratorDialog : public QDialog {
 
-	Q_OBJECT
-
+  Q_OBJECT
+    
 public:
-	PlasmaGeneratorDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
-	~PlasmaGeneratorDialog();
+  PlasmaGeneratorDialog(ConfigManager* manager, QWidget* parent = 0, Qt::WindowFlags f = 0);
+  ~PlasmaGeneratorDialog();
 
-	//returns the modified palette.
-	IndexedPaletteProfile getPalette(void);
+  /**
+   * Displays the GPL license dialog.
+   */
+  void showGPLDialog(void);
 
 public slots:
-	void okClicked(bool checked = false);
-	void cancelClicked(bool checked = false);
-	void revertClicked(bool checked = false);
-	void helpClicked(bool checked = false);
+  void applyClicked(bool checked = false);
+  void okClicked(bool checked = false);
+  void cancelClicked(bool checked = false);
+  void helpClicked(bool checked = false);
 
-	void colorChanged(int x, int y, QRgb* color);
-	void defaultColorClicked(bool checked = false);
-	void resizeClicked(bool checked = false);
-	void interpClicked(bool checked = false);
-	void linearClicked(bool checked = false);
-	void sineClicked(bool checked = false);
-	void wrapClicked(bool checked = false);
+  void managePalettesClicked(bool checked = false);
 
-signals:
-	void paletteUpdated(void);
+  void setDefaultClicked(bool checked = false);
+  void newProfileClicked(bool checked = false);
+  void copyProfileClicked(bool checked = false);
+  void renameProfileClicked(bool checked = false);
+  void deleteProfileClicked(bool checked = false);
+  void profileChanged(const QString& newProfile);
+
+  void generateClicked(bool checked = false);
+  void saveClicked(bool checked = false);
+  void browseClicked(bool checked = false);
+
+  void importClicked(bool checked = false);
+  void exportClicked(bool checked = false);
 
 private:
 
-	//populates the widget based on _palProfile.
-	//Steps the dialog box _palProfile.getHeight()*2+2 number of times.
-	void populateColorWidget(void);
+  /**
+   * Updates the profile info in the config manager.
+   */
+  void updateProfile();
 
-	//updates the preview icon
-	//Steps the dialog box _palProfile.getHeight() number of times.
-	void updatePreviewIcon(void);
+  /**
+   * Updates all widgets with the currently selected profile.
+   */
+  void updateDisplay();
 
-	//steps the progress dialog
-	void stepProgress();
+  QString _windowTitle;
 
-	IndexedPaletteProfile _palProfile;
-	IndexedPaletteProfile _origPalProfile;
+  QLineEdit* _fileEdit;
+  QComboBox* _nameBox;
+  QComboBox* _palName;
 
-	QScrollArea* _colorScrollWidget;
-	IndexedPaletteEditorWidget* _colorWidget;
+  QSpinBox* _xDimBox;
+  QSpinBox* _yDimBox;
 
-	QLineEdit* _nameEdit;
+  QCheckBox* _tileVertBox;
+  QCheckBox* _tileHorizBox;
+ 
+  QRadioButton* _alwaysBox;
+  QRadioButton* _askBox;
+  QRadioButton* _neverBox;
 
-	QLabel* _previewLabel;
-	QPixmap _previewPixmap;
-	int _previewZoom;
+  QPushButton* _defaultButton;
 
-	QProgressDialog* _prgDlg;
-	int _prgCount;
+  QSlider* _coarsenessBox;
+  float _coarsenessAdjust;
+  QCheckBox* _clampColorBox;
 
-	QSpinBox* _xDimBox;
-	QSpinBox* _yDimBox;
+  QScrollArea* _previewScrollWidget;
+  QLabel* _previewLabel;
+  QPixmap _previewPixmap;
 
-	QRadioButton* _linearButton;
-	QRadioButton* _sineButton;
-	InterpType _lastInterpType;
-	QString _windowTitle;
+  QProgressDialog* _prgDialog;
+
+  ConfigManager* _manager;
+
+  bool _bDefault;
+  bool _bDontUpdateDisplay;
+  QString _currentProfile;
+
+  QString _fileFormatFilter;
+  QString _selFilter;
+
+  PlasmaGenerator* _plasma;
+
+  GPLDialog* _gplDialog;
+  
 };
 
 

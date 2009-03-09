@@ -35,25 +35,6 @@
 
 #include <QString>
 
-//#include "2d_bgnd_w_lens/BackgroundProfile.h"
-//#include "2d_bgnd_w_lens/lens_engine/LensProfile.h"
-
-/**
- * This function will create an array that contains the profiles
- * for allowable backgrounds and sets numProfiles to indicate
- * the number of profiles in the array.  If there is a problem,
- * numProfiles will be set to 0 and NULL will be returned.
- */
-//extern BackgroundProfile** getBackgroundTypes(int* numProfiles);
-
-/**
- * This function will create an array that contains the profiles
- * for allowable lenses and sets numProfiles to indicate
- * the number of profiles in the array.  If there is a problem,
- * numProfiles will be set to 0 and NULL will be returned.
- */
-//extern LensProfile** getLensTypes(int* numProfiles);
-
 /**
  * This function returns the string used to create the path for
  * the settings file.  It is also used to define the XML

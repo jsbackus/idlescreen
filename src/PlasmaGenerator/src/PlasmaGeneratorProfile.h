@@ -48,46 +48,64 @@ class PlasmaGeneratorProfile {
   PlasmaGeneratorProfile();
   ~PlasmaGeneratorProfile();
 
-  /* Attempts to load this profile object from the
+  /**
+   * Attempts to load this profile object from the
    * specified QDomNode.
    */
   static PlasmaGeneratorProfile* load(QDomNode &node);
 
-  /*
+  /**
    * Returns a QDomNode object that represents this profile.
    */
   QDomNode save(QDomDocument* doc);
 
-  /*
+  /**
    * Creates and returns a new PlasmaGenerator object.  Does not
    * generate the plasma.
    */
   PlasmaGenerator* getGenerator(QHash<QString, IndexedPaletteProfile*>* palHash);
 
-  /*
+  /**
    * get/set palette name.
    */
   QString getPaletteName();
-  void setPaletteName(QString paletteName);
+  void setPaletteName(const QString paletteName);
 
-  /*
+  /**
    * get/set coarseness.
    */
   float getCoarseness();
   void setCoarseness(float coarseness);
 
-  /*
+  /**
+   * Gets the height
+   */
+  int getHeight();
+  /**
+   * Sets the height
+   */
+  void setHeight(int height);
+  /**
+   * Gets the width.
+   */
+  int getWidth();
+  /**
+   * Sets the width.
+   */
+  void setWidth(int width);
+
+  /**
    * Get/set clamp color index.
    */
   bool getClampColorIndex();
   void setClampColorIndex(bool bClampColorIndex);
 
-  /*
+  /**
    * Overloaded assignment operator.
    */
   PlasmaGeneratorProfile& operator=(PlasmaGeneratorProfile& other);
 
-  /*
+  /**
    * Creates a new object with this object's settings.
    */
   PlasmaGeneratorProfile* clone();
@@ -113,6 +131,24 @@ class PlasmaGeneratorProfile {
   void setFileTarget(QString filename);
 
   /**
+   * Gets whether to tile vertically.
+   */
+  bool getTileVertical();
+  /**
+   * Sets whether to tile vertically.
+   */
+  void setTileVertical(bool bVert);
+  /**
+   * Gets whether to tile horizontally.
+   */
+  bool getTileHorizontal();
+  /**
+   * Sets whether to tile horizontally.
+   */
+  void setTileHorizontal(bool bHoriz);
+
+
+  /**
    * Gets file overwrite policy.
    */
   PlasmaGeneratorOverwritePolicy getOverwritePolicy();
@@ -122,13 +158,13 @@ class PlasmaGeneratorProfile {
    */
   void setOverwritePolicy(PlasmaGeneratorOverwritePolicy policy);
 
-  /*
+  /**
    * Get/set the name of this profile.
    */
-  void setName(QString &name);
+  void setName(const QString &name);
   QString getName();
 
-  /*
+  /**
    * Returns the tag name used by Dom elements for all
    * subclasses of BackgroundProfile.
    */

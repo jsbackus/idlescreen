@@ -14,8 +14,15 @@ win32:RESOURCE_PATH = ../../resource_files
 
 INCLUDEPATH = $$COMMON_PATH $$SOURCE_PATH $$RESOURCE_PATH
 
-SOURCES		=	PlasmaGenerator.cpp
-SOURCES		+=	ConfigManager.cpp PlasmaGeneratorDialog.cpp
+SOURCES		=	$$SOURCE_PATH/PlasmaGenerator.cpp
+SOURCES		+=	$$SOURCE_PATH/PlasmaGeneratorMain.cpp
+SOURCES		+=	$$SOURCE_PATH/PlasmaGeneratorProfile.cpp
+SOURCES		+=	$$SOURCE_PATH/ConfigManager.cpp
+SOURCES		+=	$$SOURCE_PATH/PlasmaGeneratorDialog.cpp
+SOURCES		+=	$$SOURCE_PATH/project_specific_externs.cpp
+SOURCES		+=	$$SOURCE_PATH/PlasmaGeneratorPaletteEditor.cpp
+SOURCES		+=	$$SOURCE_PATH/PlasmaGeneratorPaletteSelectWidget.cpp
+
 SOURCES         +=      $$COMMON_PATH/core/win_misc_funcs.cpp
 
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPalette.cpp
@@ -34,8 +41,13 @@ SOURCES		+=	$$COMMON_PATH/plasma/PlasmaAlgorithm.cpp
 
 SOURCES		+=	$$COMMON_PATH/utility/AboutDialog.cpp
 
-HEADERS		=	ConfigManager.h
-HEADERS		+=	PlasmaGeneratorDialog.h
+HEADERS		=	$$SOURCE_PATH/ConfigManager.h
+HEADERS		+=	$$SOURCE_PATH/PlasmaGenerator.h
+HEADERS		+=	$$SOURCE_PATH/PlasmaGeneratorProfile.h
+HEADERS		+=	$$SOURCE_PATH/PlasmaGeneratorDialog.h
+HEADERS		+=	$$SOURCE_PATH/PlasmaGeneratorPaletteEditor.h
+HEADERS		+=	$$SOURCE_PATH/PlasmaGeneratorPaletteSelectWidget.h
+
 HEADERS		+=	$$COMMON_PATH/core/win_misc_funcs.h
 
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPalette.h

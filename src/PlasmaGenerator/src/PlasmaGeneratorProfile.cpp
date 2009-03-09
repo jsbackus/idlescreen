@@ -30,8 +30,6 @@
 #include <QtXml/QDomElement>
 #include <QtXml/QDomText>
 
-//#include "../../common/utility/misc_funcs.h"
-
 #include "utility/misc_funcs.h"
 #include "PlasmaGeneratorProfile.h"
 
@@ -54,7 +52,8 @@ PlasmaGeneratorProfile::~PlasmaGeneratorProfile() {
   
 }
 
-/* Attempts to load this background profile object from the
+/**
+ * Attempts to load this background profile object from the
  * specified QDomNode.
  */
 PlasmaGeneratorProfile* PlasmaGeneratorProfile::load(QDomNode &node) {
@@ -142,7 +141,7 @@ PlasmaGeneratorProfile* PlasmaGeneratorProfile::load(QDomNode &node) {
 }
 
 
-/*
+/**
  * Returns a QDomNode object that represents this profile.
  */
 QDomNode PlasmaGeneratorProfile::save(QDomDocument* doc) {
@@ -226,7 +225,7 @@ QDomNode PlasmaGeneratorProfile::save(QDomDocument* doc) {
   return retVal;
 }
 
-/*
+/**
  * Creates and returns a new PlasmaGenerator object.  Does not
  * generate the plasma.
  */
@@ -268,18 +267,18 @@ PlasmaGenerator* PlasmaGeneratorProfile::getGenerator(QHash<QString, IndexedPale
   return retVal;
 }
 
-/*
+/**
  * get/set palette name.
  */
 QString PlasmaGeneratorProfile::getPaletteName() {
   return _palName;
 }
 
-void PlasmaGeneratorProfile::setPaletteName(QString paletteName) {
+void PlasmaGeneratorProfile::setPaletteName(const QString paletteName) {
   _palName = paletteName;
 }
 
-/*
+/**
  * get/set coarseness.
  */
 float PlasmaGeneratorProfile::getCoarseness() {
@@ -287,10 +286,41 @@ float PlasmaGeneratorProfile::getCoarseness() {
 }
 
 void PlasmaGeneratorProfile::setCoarseness(float coarseness) {
-  _coarseness = coarseness;
+  if(_coarseness > 0.0){
+    _coarseness = coarseness;
+  }
 }
 
-/*
+/**
+ * Gets the height
+ */
+int PlasmaGeneratorProfile::getHeight() {
+  return _height;
+}
+/**
+ * Sets the height
+ */
+void PlasmaGeneratorProfile::setHeight(int height) {
+  if(0 < height && height < 1024*1024) {
+    _height = height;
+  }
+}
+/**
+ * Gets the width.
+ */
+int PlasmaGeneratorProfile::getWidth() {
+  return _width;
+}
+/**
+ * Sets the width.
+ */
+void PlasmaGeneratorProfile::setWidth(int width) {
+  if(0 < width && width < 1024*1024) {
+    _width = width;
+  }
+}
+
+/**
  * Get/set clamp color index.
  */
 bool PlasmaGeneratorProfile::getClampColorIndex() {
@@ -301,7 +331,7 @@ void PlasmaGeneratorProfile::setClampColorIndex(bool bClampColorIndex) {
   _bClampColorIndex = bClampColorIndex;
 }
 
-/*
+/**
  * Overloaded assignment operator
  */
 PlasmaGeneratorProfile& PlasmaGeneratorProfile::operator=(PlasmaGeneratorProfile& other) {
@@ -319,7 +349,7 @@ PlasmaGeneratorProfile& PlasmaGeneratorProfile::operator=(PlasmaGeneratorProfile
   return *this;
 }
 
-/*
+/**
  * Creates a new object with this object's settings.
  */
 PlasmaGeneratorProfile* PlasmaGeneratorProfile::clone() {
@@ -334,7 +364,7 @@ PlasmaGeneratorProfile* PlasmaGeneratorProfile::clone() {
  * Called whenever palette names change
  */
 void PlasmaGeneratorProfile::paletteNameChanged(QString oldName,
-							QString newName) {
+						QString newName) {
   // if the palette name matches the old name, change the name.
   if(_palName == oldName) {
     _palName = newName;
@@ -366,6 +396,31 @@ void PlasmaGeneratorProfile::setFileTarget(QString filename) {
 }
 
 /**
+ * Gets whether to tile vertically.
+ */
+bool PlasmaGeneratorProfile::getTileVertical() {
+  return _bTileVertical;
+}
+/**
+ * Sets whether to tile vertically.
+ */
+void PlasmaGeneratorProfile::setTileVertical(bool bVert) {
+  _bTileVertical = bVert;
+}
+/**
+ * Gets whether to tile horizontally.
+ */
+bool PlasmaGeneratorProfile::getTileHorizontal() {
+  return _bTileHorizontal;
+}
+/**
+ * Sets whether to tile horizontally.
+ */
+void PlasmaGeneratorProfile::setTileHorizontal(bool bHoriz) {
+  _bTileHorizontal = bHoriz;
+}
+
+/**
  * Gets file overwrite policy.
  */
 PlasmaGeneratorOverwritePolicy PlasmaGeneratorProfile::getOverwritePolicy() {
@@ -380,17 +435,17 @@ void PlasmaGeneratorProfile::setOverwritePolicy(PlasmaGeneratorOverwritePolicy p
 }
 
 
-/*
+/**
  * Get/set the name of this profile.
  */
-void PlasmaGeneratorProfile::setName(QString &name) {
+void PlasmaGeneratorProfile::setName(const QString &name) {
   _name = name;
 }
 QString PlasmaGeneratorProfile::getName() {
   return _name;
 }
 
-/*
+/**
  * Returns the tag name used by Dom elements for all
  * subclasses of BackgroundProfile.
  */

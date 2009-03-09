@@ -84,6 +84,11 @@ bin/AcidRain_glut : src/AcidRain/project_files/AcidRain_glut.pro
 	-o Makefile.AcidRain_glut && \
 	$(MAKE) -f Makefile.AcidRain_glut
 
+bin/PlasmaGenerator : src/PlasmaGenerator/project_files/PlasmaGenerator.pro
+	cd $(srcdir)/src/PlasmaGenerator/project_files/ && $(QMAKE) PlasmaGenerator.pro \
+	-o Makefile.PlasmaGenerator && \
+	$(MAKE) -f Makefile.PlasmaGenerator
+
 doc : 
 	cd doc; $(MAKE)
 
@@ -92,12 +97,14 @@ clean :
 	-rm bin/PlasmaLenz bin/PlasmaLenz_glut
 	-rm bin/Crawlies bin/Crawlies_glut
 	-rm bin/AcidRain bin/AcidRain_glut
+	-rm bin/PlasmaGenerator
 	-cd $(srcdir)/src/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_scr clean
 	-cd $(srcdir)/src/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_glut clean
 	-cd $(srcdir)/src/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_scr clean
 	-cd $(srcdir)/src/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_glut clean
 	-cd $(srcdir)/src/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_scr clean
 	-cd $(srcdir)/src/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_glut clean
+	-cd $(srcdir)/src/PlasmaGenerator/project_files/ && $(MAKE) -f Makefile.PlasmaGenerator clean
 	-cd doc; $(MAKE) -f Makefile clean
 
 distclean:
@@ -111,6 +118,7 @@ distclean:
 	-cd $(srcdir)/src/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_glut distclean
 	-cd $(srcdir)/src/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_scr distclean
 	-cd $(srcdir)/src/AcidRain/project_files/ && $(MAKE) -f Makefile.AcidRain_glut distclean
+	-cd $(srcdir)/src/PlasmaGenerator/project_files/ && $(MAKE) -f Makefile.PlasmaGenerator distclean
 	-cd doc; $(MAKE) -f Makefile distclean
 	-rm -rf autom4te.cache
 	-rm Makefile

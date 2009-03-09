@@ -163,7 +163,7 @@ bool PlasmaGenerator::genPlasma() {
   
   // calculate the number of steps
   float totalNumSteps = (_height*_width /
-			 PLASMAGENERATOR_NUM_ITERS_PER_CALC) + _height;
+			 (3*PLASMAGENERATOR_NUM_ITERS_PER_CALC)) + _height;
   float currStep = 0;
 
   // initialize the PlasmaAlgorithm, then step through each calc
@@ -198,6 +198,9 @@ bool PlasmaGenerator::genPlasma() {
     currStep+=1.0;
     emit progressUpdated((int)(currStep*100.0/totalNumSteps));
   }
+
+  // emit 100%
+  emit progressUpdated(100);
 
   // clean up
   delete [] field;
@@ -234,5 +237,5 @@ bool PlasmaGenerator::savePlasma(QString filename, bool bOverwrite) {
   }
 
   // save
-  _img.save(targFileName);
+  return _img.save(targFileName);
 }

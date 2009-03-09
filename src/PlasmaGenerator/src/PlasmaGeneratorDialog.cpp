@@ -22,509 +22,1245 @@
  * 
  */
 
+// debug
+//#include <iostream>
+//using namespace std;
+//end debug
+
 #include <QMessageBox>
+#include <QInputDialog>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QGroupBox>
-#include <QCheckBox>
-#include <QColorDialog>
-#include <QColor>
-#include <QPixmap>
-#include <QImage>
+#include <QFileDialog>
+#include <QDir>
+#include <QImageWriter>
+#include <QByteArray>
+#include <QList>
+#include <QStringList>
 
-#include <QProgressDialog>
-#include <QApplication>
-
-#include <QString>
-
+#include "IndexedPalette/IndexedPaletteProfile.h"
 #include "IndexedPalette/IndexedPaletteDialog.h"
-//#include "IndexedPaletteEditorRawWidget.h"
-#include "IndexedPalette/IndexedPaletteEditorTableWidget.h"
 #include "utility/HelpDialog.h"
+#include "utility/ImportExportDialog.h"
 
-IndexedPaletteDialog::IndexedPaletteDialog(IndexedPaletteProfile* palProfile, QWidget* parent, Qt::WindowFlags f) {
-	QDialog(parent, f);
-	_windowTitle = tr("Palette Editor");
-	setWindowTitle(_windowTitle);
-	setWindowModality(Qt::WindowModal);
-	QIcon icon(":/app_icon.png");
-	setWindowIcon(icon);
+#include "PlasmaGeneratorDialog.h"
+#include "PlasmaGeneratorPaletteEditor.h"
 
-	_colorScrollWidget = NULL;
-	_colorWidget = NULL;
-	_prgDlg = NULL;
-	_linearButton = NULL;
-	_sineButton = NULL;
-	_prgCount = 0;
+PlasmaGeneratorDialog::PlasmaGeneratorDialog(ConfigManager* manager, QWidget* parent, Qt::WindowFlags f) {
+  _windowTitle = "Plasma Generation Utility";
+  setWindowTitle(_windowTitle);
+  QIcon icon(":/app_icon.png");
+  setWindowIcon(icon);
 
-	if(palProfile == NULL) {
-		_palProfile.setHeight(16);
-		_palProfile.setWidth(16);
-		_origPalProfile = _palProfile;
-	} else {
-		_palProfile = *palProfile;
-		_origPalProfile = *palProfile;
-	}
+  _coarsenessAdjust = 100.0;
 
-	_prgDlg = new QProgressDialog("Please wait...", 0, 0, _palProfile.getHeight()*3+2);
-	_prgCount = 0;
+  // nullify pointers
+  _fileEdit = NULL;
+  _nameBox = NULL;
+  _palName = NULL;
+  _xDimBox = NULL;
+  _yDimBox = NULL;
+  _tileVertBox = NULL;
+  _tileHorizBox = NULL;
+  _coarsenessBox = NULL;
+  _clampColorBox = NULL;
+  _alwaysBox = NULL;
+  _neverBox = NULL;
+  _askBox = NULL;
+  _previewScrollWidget = NULL;
+  _previewLabel = NULL;
+  _previewPixmap = NULL;
+  _prgDialog = NULL;
+  _gplDialog = NULL;
+  _plasma = NULL;
 
-	//_colorWidget = new IndexedPaletteEditorRawWidget();
-	//_colorWidget = new IndexedPaletteEditorListWidget();
-	_colorWidget = new IndexedPaletteEditorTableWidget();
-	QObject::connect(_colorWidget, SIGNAL(colorChanged(int, int, QRgb*)), this, SLOT(colorChanged(int, int, QRgb*)));
-	populateColorWidget();
+  // set up
+  _manager = manager;
+  _gplDialog = new GPLDialog(_manager->getGPLAccepted());
+  if(_gplDialog == NULL) {
+    return;
+  }
+  _prgDialog = new QProgressDialog(tr("Plasma Generation Progress"), 0, 0, 100);
+  if(_prgDialog == NULL) {
+    return;
+  }
 
-	//hide();
-	QWidget* tempWidget = NULL;
-	QPushButton* tempButton = NULL;
-	QVBoxLayout* mainLayout = new QVBoxLayout();
-	QString tempToolTip;
+  // lock out while setting up.
+  _bDontUpdateDisplay = true;
 
-	//top region
-	QHBoxLayout* topRegion = new QHBoxLayout();
 
-	QVBoxLayout* topLeftPane = new QVBoxLayout();
+  QWidget* tmpWidget = NULL;
+  QPushButton* tmpButton = NULL;
+  QLabel* tmpLabel = NULL;
+  QVBoxLayout* tmpV = NULL;
+  QHBoxLayout* tmpH = NULL;
+  QHBoxLayout* tmpH2 = NULL;
+  QHBoxLayout* tmpH3 = NULL;
+  QGroupBox* tmpGroup = NULL;
+  QString tmpTip;
 
-	//name section and change default color
-	QHBoxLayout* nameRegion = new QHBoxLayout();
-	tempToolTip = tr("The name of the palette.");
-	QLabel* tmpLabel = new QLabel(tr("Palette Name:"));
-	tmpLabel->setToolTip(tempToolTip);
-	nameRegion->addWidget(tmpLabel);
-	tmpLabel = NULL;
+  QVBoxLayout* mainLayout = new QVBoxLayout();
+  if(mainLayout == NULL) {
+    return;
+  }
+  
+  // set up name box region
+  _nameBox = new QComboBox();
+  if(_nameBox == NULL) {
+    return;
+  }
+  _nameBox->addItems(_manager->getAvailableProfiles());
+  _nameBox->setEditable(false);
+  QObject::connect(_nameBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(profileChanged(QString)));
 
-	_nameEdit = new QLineEdit(_palProfile.getName());
-	_nameEdit->setToolTip(tempToolTip);
-	nameRegion->addWidget(_nameEdit);
+  tmpH = new QHBoxLayout();
+  if(tmpH == NULL) {
+    return;
+  }
+  tmpTip = QString(tr("Name of the currently selected profile."));
+  tmpLabel = new QLabel("Profile Name: ");
+  tmpLabel->setToolTip(tmpTip);
+  tmpH->addWidget(tmpLabel);
+  _nameBox->setToolTip(tmpTip);
+  tmpH->addWidget(_nameBox);
+  tmpLabel = NULL;
 
-	tempButton = new QPushButton(tr("Default Color"));
-	tempButton->setDefault(false);
-	tempButton->setAutoDefault(false);
-	tempToolTip = tr("The default color is used for all undefined colors, unless interpolation is enabled.");
-	tempButton->setToolTip(tempToolTip);
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(defaultColorClicked(bool)));
-	nameRegion->addWidget(tempButton);
-	tempButton = NULL;
+  tmpH->addStretch(0);
 
-	tempWidget = new QWidget();
-	tempWidget->setLayout(nameRegion);
-	topLeftPane->addWidget(tempWidget);
-	tempWidget = NULL;
+  _defaultButton = new QPushButton(tr("Set Default"));
+  _defaultButton->setDefault(false);
+  _defaultButton->setAutoDefault(false);
+  if(_defaultButton == NULL) {
+    return;
+  }
+  _defaultButton->setToolTip(tr("Sets this profile as the default profile."));
+  QObject::connect(_defaultButton, SIGNAL(clicked(bool)), this, SLOT(setDefaultClicked(bool)));
+  tmpH->addWidget(_defaultButton);
+  
+  tmpWidget = new QWidget();
+  tmpWidget->setLayout(tmpH);
+  mainLayout->addWidget(tmpWidget);
+  tmpWidget = NULL;
+  tmpH = NULL;
 
-	//dimensions
-	QHBoxLayout* dimsRegion = new QHBoxLayout();
+  // profile management region
+  tmpH = new QHBoxLayout();
+  if(tmpH == NULL) {
+    return;
+  }
 
-	tmpLabel = new QLabel(tr("Dimensions:"));
-	tempToolTip = tr("The height and width of the palette in colors.");
-	tmpLabel->setToolTip(tempToolTip);
-	dimsRegion->addWidget(tmpLabel);
+  tmpButton = new QPushButton(tr("New"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  tmpButton->setToolTip(tr("Creates a new profile."));
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(newProfileClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton = NULL;
+  
+  tmpButton = new QPushButton(tr("Rename"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  tmpButton->setToolTip(tr("Renames this profile."));
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(renameProfileClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton = NULL;
+  
+  tmpButton = new QPushButton(tr("Copy"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  tmpButton->setToolTip(tr("Copies the currently selected profile."));
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(copyProfileClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton = NULL;
+  
+  tmpButton = new QPushButton(tr("Delete"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  tmpButton->setToolTip(tr("Deletes this profile."));
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(deleteProfileClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton = NULL;
+  
+  tmpWidget = new QWidget();
+  tmpWidget->setLayout(tmpH);
+  mainLayout->addWidget(tmpWidget);
+  tmpWidget = NULL;
+  tmpH = NULL;
 
-	dimsRegion->addStretch(0);
+  // palette selection & import/export region
+  _palName = new QComboBox();
+  if(_palName == NULL) {
+    return;
+  }
+  _palName->addItems(_manager->getPaletteNames());
+  _palName->setEditable(false);
 
-	tempToolTip = tr("The width of the palette.");
-	tmpLabel = new QLabel(tr("Width"));
-	tmpLabel->setToolTip(tempToolTip);
-	dimsRegion->addWidget(tmpLabel);
+  tmpH = new QHBoxLayout();
+  if(tmpH == NULL) {
+    return;
+  }
+  tmpTip = QString(tr("Name of the currently selected palette."));
+  tmpLabel = new QLabel("Palette: ");
+  tmpLabel->setToolTip(tmpTip);
+  tmpH->addWidget(tmpLabel);
+  _palName->setToolTip(tmpTip);
+  tmpH->addWidget(_palName);
+  tmpLabel = NULL;
+  
+  tmpButton = new QPushButton(tr("Manage Palettes"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  tmpButton->setToolTip(tr("Click here to add, edit, or delete palettes."));
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(managePalettesClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton = NULL;
 
-	_xDimBox = new QSpinBox();
-	_xDimBox->setRange(1,1024);
-	_xDimBox->setSingleStep(1);
-	_xDimBox->setValue(_palProfile.getWidth());
-	_xDimBox->setToolTip(tempToolTip);
-	dimsRegion->addWidget(_xDimBox);
+  tmpH->addStretch(0);
+    
+  tmpButton = new QPushButton(tr("Import"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  tmpButton->setToolTip(tr("Click here to import palettes and profiles."));
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(importClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton = NULL;
+    
+  tmpButton = new QPushButton(tr("Export"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  tmpButton->setToolTip(tr("Click here to export palettes and profiles."));
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(exportClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton = NULL;
+    
+  tmpWidget = new QWidget();
+  tmpWidget->setLayout(tmpH);
+  mainLayout->addWidget(tmpWidget);
+  tmpWidget = NULL;
+  tmpH = NULL;
 
-	dimsRegion->addStretch(0);
+  // dimensions and tiling controls
+  tmpH = new QHBoxLayout();
+  if(tmpH == NULL) {
+    return;
+  }
 
-	tempToolTip = tr("The height of the palette.");
-	tmpLabel = new QLabel(tr("Height"));
-	tmpLabel->setToolTip(tempToolTip);
-	dimsRegion->addWidget(tmpLabel);
+  // dimensions
+  tmpGroup = new QGroupBox("Dimensions");
+  if(tmpGroup == NULL) {
+    return;
+  }
+  tmpTip = QString(tr("Plasma dimensions"));
+  tmpGroup->setToolTip(tmpTip);
 
-	_yDimBox = new QSpinBox();
-	_yDimBox->setRange(1,1024);
-	_yDimBox->setSingleStep(1);
-	_yDimBox->setValue(_palProfile.getHeight());
-	_yDimBox->setToolTip(tempToolTip);
-	dimsRegion->addWidget(_yDimBox);
+  tmpH3 = new QHBoxLayout();
+  if(tmpH3 == NULL) {
+    return;
+  }
+  
+  tmpH2 = new QHBoxLayout();
+  if(tmpH2 == NULL) {
+    return;
+  }
+  tmpLabel = new QLabel(tr("Width"));
+  if(tmpLabel == NULL) {
+    return;
+  }
+  tmpLabel->setToolTip(tmpTip);
+  tmpH2->addWidget(tmpLabel);
 
-	tempButton = new QPushButton(tr("Resize"));
-	tempButton->setDefault(false);
-	tempButton->setAutoDefault(false);
-	tempToolTip = tr("Changes the dimensions of the palette.  If the new dimensions are smaller than")+"\n"
-					+tr("the current dimensions, colors may be lost!");
-	tempButton->setToolTip(tempToolTip);
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(resizeClicked(bool)));
-	dimsRegion->addWidget(tempButton);
-	tempButton = NULL;
+  _xDimBox = new QSpinBox();
+  if(_xDimBox == NULL) {
+    return;
+  }
+  _xDimBox->setToolTip(tmpTip);
+  _xDimBox->setMinimum(16);
+  _xDimBox->setMaximum(1024*1024);
+  _xDimBox->setSingleStep(1);
+  tmpH2->addWidget(_xDimBox);
 
-	tempWidget = new QWidget();
-	tempWidget->setLayout(dimsRegion);
-	topLeftPane->addWidget(tempWidget);
-	tempWidget = NULL;
+  tmpWidget = new QWidget();
+  tmpWidget->setLayout(tmpH2);
+  tmpH3->addWidget(tmpWidget);
+  tmpWidget = NULL;
+  tmpH2 = NULL;
 
-	tempWidget = new QWidget();
-	tempWidget->setLayout(topLeftPane);
-	topRegion->addWidget(tempWidget);
-	tempWidget = NULL;
+  tmpH2 = new QHBoxLayout();
+  if(tmpH2 == NULL) {
+    return;
+  }
+  tmpLabel = new QLabel(tr("Height"));
+  if(tmpLabel == NULL) {
+    return;
+  }
+  tmpLabel->setToolTip(tmpTip);
+  tmpH2->addWidget(tmpLabel);
 
-	//interp colors region
-	QGroupBox* interpBox = new QGroupBox(tr("Interpolate Colors"));
-	interpBox->setCheckable(true);
-	_lastInterpType = _palProfile.getInterpolateColors();
-	interpBox->setChecked(_lastInterpType != none);
-	tempToolTip = tr("When enabled, interpolation will be used to determine undefined colors.");
-	interpBox->setToolTip(tempToolTip);
-	QObject::connect(interpBox, SIGNAL(clicked(bool)), this, SLOT(interpClicked(bool)));
+  _yDimBox = new QSpinBox();
+  if(_yDimBox == NULL) {
+    return;
+  }
+  _yDimBox->setToolTip(tmpTip);
+  _yDimBox->setMinimum(16);
+  _yDimBox->setMaximum(1024*1024);
+  _yDimBox->setSingleStep(1);
+  tmpH2->addWidget(_yDimBox);
 
-	//QHBoxLayout* interpBoxLayout = new QHBoxLayout();
-	QVBoxLayout* interpBoxLayout = new QVBoxLayout();
+  tmpWidget = new QWidget();
+  tmpWidget->setLayout(tmpH2);
+  tmpH3->addWidget(tmpWidget);
+  tmpWidget = NULL;
+  tmpH2 = NULL;
 
-	_linearButton = new QRadioButton(tr("Linear"));
-	_linearButton->setChecked(_lastInterpType == linear);
-	tempToolTip = tr("Use linear interpolation.");
-	_linearButton->setToolTip(tempToolTip);
-	interpBoxLayout->addWidget(_linearButton);
-	QObject::connect(_linearButton, SIGNAL(toggled(bool)), this, SLOT(linearClicked(bool)));
+  tmpGroup->setLayout(tmpH3);
+  tmpH3 = NULL;
+  tmpH->addWidget(tmpGroup);
+  tmpGroup = NULL;
+  
+  tmpH->addStretch(0);
+
+  tmpGroup = new QGroupBox("Tiling");
+  if(tmpGroup == NULL) {
+    return;
+  }
+  tmpTip = QString(tr("Generate a plasma that can be tiled on the horizontal and/or vertical axes"));
+  tmpGroup->setToolTip(tmpTip);
+
+  tmpH3 = new QHBoxLayout();
+  if(tmpH3 == NULL) {
+    return;
+  }
+  
+  _tileVertBox = new QCheckBox(tr("Vertical"));
+  if(_tileVertBox == NULL) {
+    return;
+  }
+  _tileVertBox->setToolTip(tmpTip);
+  _tileVertBox->setTristate(false);
+  tmpH3->addWidget(_tileVertBox);
+
+  _tileHorizBox = new QCheckBox(tr("Horizontal"));
+  if(_tileHorizBox == NULL) {
+    return;
+  }
+  _tileHorizBox->setToolTip(tmpTip);
+  _tileHorizBox->setTristate(false);
+  tmpH3->addWidget(_tileHorizBox);
+
+  tmpGroup->setLayout(tmpH3);
+  tmpH3 = NULL;
+  tmpH->addWidget(tmpGroup);
+  tmpGroup = NULL;
+
+  tmpWidget = new QWidget();
+  tmpWidget->setLayout(tmpH);
+  mainLayout->addWidget(tmpWidget);
+  tmpWidget = NULL;
+  tmpH = NULL;
+
+  // coarseness adjust and clamp color box
+  tmpGroup = new QGroupBox(tr("Field Generation"));
+  if(tmpGroup == NULL)
+    return;
+
+  tmpH = new QHBoxLayout();
+  if(tmpH == NULL) {
+    return;
+  }
+    
+  tmpLabel = new QLabel(tr("Less Volatile"));
+  tmpTip = tr("This quantity determines how coarse or volatile the fractal is.  More volatile, the more variation.");
+  tmpLabel->setToolTip(tmpTip);
+  tmpH->addWidget(tmpLabel);
+
+  _coarsenessBox = new QSlider(Qt::Horizontal);
+  _coarsenessBox->setTickInterval(0.10*_coarsenessAdjust);
+  //_coarsenessBox->setTickPosition(QSlider::TicksBelow);
+  _coarsenessBox->setMinimum(0.01*_coarsenessAdjust);
+  _coarsenessBox->setMaximum(6.00*_coarsenessAdjust);
+  _coarsenessBox->setToolTip(tmpTip);
+  tmpH->addWidget(_coarsenessBox);
+  
+  tmpLabel = new QLabel(tr("More Volatile"));
+  tmpLabel->setToolTip(tmpTip);
+  tmpH->addWidget(tmpLabel);
 	
-	_sineButton = new QRadioButton(tr("Sinusoidal"));
-	_sineButton->setChecked(_lastInterpType == sine);
-	tempToolTip = tr("Use sin(t) interpolation.");
-	_sineButton->setToolTip(tempToolTip);
-	interpBoxLayout->addWidget(_sineButton);
-	QObject::connect(_sineButton, SIGNAL(toggled(bool)), this, SLOT(sineClicked(bool)));
+  tmpH->addStretch(0);
 
-	QCheckBox* wrapBox = new QCheckBox(tr("Wrap Colors"));
-	wrapBox->setCheckable(true);
-	wrapBox->setChecked(_palProfile.getWrapColors());
-	tempToolTip = tr("When endpoint colors are not defined, the interpolator will \"wrap around\" when checked.");
-	wrapBox->setToolTip(tempToolTip);
-	QObject::connect(wrapBox, SIGNAL(clicked(bool)), this, SLOT(wrapClicked(bool)));
-	interpBoxLayout->addWidget(wrapBox);
-	interpBox->setLayout(interpBoxLayout);
+  _clampColorBox = new QCheckBox(tr("Clamp color on overflow"));
+  if(_clampColorBox == NULL) {
+    return;
+  }
+  _clampColorBox->setToolTip(tr("When the plasma algorithm generates an invalid color index, it will clamp")+"\n"
+			     +tr("to the nearest valid color if checked, or wrap around if unchecked."));
+  tmpH->addWidget(_clampColorBox);
 
-	topRegion->addWidget(interpBox);
+  tmpGroup->setLayout(tmpH);
+  mainLayout->addWidget(tmpGroup);
+  tmpH = NULL;
+  tmpGroup = NULL;
 
-	tempWidget = new QWidget();
-	tempWidget->setLayout(topRegion);
-	mainLayout->addWidget(tempWidget);
-	tempWidget = NULL;
+  // preview region
+  _previewScrollWidget = new QScrollArea();
+  if(_previewScrollWidget == NULL) {
+    return;
+  }
+  _previewScrollWidget->setToolTip(tr("Plasma preview area."));
+  _previewLabel = new QLabel();
+  if(_previewLabel == NULL) {
+    return;
+  }
+  _previewLabel->setPixmap(_previewPixmap);
+  _previewLabel->setToolTip(_previewScrollWidget->toolTip());
+  _previewScrollWidget->setWidget(_previewLabel);
+  mainLayout->addWidget(_previewScrollWidget);
 
-	//draw grid of entry buttons
-	//_colorScrollWidget = new QScrollArea();
+  // overwrite policy & generate region
+  tmpH2 = new QHBoxLayout();
+  if(tmpH2 == NULL) {
+    return;
+  }
 
-	//_colorScrollWidget->setWidget(_colorWidget);
-	//mainLayout->addWidget(_colorScrollWidget);
-	mainLayout->addWidget(_colorWidget->getWidget());
+  tmpGroup = new QGroupBox("Overwrite Policy");
+  if(tmpGroup == NULL) {
+    return;
+  }
+  tmpTip = QString(tr("File overwrite policy.  If a file with the name below already exists, should PlasmaGenerator replace the file: always, never, or ask.  Note that ask defaults to never in command-line mode."));
+  tmpGroup->setToolTip(tmpTip);
 
-	//preview area
-	tempToolTip = tr("This view shows how the will palette look when in use.");
-	tmpLabel = new QLabel("Preview:");
-	tmpLabel->setToolTip(tempToolTip);
-	mainLayout->addWidget(tmpLabel);
-	tmpLabel = NULL;
+  tmpH = new QHBoxLayout();
+  if(tmpH == NULL) {
+    return;
+  }
 
-	_previewZoom = 4;
-	_previewLabel = new QLabel();
-	_previewLabel->setToolTip(tempToolTip);
-	_previewLabel->setPixmap(_previewPixmap);
-	updatePreviewIcon();
+  _alwaysBox = new QRadioButton(tr("Always"));
+  if(_alwaysBox == NULL) {
+    return;
+  }
+  tmpH->addWidget(_alwaysBox);
+  
+  _neverBox = new QRadioButton(tr("Never"));
+  if(_neverBox == NULL) {
+    return;
+  }
+  tmpH->addWidget(_neverBox);
+  
+  _askBox = new QRadioButton(tr("Ask"));
+  if(_askBox == NULL) {
+    return;
+  }
+  tmpH->addWidget(_askBox);
 
-	QScrollArea* previewScrollArea = new QScrollArea();
-	previewScrollArea->setWidget(_previewLabel);
-	previewScrollArea->setToolTip(tempToolTip);
-	mainLayout->addWidget(previewScrollArea);
+  tmpGroup->setLayout(tmpH);
+  tmpH2->addWidget(tmpGroup);
+  tmpGroup = NULL;
+  tmpH = NULL;
 
-	//Revert, OK, and Cancel buttons
-	QHBoxLayout* botButtonsLayout = new QHBoxLayout();
+  tmpH2->addStretch(0);
+
+  tmpButton = new QPushButton(tr("Generate"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  tmpButton->setToolTip(tr("Generates a new plasma"));
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(generateClicked(bool)));
+  tmpH2->addWidget(tmpButton);
+  tmpButton = NULL;
+
+  tmpWidget = new QWidget();
+  tmpWidget->setLayout(tmpH2);
+  mainLayout->addWidget(tmpWidget);
+  tmpWidget = NULL;
+  tmpH2 = NULL;
+
+  // save to file region
+  tmpH = new QHBoxLayout();
+  if(tmpH == NULL) {
+    return;
+  }
+
+  _fileEdit = new QLineEdit();
+  if(_fileEdit == NULL) {
+    return;
+  }
+  _fileEdit->setToolTip(tr("Filename to save plasma image to."));
+  _fileEdit->setReadOnly(false);
+  _fileEdit->setDragEnabled(true);
+  tmpH->addWidget(_fileEdit);
+
+  tmpButton = new QPushButton(tr("Browse"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  tmpButton->setToolTip(tr("Browse for file to export image to."));
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(browseClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton = NULL;
+
+  tmpButton = new QPushButton(tr("&Save"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  tmpButton->setToolTip(tr("Saves the current plasma image to disk."));
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(saveClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton = NULL;
+
+  tmpWidget = new QWidget();
+  tmpWidget->setLayout(tmpH);
+  mainLayout->addWidget(tmpWidget);
+  tmpWidget = NULL;
+  tmpH = NULL;
+
+  // buttons at bottom
+  tmpH = new QHBoxLayout();
+  if(tmpH == NULL) {
+    return;
+  }
+  tmpButton = new QPushButton(tr("&Help"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(helpClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton = NULL;
+
+  tmpH->addStretch(0);
+  
+  tmpButton = new QPushButton(tr("&Apply"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(applyClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton = NULL;
+  
+  tmpButton = new QPushButton(tr("&OK"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(okClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton->setDefault(true);
+  tmpButton->setAutoDefault(true);
+  tmpButton = NULL;
+  
+  tmpButton = new QPushButton(tr("&Cancel"));
+  if(tmpButton == NULL) {
+    return;
+  }
+  QObject::connect(tmpButton, SIGNAL(clicked(bool)), this, SLOT(cancelClicked(bool)));
+  tmpH->addWidget(tmpButton);
+  tmpButton = NULL;
+  
+  tmpWidget = new QWidget();
+  tmpWidget->setLayout(tmpH);
+  mainLayout->addWidget(tmpWidget);
+  tmpWidget = NULL;
+  tmpH = NULL;
+
+  setLayout(mainLayout);
+
+  // generate the filter list of supported file formats 
+  QList<QByteArray> list = QImageWriter::supportedImageFormats();
+  QStringList uniqueList;
+  QString ext;
+  int i;
+  for(i=0; i<list.size();i++) {
+    ext = list.at(i);
+    if(!uniqueList.contains(QString(ext), Qt::CaseInsensitive)) {
+      uniqueList.append(ext.toUpper());
+    }
+  }
+  int listSize = uniqueList.size();
+  for(i=0; i<listSize;i++) {
+    ext = uniqueList.at(i);
+    _fileFormatFilter.append(ext);
+    _fileFormatFilter.append(" Files (*.");
+    _fileFormatFilter.append(ext.toLower());
+    _fileFormatFilter.append(" *.");
+    _fileFormatFilter.append(ext);
+    _fileFormatFilter.append(")");
+    if(i < listSize-1) {
+      _fileFormatFilter.append(";;");
+    }
+  }
+
+  // choose default filter
+  if(uniqueList.contains(QString("JPG"))) {
+    _selFilter = QString("JPG Files (*.jpg *.JPG)");
+  } else if(uniqueList.contains(QString("PNG"))) {
+    _selFilter = QString("PNG Files (*.png *.PNG)");
+  } else if(uniqueList.contains(QString("BMP"))) {
+    _selFilter = QString("BMP Files (*.bmp *.BMP)");
+  }
+
+  // last thing is to update the data with the default profile.
+  _bDontUpdateDisplay = false;
+  _nameBox->setCurrentIndex(_nameBox->findText(_manager->getDefaultProfile()));
+  updateDisplay();
+}
+
+PlasmaGeneratorDialog::~PlasmaGeneratorDialog() {
+  _manager = NULL;
+
+  if(_gplDialog != NULL) {
+    delete _gplDialog;
+    _gplDialog = NULL;
+  }
+  // widgets should get deleted automatically when the main layout gets
+  // deleted...
+  /*
+    if(_fileEdit != NULL) {
+    delete _fileEdit;
+    _fileEdit = NULL;
+    }
+    if(_nameBox != NULL) {
+    delete _nameBox;
+    _nameBox = NULL;
+    }
+    if(_palName != NULL) {
+    delete _palName;
+    _palName = NULL;
+    }
+    if(_xDimBox != NULL) {
+    delete _xDimBox;
+    _xDimBox = NULL;
+    }
+    if(_yDimBox != NULL) {
+    delete _yDimBox;
+    _yDimBox = NULL;
+    }
+    if(_tileVertBox != NULL) {
+    delete _tileVertBox;
+    _tileVertBox = NULL;
+    }
+    if(_tileHorizBox != NULL) {
+    delete _tileHorizBox;
+    _tileHorizBox = NULL;
+    }
+    if(_alwaysBox != NULL) {
+    delete _alwaysBox;
+    _alwaysBox = NULL;
+    }
+    if(_askBox != NULL) {
+    delete _askBox;
+    _askBox = NULL;
+    }
+    if(_neverBox != NULL) {
+    delete _neverBox;
+    _neverBox = NULL;
+    }
+    if(_previewScrollWidget != NULL) {
+    delete _previewScrollWidget;
+    _previewScrollWidget = NULL;
+    }
+    if(_previewLabel != NULL) {
+    delete _previewLabel;
+    _previewLabel = NULL;
+    }
+    if(_previewPixmap != NULL) {
+    delete _previewPixmap;
+    _previewPixmap = NULL;
+    }
+  */
+  if(_prgDialog != NULL) {
+    delete _prgDialog;
+    _prgDialog = NULL;
+  }
+  if(_plasma != NULL) {
+    delete _plasma;
+    _plasma = NULL;
+  }
+}
+
+void PlasmaGeneratorDialog::applyClicked(bool checked) {
+  // update and save
+  updateProfile();
+  _manager->save();
+}
+
+void PlasmaGeneratorDialog::okClicked(bool checked) {
+  // update profile in config manager and save
+  updateProfile();
+  _manager->save();
+  accept();
+}
+
+void PlasmaGeneratorDialog::cancelClicked(bool checked) {
+  reject();
+}
+
+void PlasmaGeneratorDialog::helpClicked(bool checked) {
+  HelpDialog* dlg = new HelpDialog("qrc:/help/index.html");
+  if(dlg != NULL) {
+    dlg->exec();
+    delete dlg;
+    dlg = NULL;
+  }
+}
+
+void PlasmaGeneratorDialog::managePalettesClicked(bool checked) {
+  PlasmaGeneratorPaletteEditor* dlg = 
+    new PlasmaGeneratorPaletteEditor(_manager, this);
+  dlg->exec();
+
+  //clean up
+  delete dlg;
+  dlg = NULL;
+
+  // refresh names
+  _palName->clear();
+  _palName->addItems(_manager->getPaletteNames());
+  updateDisplay();
+}
+
+void PlasmaGeneratorDialog::setDefaultClicked(bool checked) {
+  _bDefault = true;
+  _defaultButton->setEnabled(false);
+}
+
+void PlasmaGeneratorDialog::newProfileClicked(bool checked) {
+  // prompt for name from user
+  bool bOk;
+  bool bDone = false;
+  QString tmpName;
+  
+  while(!bDone) {
+
+    tmpName = QInputDialog::getText(this, tr("Create New Profile"), 
+				    tr("Please enter a new profile name:"), 
+				    QLineEdit::Normal, tr("New Profile"),
+				    &bOk);
+    if(!bOk) {
+      return;
+    }
+
+    if(tmpName.isEmpty()) {
+      QMessageBox::information(this, tr("Profile Name"), 
+			       tr("Please enter a valid profile name."), 
+			       QMessageBox::Ok);      
+    } else if(_manager->doesProfileExist(tmpName)) {
+      QMessageBox::information(this, tr("Profile Name"), 
+			       tr("There is already a profile named '")+
+			       tmpName+tr("'.  Please choose a new name."), 
+			       QMessageBox::Ok);
+    } else {
+      bDone = true;
+    }
+  }
+
+  // set defaults
+  PlasmaGeneratorProfile profile;
+  profile.setWidth(_manager->getDefaultWidth());
+  profile.setHeight(_manager->getDefaultHeight());
+  profile.setPaletteName(_manager->getDefaultPalette());
+  profile.setName(tmpName);
+  _manager->addProfile(profile);
+  _nameBox->addItem(tmpName);
+  _nameBox->setCurrentIndex(_nameBox->findText(tmpName));
+}
+
+void PlasmaGeneratorDialog::renameProfileClicked(bool checked) {
+  // prompt for name from user
+  bool bOk;
+  bool bDone = false;
+  QString tmpName;
+  QString oldName = _currentProfile;
+  
+  updateProfile();
+
+  while(!bDone) {
+
+    tmpName = QInputDialog::getText(this, tr("Rename Profile"), 
+				    tr("Please enter a new profile name:"), 
+				    QLineEdit::Normal, _currentProfile,
+				    &bOk);
+    if(!bOk) {
+      return;
+    }
+
+    if(tmpName.isEmpty()) {
+      QMessageBox::information(this, tr("Profile Name"), 
+			       tr("Please enter a valid profile name."), 
+			       QMessageBox::Ok);      
+    } else if(_manager->doesProfileExist(tmpName)) {
+      QMessageBox::information(this, tr("Profile Name"), 
+			       tr("There is already a profile named '")+
+			       tmpName+tr("'.  Please choose a new name."), 
+			       QMessageBox::Ok);
+    } else {
+      bDone = true;
+    }
+  }
+
+  if(tmpName == _currentProfile) {
+    return;
+  }
+
+  PlasmaGeneratorProfile profile = _manager->getProfile(oldName);
+  profile.setName(tmpName);
+  _manager->replaceProfile(oldName, profile);
+  _currentProfile = tmpName;
+  _nameBox->removeItem(_nameBox->findText(oldName));
+  _nameBox->addItem(tmpName);
+  _nameBox->setCurrentIndex(_nameBox->findText(tmpName));
+}
+
+void PlasmaGeneratorDialog::copyProfileClicked(bool checked) {
+  // prompt for name from user
+  bool bOk;
+  bool bDone = false;
+  QString tmpName;
+  
+  updateProfile();
+
+  while(!bDone) {
+
+    tmpName = QInputDialog::getText(this, tr("Copy Profile"), 
+				    tr("Please enter a new profile name:"), 
+				    QLineEdit::Normal, _currentProfile,
+				    &bOk);
+    if(!bOk) {
+      return;
+    }
+
+    if(tmpName.isEmpty()) {
+      QMessageBox::information(this, tr("Profile Name"), 
+			       tr("Please enter a valid profile name."), 
+			       QMessageBox::Ok);      
+    } else if(_manager->doesProfileExist(tmpName)) {
+      QMessageBox::information(this, tr("Profile Name"), 
+			       tr("There is already a profile named '")+
+			       tmpName+tr("'.  Please choose a new name."), 
+			       QMessageBox::Ok);
+    } else {
+      bDone = true;
+    }
+  }
+
+  PlasmaGeneratorProfile profile = _manager->getProfile(_currentProfile);
+  profile.setName(tmpName);
+  _manager->addProfile(profile);
+  _nameBox->addItem(tmpName);
+  _nameBox->setCurrentIndex(_nameBox->findText(tmpName));
+}
+
+void PlasmaGeneratorDialog::deleteProfileClicked(bool checked) {
+  QString oldName = _currentProfile;
+  _currentProfile = QString("");
+  _manager->removeProfile(oldName);
+  _nameBox->removeItem(_nameBox->findText(oldName));
+  _nameBox->setCurrentIndex(0);
+}
+
+void PlasmaGeneratorDialog::profileChanged(const QString& newProfile) {
+  updateDisplay();
+}
+
+void PlasmaGeneratorDialog::generateClicked(bool checked) {
+  updateProfile();
+  if(_plasma != NULL) {
+    delete _plasma;
+    _plasma = NULL;
+  }
+  
+  // create a generator and connect it to the progress dialog
+  _plasma = _manager->getGenerator(_currentProfile);
+  if(_plasma == NULL) {
+    return;
+  }
+  QObject::connect(_plasma, SIGNAL(progressUpdated(int)), _prgDialog, SLOT(setValue(int)));
+  _prgDialog->show();
+  if(!_plasma->genPlasma()) {
+    _prgDialog->hide();
+    // error!
+    QMessageBox::critical(this, _windowTitle, tr("Error generating plasma!"), QMessageBox::Ok);
+    delete _plasma;
+    _plasma = NULL;
+    return;
+  }
+  _prgDialog->hide();
+
+  _previewPixmap = QPixmap::fromImage(_plasma->getPlasma());
+  QString tmpTip = _previewScrollWidget->toolTip();
+  //_previewPixmap.setToolTip(tmpTip);
+  _previewLabel = new QLabel();
+  if(_previewLabel == NULL) {
+    QMessageBox::critical(this, _windowTitle, tr("Error generating plasma!"), QMessageBox::Ok);
+    delete _plasma;
+    _plasma = NULL;
+    return;
+  }
+  _previewLabel->setPixmap(_previewPixmap);
+  _previewScrollWidget->setWidget(_previewLabel);
+}
+
+void PlasmaGeneratorDialog::saveClicked(bool checked) {
+  updateProfile();
+
+  // make sure there is something in the filename field.
+  QString filename = _fileEdit->text();
+  if(filename.isEmpty()) {
+    QMessageBox::warning(this, tr("Save Plasma"), tr("Please specify a target filename."), QMessageBox::Ok);  
+    
+    return;
+  }
+
+  // check to see if there is a current plasma object.  If not, generate one.
+  if(_plasma == NULL) {
+    generateClicked(false);
+  }
+
+  bool bOverwrite = false;
+  // if the overwrite policy is ask, check to see if the file exists first.
+  // otherwise, set bOverwrite to the appropriate value.
+  switch(_manager->getProfile(_currentProfile).getOverwritePolicy()) {
+  case ALWAYS:
+    bOverwrite = true;
+    break;
+  case NEVER:
+    bOverwrite = false;
+    break;
+  default:
+    // check for file
+    if(QFile(filename).exists()) {
+      int ret = QMessageBox::question(this, tr("Save Plasma"), filename+
+				      tr(" already exists.  Overwrite?"),
+				      QMessageBox::Yes | QMessageBox::No |
+				      QMessageBox::Cancel);
+      switch(ret) {
+      case QMessageBox::Yes:
+	bOverwrite = true;
+	break;
+      case QMessageBox::No:
+	bOverwrite = false;
+	break;
+      default:
+	return;
+      }
+    } else {
+      bOverwrite = false;
+    }
+  }
+
+  // now attempt to save to the specified filename
+  _plasma->savePlasma(filename, bOverwrite);
+}
+
+void PlasmaGeneratorDialog::browseClicked(bool checked) {
+  // no need to confirm overwrite.  This will happen with the save button.
+  QString path = QFileDialog::getSaveFileName(this, tr("Save Plasma to File"),
+					      QDir::homePath(), 
+					      _fileFormatFilter, &_selFilter,
+					      QFileDialog::DontConfirmOverwrite
+					      );
+  if(!path.isEmpty()) {
+    _fileEdit->setText(path);
+  }
+}
+
+void PlasmaGeneratorDialog::importClicked(bool checked) {
+  ImportExportDialog dlg(true);
+
+  // get file name to import from
+  QString filename = QFileDialog::getOpenFileName(this, tr("Import Settings From File"), QDir::homePath(), 
+						  tr("Settings Files (*.xml)"));
+
+  if(filename.isEmpty())
+    return;
 	
-	tempButton = new QPushButton(tr("&Help"));
-	tempButton->setDefault(false);
-	tempButton->setAutoDefault(false);
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(helpClicked(bool)));
-	botButtonsLayout->addWidget(tempButton);
-	tempButton = NULL;
+  // create a temporary config manager and load
+  // it with data from the import file.
+  ConfigManager* tmpMgr = new ConfigManager();
+  if(tmpMgr == NULL)
+    return;
+  tmpMgr->importFromFile(filename, false);
 
-	tempButton = new QPushButton(tr("&Revert"));
-	tempButton->setEnabled(false);
-	tempButton->setDefault(false);
-	tempButton->setAutoDefault(false);
-	tempToolTip = tr("Undoes all changes made since the dialog box opened.");
-	tempButton->setToolTip(tempToolTip);
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(revertClicked(bool)));
-	botButtonsLayout->addWidget(tempButton);
-	tempButton = NULL;
+  // populate dialog box
+  QStringList profiles = tmpMgr->getAvailableProfiles();
+  dlg.addSubItems("Configuration Profiles", profiles, true);
 
-	botButtonsLayout->addStretch(0);
+  QStringList palettes = tmpMgr->getPaletteNames();
+  dlg.addSubItems("Palettes", palettes, true);
 
-	tempButton = new QPushButton(tr("&OK"));
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(okClicked(bool)));
-	tempButton->setDefault(true);
-	tempButton->setAutoDefault(true);
-	botButtonsLayout->addWidget(tempButton);
-	tempButton = NULL;
+  // show dialog and get lists of checked items
+  if(dlg.exec() == QDialog::Rejected) {
+    delete tmpMgr;
+    tmpMgr = NULL;
+    return;
+  }
+  profiles = dlg.getSubItems("Configuration Profiles", true);
+  palettes = dlg.getSubItems("Palettes", true);
 
-	tempButton = new QPushButton(tr("&Cancel"));
-	tempButton->setDefault(false);
-	tempButton->setAutoDefault(false);
-	QObject::connect(tempButton, SIGNAL(clicked(bool)), this, SLOT(cancelClicked(bool)));
-	botButtonsLayout->addWidget(tempButton);
-	tempButton = NULL;
+  // first, add in the palettes, since they don't
+  // have any dependencies
+  for(int i = 0; i<palettes.size(); i++) {
+    IndexedPaletteProfile tmpPal = tmpMgr->getPaletteProfile(palettes.at(i));
+    _manager->addPalette(tmpPal);
+  }
 
-	tempWidget = new QWidget();
-	tempWidget->setLayout(botButtonsLayout);
-	mainLayout->addWidget(tempWidget);
-	tempWidget = NULL;
-
-	setLayout(mainLayout);
-
-	//show();
-
-	//clean up progress dialog
-	if(_prgDlg != NULL) {
-		delete _prgDlg;
-		_prgDlg = NULL;
-		_prgCount = 0;
-	}
-
+  // now go through the PlasmaGeneratorProfiles, adding palettes it requires
+  for(int i = 0; i<profiles.size(); i++) {
+    PlasmaGeneratorProfile tmpProfile = tmpMgr->getProfile(profiles.at(i));
+    // make sure the  profile doesn't exist, so that we don't
+    // unnecessarily copy the palettes.  No need to check the
+    // palettes, because the add routine should take care of it.
+    if(!_manager->doesProfileExist(tmpProfile.getName())) {
+      IndexedPaletteProfile tmpPal = tmpMgr->getPaletteProfile(tmpProfile.getPaletteName());
+      _manager->addPalette(tmpPal);
+      _manager->addProfile(tmpProfile);
+    }
+  }
+  
+  _bDontUpdateDisplay = true;
+  _palName->clear();
+  _palName->addItems(_manager->getPaletteNames());
+  _nameBox->clear();
+  _nameBox->addItems(_manager->getAvailableProfiles());
+  _nameBox->setCurrentIndex(_nameBox->findText(_currentProfile));
+  _bDontUpdateDisplay = false;
+  updateDisplay();
 }
 
-IndexedPaletteDialog::~IndexedPaletteDialog() {
+void PlasmaGeneratorDialog::exportClicked(bool checked) {
+  ImportExportDialog dlg(false);
 
-	//all widgets should get destroyed by the layout.
-	_colorScrollWidget = NULL;
-	_colorWidget = NULL;
-	_nameEdit = NULL;
-	_previewLabel = NULL;
-	_prgDlg = NULL;
-	_xDimBox = NULL;
-	_yDimBox = NULL;
+  // populate dialog box
+  QStringList profiles = _manager->getAvailableProfiles();
+  dlg.addSubItems("Configuration Profiles", profiles, true);
 
-	/*
-	if(_colorScrollWidget != NULL) {
-		delete _colorScrollWidget;
-		_colorScrollWidget = NULL;
-	}
+  QStringList palettes = _manager->getPaletteNames();
+  dlg.addSubItems("Palettes", palettes, true);
+
+  // show dialog and get lists of checked items
+  if(dlg.exec() == 0)
+    return;
+  profiles = dlg.getSubItems("Configuration Profiles", true);
+  palettes = dlg.getSubItems("Palettes", true);
+
+  // get file name to export to
+  QString filename = QFileDialog::getSaveFileName(this, tr("Export Settings to File"), QDir::homePath(), 
+						  tr("Settings Files (*.xml)"));
+
+  if(filename.isEmpty())
+    return;
 	
-	if(_colorWidget != NULL) {
-		delete _colorWidget;
-		_colorWidget = NULL;
-	}
+  // now create a temporary config manager that
+  // contains only the profiles that we want.  Be sure to grab
+  // all miscellaneous profiles that the MasterProfile
+  // (including the IndexedPaletteProfiles).
+  ConfigManager* tmpMgr = new ConfigManager();
+  if(tmpMgr == NULL)
+    return;
 
-	if(_nameEdit != NULL) {
-		delete _nameEdit;
-		_nameEdit = NULL;
-	}
+  // first, add in the palettes, since they don't
+  // have any dependencies
+  for(int i = 0; i<palettes.size(); i++) {
+    IndexedPaletteProfile tmpPal = _manager->getPaletteProfile(palettes.at(i));
+    tmpMgr->addPalette(tmpPal);
+  }
 
-	if(_previewLabel != NULL) {
-		delete _previewLabel;
-		_previewLabel = NULL;
-	}
+  // now go through the MasterProfiles, adding sub profiles
+  // it requires (including IndexedPaletteProfiles).
+  for(int i = 0; i<profiles.size(); i++) {
+    PlasmaGeneratorProfile tmpProfile = _manager->getProfile(profiles.at(i));
+    IndexedPaletteProfile tmpPal = _manager->getPaletteProfile(tmpProfile.getPaletteName());
+    tmpMgr->addPalette(tmpPal);
+    tmpMgr->addProfile(tmpProfile);
+  }
 
-	if(_prgDlg != NULL) {
-		delete _prgDlg;
-		_prgDlg = NULL;
-	}
-
-	if(_xDimBox != NULL) {
-		delete _xDimBox;
-		_xDimBox = NULL;
-	}
-
-	if(_yDimBox != NULL) {
-		delete _yDimBox;
-		_yDimBox = NULL;
-	}
-	*/
+  // save!
+  tmpMgr->exportToFile(filename, false);
+  delete tmpMgr;
+  tmpMgr = NULL;
 }
 
-//returns the modified palette.
-IndexedPaletteProfile IndexedPaletteDialog::getPalette(void) {
-	return _palProfile;
+/**
+ * Updates the profile info in the config manager.
+ */
+void PlasmaGeneratorDialog::updateProfile() {
+  // sanity check
+  if(_manager == NULL) {
+    return;
+  }
+  if(_nameBox == NULL) {
+    return;
+  }
+  if(_fileEdit == NULL) {
+    return;
+  }
+  if(_palName == NULL) {
+    return;
+  }
+  if(_xDimBox == NULL) {
+    return;
+  }
+  if(_yDimBox == NULL) {
+    return;
+  }
+  if(_tileVertBox == NULL) {
+    return;
+  }
+  if(_tileHorizBox == NULL) {
+    return;
+  }
+  if(_coarsenessBox == NULL) {
+    return;
+  }
+  if(_clampColorBox == NULL) {
+    return;
+  }
+  if(_alwaysBox == NULL) {
+    return;
+  }
+  if(_askBox == NULL) {
+    return;
+  }
+  if(_neverBox == NULL) {
+    return;
+  }
+
+  // stuff data into a temporary profile;
+  PlasmaGeneratorProfile profile;
+  
+  profile.setName(_currentProfile);
+  profile.setPaletteName(_palName->currentText());
+  profile.setHeight(_yDimBox->value());
+  profile.setWidth(_xDimBox->value());
+  profile.setCoarseness(((float)_coarsenessBox->value())/_coarsenessAdjust);
+  profile.setClampColorIndex(_clampColorBox->isChecked());
+  profile.setFileTarget(_fileEdit->text());
+  if(_alwaysBox->isChecked()) {
+    profile.setOverwritePolicy(ALWAYS);
+  } else if(_neverBox->isChecked()) {
+    profile.setOverwritePolicy(NEVER);
+  } else {
+    profile.setOverwritePolicy(ASK);
+  }
+  profile.setTileVertical(_tileVertBox->isChecked());
+  profile.setTileHorizontal(_tileHorizBox->isChecked());
+
+  _manager->replaceProfile(_currentProfile, profile);
+  if(_bDefault) {
+    _manager->setDefaultProfile(profile.getName());
+  }
 }
 
-void IndexedPaletteDialog::okClicked(bool checked) {
-	QString param = _nameEdit->text();
-	_palProfile.setName(param);
-	emit paletteUpdated();
-	accept();
+/**
+ * Updates all widgets with the currently selected profile.
+ */
+void PlasmaGeneratorDialog::updateDisplay() {
+  // we're locked out...
+  if(_bDontUpdateDisplay) {
+    return;
+  }
+  // sanity check
+  if(_manager == NULL) {
+    return;
+  }
+  if(_nameBox == NULL) {
+    return;
+  }
+  if(_fileEdit == NULL) {
+    return;
+  }
+  if(_palName == NULL) {
+    return;
+  }
+  if(_xDimBox == NULL) {
+    return;
+  }
+  if(_yDimBox == NULL) {
+    return;
+  }
+  if(_tileVertBox == NULL) {
+    return;
+  }
+  if(_tileHorizBox == NULL) {
+    return;
+  }
+  if(_coarsenessBox == NULL) {
+    return;
+  }
+  if(_clampColorBox == NULL) {
+    return;
+  }
+  if(_alwaysBox == NULL) {
+    return;
+  }
+  if(_askBox == NULL) {
+    return;
+  }
+  if(_neverBox == NULL) {
+    return;
+  }
+  if(_defaultButton == NULL) {
+    return;
+  }
+  if(_previewScrollWidget == NULL) {
+    return;
+  }
+  // check to see if profile has changed
+  if( _currentProfile != _nameBox->currentText()) {
+    updateProfile();
+    _currentProfile = _nameBox->currentText();
+  }
+
+  _bDefault = (_manager->getDefaultProfile() == _currentProfile);
+  
+  // get a copy of the profile
+  PlasmaGeneratorProfile profile;
+  profile = _manager->getProfile(_currentProfile);
+
+  // update fields
+  _fileEdit->setText(profile.getFileTarget());
+  _palName->setCurrentIndex(_palName->findText(profile.getPaletteName()));
+  _xDimBox->setValue(profile.getWidth());
+  _yDimBox->setValue(profile.getHeight());
+  _tileVertBox->setChecked(profile.getTileVertical());
+  _tileHorizBox->setChecked(profile.getTileHorizontal());
+  _coarsenessBox->setValue(profile.getCoarseness()*_coarsenessAdjust);
+  _clampColorBox->setChecked(profile.getClampColorIndex());
+  switch(profile.getOverwritePolicy()) {
+  case ALWAYS:
+    _alwaysBox->setChecked(true);
+    break;
+  case NEVER:
+    _neverBox->setChecked(true);
+    break;
+  default:
+    _askBox->setChecked(true);
+  }
+  QLabel* tmpLabel = 
+    new QLabel(tr("Press 'Generate' to generate a new plasma."));
+  if(tmpLabel == NULL) {
+    return;
+  }
+  _previewScrollWidget->setWidget(tmpLabel);
+  tmpLabel = NULL;
+
+  _defaultButton->setEnabled(!_bDefault);
 }
 
-void IndexedPaletteDialog::cancelClicked(bool checked) {
-	_palProfile = _origPalProfile;
-	reject();
+/**
+ * Displays the GPL license dialog.
+ */
+void PlasmaGeneratorDialog::showGPLDialog(void) {
+  _gplDialog->exec();
+  _manager->setGPLAccepted(_gplDialog->isAccepted());
+  if(_manager->getGPLAccepted()) {
+    _manager->save();
+  }
 }
 
-void IndexedPaletteDialog::revertClicked(bool checked) {
-	_palProfile = _origPalProfile;
-	_palProfile.setHeight(_palProfile.getHeight()*2);
-	_palProfile.setWidth(_palProfile.getWidth()*2);
-	_nameEdit->setText(_palProfile.getName());
-
-	/*
-	if(_colorWidget != NULL)
-		delete _colorWidget;
-	//_colorWidget = new IndexedPaletteEditorRawWidget();
-	if(_colorScrollWidget != NULL)
-		_colorScrollWidget->setWidget(_colorWidget);
-	QObject::connect(_colorWidget, SIGNAL(colorChanged(int, int, QRgb)), this, SLOT(colorChanged(int, int, QRgb)));
-	*/
-	populateColorWidget();
-
-	updatePreviewIcon();
-}
-
-void IndexedPaletteDialog::colorChanged(int x, int y, QRgb* color) {
-	if(color == NULL) {
-		_palProfile.deleteColor(x,y);
-	} else {
-		_palProfile.setColor(x, y, *color);
-	}
-	updatePreviewIcon();
-}
-
-void IndexedPaletteDialog::populateColorWidget(void) {
-	int height = _palProfile.getHeight();
-	int width = _palProfile.getWidth();
-
-	_colorWidget->setProgressDialog(_prgDlg);
-	_colorWidget->changeSize(width, height);
-	_colorWidget->setProgressDialog(NULL);
-
-	for(int y=0; y<height; y++) {
-		for(int x=0; x<width;x++) {
-			if(_palProfile.isColorDefined(x,y)) {
-				QRgb tmpColor = _palProfile.getColor(x, y);
-				_colorWidget->setColor(x, y, tmpColor);
-			}
-		}
-		stepProgress();
-	}
-}
-
-void IndexedPaletteDialog::defaultColorClicked(bool checked) {
-	bool bOk = false;
-
-	QRgb newColor = QColorDialog::getRgba(_palProfile.getDefaultColor(), &bOk, this);
-	if(bOk) {		
-		_palProfile.setDefaultColor(newColor);
-		updatePreviewIcon();
-	}
-}
-
-void IndexedPaletteDialog::interpClicked(bool checked) {
-	_palProfile.setInterpolateColors(checked ? _lastInterpType : none);
-	updatePreviewIcon();
-}
-void IndexedPaletteDialog::linearClicked(bool checked) {
-	if(checked) {
-		_lastInterpType = linear;
-		_palProfile.setInterpolateColors(_lastInterpType);
-		updatePreviewIcon();
-	}
-}
-
-void IndexedPaletteDialog::sineClicked(bool checked) {
-	if(checked) {
-		_lastInterpType = sine;
-		_palProfile.setInterpolateColors(_lastInterpType);
-		updatePreviewIcon();
-	}
-}
-
-void IndexedPaletteDialog::wrapClicked(bool checked) {
-	_palProfile.setWrapColors(checked);
-	updatePreviewIcon();
-}
-
-//updates the preview icon
-void IndexedPaletteDialog::updatePreviewIcon(void) {
-	//create the palette.
-	IndexedPalette* tmpPal = _palProfile.createPalette();
-
-	int width = _palProfile.getWidth();
-	int height = _palProfile.getHeight();
-
-	//check to see if the progress dialog box pointer is null.  If so,
-	//create a new one.
-	bool bISetPrgDlg = false;
-	if(_prgDlg == NULL) {
-		_prgDlg = new QProgressDialog("Populating...", 0, 0, height);
-		_prgCount = 0;
-		bISetPrgDlg = true;
-	}
-
-	//go through the palette and for each color add a pixel in the
-	//image
-	QImage tmpImage(width*_previewZoom, height*_previewZoom, QImage::Format_ARGB32);
-
-	for(int y=0; y<height; y++) {
-		for(int x=0; x<width; x++) {
-			int buff[4];
-			tmpPal->getColor(x, y, &buff[0], 4);
-			QRgb tmpColor = qRgba(buff[0], buff[1], buff[2], 255);
-			for(int i=0;i<_previewZoom;i++) {
-				for(int j=0;j<_previewZoom;j++) {
-					tmpImage.setPixel(x*_previewZoom+i,y*_previewZoom+j,tmpColor);
-				}
-			}
-		}
-		stepProgress();
-	}
-	_previewPixmap = QPixmap::fromImage(tmpImage);
-	_previewLabel->clear();
-	_previewLabel->resize(width*_previewZoom, height*_previewZoom);
-	_previewLabel->setPixmap(_previewPixmap);
-
-	//_previewLabel->setPixmap(QPixmap::fromImage(tmpImage));
-
-	delete tmpPal;
-	tmpPal = NULL;
-
-	//if we created the progress dialog, clean up
-	if(bISetPrgDlg && _prgDlg != NULL) {
-		delete _prgDlg;
-		_prgDlg = NULL;
-		_prgCount = 0;
-	}
-}
-
-//steps the progress dialog
-void IndexedPaletteDialog::stepProgress() {
-	if(_prgDlg != NULL) {
-		_prgDlg->setValue(++_prgCount);
-		QApplication::processEvents();		
-	}
-}
-
-void IndexedPaletteDialog::resizeClicked(bool checked) {
-
-	int width = _xDimBox->value();
-	int height = _yDimBox->value();
-
-	if(width > 0 && height > 0) {
-		_prgDlg = new QProgressDialog("Please wait...", 0, 0, height*3+2);
-		_prgCount = 0;
-
-		_palProfile.setHeight(height);
-		_palProfile.setWidth(width);
-
-		populateColorWidget();
-		updatePreviewIcon();
-		//_colorScrollWidget->resize(width, height);
-
-		delete _prgDlg;
-		_prgDlg = NULL;
-	}
-}
-void IndexedPaletteDialog::helpClicked(bool checked) {
-//	QMessageBox::information(this, _windowTitle, "Not implemented yet.", QMessageBox::Ok);
-	HelpDialog* dlg = new HelpDialog("qrc:/help/IndexedPaletteDialog.html");
-	if(dlg != NULL) {
-		dlg->exec();
-		delete dlg;
-		dlg = NULL;
-	}
-}

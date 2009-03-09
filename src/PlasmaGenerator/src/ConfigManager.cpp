@@ -24,9 +24,6 @@
 
 #include <iostream>
 using namespace std;
-// debug
-//#include <QMessageBox>
-//#include "lens_engine/SphericalLensProfile.h"
 
 #include <QCoreApplication>
 #include <QApplication>
@@ -45,24 +42,6 @@ using namespace std;
 
 //Constructor and deconstructor
 ConfigManager::ConfigManager() {
-
-  //specify the plugins path.  plugins should have been installed
-  //by the lib package.  the libs need to be added to the system path.
-  //first check in HKEY_CURRENT_USER.  If not there, check HKEY_LOCAL_MACHINE.
-  /*
-    QString getExternalDefaultConfigFile();
-    QString getExternalDefaultConfigPath();
-    QString rootPath = readRegString(QString("Software\\Phej"),
-    QString("Lib Install Base Path"), false);
-    if(rootPath == "") {
-    rootPath = readRegString(QString("Software\\Phej"),
-    QString("Lib Install Base Path"), true);
-    }
-
-    QString libPath = rootPath + QString("\\Qt-4.2.2\\plugins\\");
-    QCoreApplication::addLibraryPath(libPath);
-  */
-
   _bGPLAccepted = false;
 }
 
@@ -167,7 +146,7 @@ bool ConfigManager::importFromFile(QString filename, bool bLoadMiscInfo) {
   while(!tempNode.isNull()) {
     IndexedPaletteProfile* tempProfile = IndexedPaletteProfile::load(tempNode);
     //if non-NULL, add it to the hash of palette profiles
-    if(tempProfile != NULL) {
+    if(tempProfile != NULL && !tempProfile->getName().isEmpty()) {
       _paletteHash.insert(tempProfile->getName(), tempProfile);
     }
     tempNode = tempNode.nextSiblingElement(IndexedPaletteProfile::getXMLTagName());
@@ -180,7 +159,7 @@ bool ConfigManager::importFromFile(QString filename, bool bLoadMiscInfo) {
     PlasmaGeneratorProfile* tempProfile = 
       PlasmaGeneratorProfile::load(tempNode);
     //if non-NULL, add it to the hash of palette profiles
-    if(tempProfile != NULL) {
+    if(tempProfile != NULL && !tempProfile->getName().isEmpty()) {
       _profiles.insert(tempProfile->getName(), tempProfile);
     }
     tempNode = tempNode.
@@ -257,6 +236,11 @@ void ConfigManager::loadMiscInfo(QDomNode &node) {
     _defaultProfile = tempElem.text();
   }
 
+  tempElem = node.firstChildElement("default_palette");
+  if(!tempElem.isNull()) {
+    _defaultPalette = tempElem.text();
+  }
+
   tempElem = node.firstChildElement("default_texture_width");
   if(!tempElem.isNull()) {
     _defWidth = tempElem.text().toInt();
@@ -283,6 +267,12 @@ void ConfigManager::saveMiscInfo(QDomDocument* doc, QDomElement* root) {
   // default profile
   tempNode = doc->createTextNode(_defaultProfile);
   tempElem = doc->createElement("default_profile");
+  tempElem.appendChild(tempNode);
+  root->appendChild(tempElem);
+
+  // default palette
+  tempNode = doc->createTextNode(_defaultPalette);
+  tempElem = doc->createElement("default_palette");
   tempElem.appendChild(tempNode);
   root->appendChild(tempElem);
 
@@ -315,11 +305,11 @@ void ConfigManager::setDefaults() {
   }
 }
 
-int ConfigManager::getTextureWidth() {
+int ConfigManager::getDefaultWidth() {
   return _defWidth;
 }
 
-int ConfigManager::getTextureHeight() {
+int ConfigManager::getDefaultHeight() {
   return _defHeight;
 }
 
@@ -330,6 +320,29 @@ bool ConfigManager::getGPLAccepted() {
 
 void ConfigManager::setGPLAccepted(bool bAccepted) {
   _bGPLAccepted = bAccepted;
+}
+
+/**
+ * Gets the default palette  name.
+ */
+QString ConfigManager::getDefaultPalette() {
+  if(!doesPaletteExist(_defaultPalette)) {
+    QList<QString> keys = _paletteHash.keys();
+    if(!keys.empty()) {
+      _defaultPalette = keys.at(0);
+    } else {
+      _defaultPalette = "";
+    }
+  }
+  return _defaultPalette;
+}
+
+/**
+ * Sets the default palette name.
+ */
+void ConfigManager::setDefaultPalette(QString paletteName) {
+  _defaultPalette = paletteName;
+
 }
 
 /**
@@ -462,6 +475,7 @@ void ConfigManager::setDefaultProfile(QString profileName) {
   _defaultProfile = profileName;
 }
 
+
 /**
  * Gets the list of all PlasmaGeneratorProfiles.
  */
@@ -481,7 +495,7 @@ bool ConfigManager::removeProfile(QString name) {
  */
 void ConfigManager::addProfile(PlasmaGeneratorProfile& profile) {
   //check for preexisting profile name.
-  if(!doesProfileExist(profile.getName())) {
+  if(!doesProfileExist(profile.getName()) && profile.getName() != QString("")) {
     //if not, create a new profile off of the heap to add to the hash.
     PlasmaGeneratorProfile* newProfile = new PlasmaGeneratorProfile();
     *newProfile = profile;
@@ -511,7 +525,8 @@ bool ConfigManager::replaceProfile(QString oldProfileName, PlasmaGeneratorProfil
   //first, check to see if the new profile name is already in the list and that
   //it isn't the same as the old name.  If so, fail.
   QString newProfileName = newProfile.getName();
-  if(oldProfileName != newProfileName && doesProfileExist(newProfileName)) {
+  if(oldProfileName != newProfileName && doesProfileExist(newProfileName) &&
+     newProfileName != QString("")) {
     return false;
   }
 
@@ -593,3 +608,20 @@ bool ConfigManager::GeneratePlasmaFile(QString profileName,
   return true;
 }
 
+/**
+ * Retrieves an initialized PlasmaGenerator object for the specified
+ * profile.  Note: genPlasma will not have been called.  Returns NULL
+ * if the profile doesn't exist.
+ */
+PlasmaGenerator* ConfigManager::getGenerator(QString profileName) {
+
+  // if the profile doesn't exist, pop out
+  if(!doesProfileExist(profileName)) {
+    return NULL;
+  }
+
+  PlasmaGeneratorProfile profile = getProfile(profileName);
+
+  // get the generator and generate a plasma!
+  return profile.getGenerator(&_paletteHash);
+}
