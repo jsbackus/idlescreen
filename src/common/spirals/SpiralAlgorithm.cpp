@@ -8,9 +8,6 @@ SpiralAlgorithm::SpiralAlgorithm() {
   _width = 0;
   _height = 0;
   _numColors = 0;
-  _colorWidth = 1;
-  _emptyWidth = 0;
-  _bConstantColor = false;
 }
 
 SpiralAlgorithm::~SpiralAlgorithm() {
@@ -24,18 +21,13 @@ SpiralAlgorithm::~SpiralAlgorithm() {
    * @param screenWidth the width of the screen in pixels.
    * @param screenHeight the height of the screen in pixels.
    * @param numColors the number of colors in the palette primary direction.
-   * @param colorWidth the width of the strip of color.
-   * @param emptyWidth the width of the default color region.
-   * @param bConstantColor whether or not to hold the color index constant.
-   * @param bRandomColor whether or not the initial color is randomly selected.
    * @see calc()
    */
-void SpiralAlgorithm::initialize(int* field, int screenWidth, int screenHeight,
-				 int numColors, int colorWidth, int emptyWidth,
-				 bool bConstantColor, bool bRandomColor) {
+void SpiralAlgorithm::initialize(int* field, const int screenWidth, 
+				 const int screenHeight,
+				 const int numColors) {
 
-  initializeBase(field, screenWidth, screenHeight, numColors, colorWidth,
-		 colorHeight, bConstantColor);
+  initializeBase(field, screenWidth, screenHeight, numColors);
 }
 
 /**
@@ -51,7 +43,7 @@ bool SpiralAlgorithm::calc() {
  * Completes up to numIterations iterations of the algorithm.  If N <= 0,
  * the algorithm will continue until finished.
  */
-bool SpiralAlgorithm::calc(int numIterations) {
+bool SpiralAlgorithm::calc(const int numIterations) {
 	for(int i=0; i<numIterations; i++) {
 		if(calc())
 			return true;
@@ -72,26 +64,14 @@ bool SpiralAlgorithm::calcAll() {
    * @param screenWidth the width of the screen in pixels.
    * @param screenHeight the height of the screen in pixels.
    * @param numColors the number of colors in the palette primary direction.
-   * @param colorWidth the width of the strip of color.
-   * @param emptyWidth the width of the default color region.
-   * @param bConstantColor whether or not to hold the color index constant.
    * @see initialize()
    */
-void SpiralAlgorithm::initializeBase(int* field, int screenWidth,
-				     int screenHeight, int numColors,
-				     int colorWidth, int emptyWidth,
-				     bool bConstantColor) {
+void SpiralAlgorithm::initializeBase(int* field, const int screenWidth,
+				     const int screenHeight, 
+				     const int numColors) {
   _field = field;
   _width = screenWidth;
   _height = screenHeight;
   _numColors = numColors;
-  _colorWidth = colorWidth;
-  _emptyWidth = emptyWidth;
-  _bConstantColor = bConstantColor;
-
-  if(_colorWidth < 0)
-    _colorWidth = 0;
-  if(_emptyWidth < 0)
-    _emptyWidth = 0;
 }
 

@@ -1,14 +1,12 @@
-<!DOCTYPE PlasmaLenz_Configuration>
-<PlasmaLenz_Configuration>
+<!DOCTYPE SpiralLenz_Configuration>
+<SpiralLenz_Configuration>
  <BackgroundProfile>
-  <type>PlasmaFractalBackground</type>
+  <type>RectangularSpiralBackground</type>
   <name>Classic RGB Profile</name>
-  <coarseness>4.5</coarseness>
   <steps_per_tick>2048</steps_per_tick>
   <anmiate_palette>true</anmiate_palette>
   <palette_x_speed>1</palette_x_speed>
   <palette_y_speed>1</palette_y_speed>
-  <clamp_color>true</clamp_color>
   <palette>Classic RGB Palette</palette>
  </BackgroundProfile>
  <IndexedPaletteProfile>
@@ -107,5 +105,5 @@
    <location>0</location>
   </selected_entry>
  </selected_master_profile_list>
-</PlasmaLenz_Configuration>
+</SpiralLenz_Configuration>
 

@@ -28,10 +28,11 @@
 
 #include <QString>
 
-#include "../../common/2d_bgnd_w_lens/BackgroundProfile.h"
-#include "../../common/2d_bgnd_w_lens/lens_engine/LensProfile.h"
-#include "../../common/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h"
+#include "2d_bgnd_w_lens/BackgroundProfile.h"
+#include "2d_bgnd_w_lens/lens_engine/LensProfile.h"
+#include "2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h"
 #include "SpiralBackgroundProfile.h"
+#include "RectangularSpiralBackgroundProfile.h"
 
 /**
  * This function will create an array that contains the profiles
@@ -42,7 +43,7 @@
 BackgroundProfile** getBackgroundTypes(int* numProfiles) {
 	BackgroundProfile** retVal = NULL;
 
-	*numProfiles = 1;
+	*numProfiles = 2;
 	retVal = new BackgroundProfile*[*numProfiles];
 
 	if(retVal == NULL) {
@@ -53,6 +54,14 @@ BackgroundProfile** getBackgroundTypes(int* numProfiles) {
 	retVal[0] = (BackgroundProfile*) (new SpiralBackgroundProfile());
 
 	if(retVal[0] == NULL) {
+		*numProfiles = 0;
+		return NULL;
+	}
+
+	retVal[1] = (BackgroundProfile*) 
+	  (new RectangularSpiralBackgroundProfile());
+
+	if(retVal[1] == NULL) {
 		*numProfiles = 0;
 		return NULL;
 	}

@@ -14,7 +14,12 @@ win32:RESOURCE_PATH = ../../resource_files
 
 INCLUDEPATH = $$COMMON_PATH $$SOURCE_PATH $$RESOURCE_PATH
 
-SOURCES		=	$$COMMON_PATH/core/glut_demo.cpp $$COMMON_PATH/core/win_misc_funcs.cpp
+SOURCES		=	$$COMMON_PATH/core/glut_demo.cpp
+SOURCES		+=	$$COMMON_PATH/core/win_misc_funcs.cpp
+
+SOURCES		+=	$$COMMON_PATH/spirals/SpiralAlgorithm.cpp
+SOURCES		+=	$$COMMON_PATH/spirals/RectangularSpiralAlgorithm.cpp
+SOURCES		+=	$$COMMON_PATH/spirals/NgonSpiralAlgorithm.cpp
 
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPalette.cpp
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteDialog.cpp
@@ -28,11 +33,12 @@ SOURCES		+=	$$COMMON_PATH/utility/misc_funcs.cpp
 SOURCES		+=	$$COMMON_PATH/utility/ImportExportDialog.cpp
 SOURCES		+=	$$COMMON_PATH/utility/HelpDialog.cpp
 SOURCES		+=	$$COMMON_PATH/gpl_related/gpldialog.cpp
-SOURCES		+=	$$COMMON_PATH/plasma/PlasmaAlgorithm.cpp
 
 SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/opengl_main.cpp
-SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/Background.cpp $$COMMON_PATH/2d_bgnd_w_lens/BackgroundProfile.cpp
-SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/configdlg_main.cpp $$COMMON_PATH/2d_bgnd_w_lens/ConfigManager.cpp
+SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/Background.cpp
+SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/BackgroundProfile.cpp
+SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/configdlg_main.cpp
+SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/ConfigManager.cpp
 SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/IndexedPaletteBackground.cpp
 SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/MasterProfile.cpp
 SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/PaletteEditor.cpp
@@ -44,12 +50,19 @@ SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/LensObject.cpp
 SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/LensManager.cpp
 SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.cpp
 
-SOURCES		+=	$$SOURCE_PATH/ConfigWidget.cpp $$SOURCE_PATH/PlasmaFractal.cpp
-SOURCES		+=	$$SOURCE_PATH/PlasmaFractalBackgroundProfile.cpp $$SOURCE_PATH/project_specific_externs.cpp
+SOURCES		+=	$$SOURCE_PATH/ConfigWidget.cpp
+SOURCES		+=	$$SOURCE_PATH/project_specific_externs.cpp
 SOURCES		+=	$$COMMON_PATH/utility/AboutDialog.cpp
-SOURCES		+=	$$SOURCE_PATH/ProfileEditDialog.cpp
+//SOURCES		+=	$$SOURCE_PATH/ProfileEditDialog.cpp
+SOURCES		+=	$$SOURCE_PATH/SpiralBackground.cpp
+SOURCES		+=	$$SOURCE_PATH/SpiralBackgroundProfile.cpp
+SOURCES		+=	$$SOURCE_PATH/RectangularSpiralBackgroundProfile.cpp
 
 HEADERS		=	$$COMMON_PATH/core/win_misc_funcs.h
+
+HEADERS		+=	$$COMMON_PATH/spirals/SpiralAlgorithm.h
+HEADERS		+=	$$COMMON_PATH/spirals/RectangularSpiralAlgorithm.h
+HEADERS		+=	$$COMMON_PATH/spirals/NgonSpiralAlgorithm.h
 
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPalette.h
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteDialog.h
@@ -63,10 +76,10 @@ HEADERS		+=	$$COMMON_PATH/utility/misc_funcs.h
 HEADERS		+=	$$COMMON_PATH/utility/ImportExportDialog.h
 HEADERS		+=	$$COMMON_PATH/utility/HelpDialog.h
 HEADERS		+=	$$COMMON_PATH/gpl_related/gpldialog.h
-HEADERS		+=	$$COMMON_PATH/plasma/PlasmaAlgorithm.h
 HEADERS		+=	$$COMMON_PATH/core/opengl_main.h
 
-HEADERS		+=	$$COMMON_PATH/2d_bgnd_w_lens/Background.h $$COMMON_PATH/2d_bgnd_w_lens/BackgroundProfile.h
+HEADERS		+=	$$COMMON_PATH/2d_bgnd_w_lens/Background.h
+HEADERS		+=	$$COMMON_PATH/2d_bgnd_w_lens/BackgroundProfile.h
 HEADERS		+=	$$COMMON_PATH/2d_bgnd_w_lens/ConfigManager.h
 HEADERS		+=	$$COMMON_PATH/2d_bgnd_w_lens/IndexedPaletteBackground.h
 HEADERS		+=	$$COMMON_PATH/2d_bgnd_w_lens/MasterProfile.h
@@ -82,10 +95,12 @@ HEADERS		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/LensObject.h
 HEADERS		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/LensManager.h
 HEADERS		+=	$$COMMON_PATH/2d_bgnd_w_lens/lens_engine/SphericalLensProfile.h
 
-HEADERS		+=	$$SOURCE_PATH/PlasmaFractalBackgroundProfile.h $$SOURCE_PATH/PlasmaFractal.h
 HEADERS		+=	$$RESOURCE_PATH/resource.h
 HEADERS		+=	$$COMMON_PATH/utility/AboutDialog.h
-HEADERS		+=	$$SOURCE_PATH/ProfileEditDialog.h
+//HEADERS		+=	$$SOURCE_PATH/ProfileEditDialog.h
+HEADERS		+=	$$SOURCE_PATH/SpiralBackground.h
+HEADERS		+=	$$SOURCE_PATH/SpiralBackgroundProfile.h
+HEADERS		+=	$$SOURCE_PATH/RectangularSpiralBackgroundProfile.h
 
 TARGET		= SpiralLenz_glut
 RESOURCES	= $$RESOURCE_PATH/qt_resource.qrc

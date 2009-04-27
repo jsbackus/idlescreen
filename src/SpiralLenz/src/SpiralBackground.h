@@ -39,74 +39,43 @@
 #include "2d_bgnd_w_lens/globaldefs.h"
 #include "2d_bgnd_w_lens/IndexedPaletteBackground.h"
 
-#include "SpiralBackgroundAlgorithm.h"
-#include "RectangularSpiral.h"
-
-enum SpiralBackgroundShape {
-  POLAR, RECTANGULAR, DIAMOND, TRIANGULAR
-};
-
-enum SpiralBackgroundSytle {
-  SINGLE, MULTIWIDTH
-};
+#include "spirals/SpiralAlgorithm.h"
 
 class SpiralBackground : public IndexedPaletteBackground {
 
  public:
   /**
-   * Constructor takes the dimensions, a pointer to the palette,
-   * whether to rotate the palette, and the palette color skip.
+   * Constructor takes the dimensions, a pointer to the algorithm,
+   * a pointer to the palette, whether to rotate the palette, 
+   * and the palette color skip.  This class takes responsibility for
+   * destroying both the algorithm and the palette.
+   * @param sizeX The width of the background.
+   * @param sizeY The height of the background.
+   * @param algorithm A pointer to the spiral algorithm.
+   * @param pal A pointer to the palette.
+   * @param bAnimatePalette Whether or not to animate the palette.
+   * @param paletteXSpeed The palette rotational speed in the primary direction.
+   * @param paletteYSpeed The palette rotational speed in the secondary dir.
+   * @param genStepsPerTick The number of generation steps per tick.
    */
-  SpiralBackground(int sizeX, int sizeY, IndexedPalette* pal,
-		   bool bAnimatePalette, float paletteXSpeed,
-		   float paletteYSpeed);
+  SpiralBackground(int sizeX, int sizeY, SpiralAlgorithm* algorithm,
+		   IndexedPalette* pal, bool bAnimatePalette,
+		   float paletteXSpeed, float paletteYSpeed,
+		   int genStepsPerTick);
 
   ~SpiralBackground();
-
-  /**
-   * Initializes the generator algorithm to generate a single-color
-   * spiral of the specified width, rotating through the primary palette
-   * direction as it extends outward.  If bLerpToDefaultColor is true,
-   * the palette color will be in the middle with, the default palette color
-   * on the borders.  If bRandomColor is true, the first color index is 
-   * randomly picked.
-   * If genStepsPerTick is 0, then it will all be done in one swoop.
-   */
-  void genSingleColorSpiral(int genStepsPerTick, int width,
-			     bool bRandomColor, bool bLerpToDefaultColor);
-
-  /**
-   * Initializes the generator algorithm to generate a multi-color spiral,
-   * that remains constant through the whole spiral.  The width is the
-   * width (primary axis) of the palette.  If bRandomColor is true,
-   * the initial index is randomly picked and the palette will be wrapped.
-   * If genStepsPerTick is 0, then it will all be done in one swoop.
-   */
-  void genMultiColorSpiral(int genStepsPerTick, bool bRandomColor);
 
   // *** Begin Extended Methods ***
   /**
    * Finishes generating the spiral then rotates the palette when done.
    */
-  virtual void clocktick();
+  void clocktick();
   // *** End Extended Methods ***
 
  private:
-  /**
-   * Performs one iteration of the fractal generation.
-   */
-  void spiralGenStep();
-
   int _numGenStepsPerTick;
-  bool _bRandomColor;
 
-  // specific to SINGLE style
-  bool _bLerpToDefaultColor;
-  int _singleWidth;
-  // end specific to SINGLE style
-
-  SpiralBackgroundShapeAlgorithm* _algorithm;
-  SpiralBackgroundStyle _style;
+  SpiralAlgorithm* _algorithm;
 };
 
 #endif

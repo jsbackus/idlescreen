@@ -26,14 +26,15 @@
  * This is the base class for the spiral algorithms.
  */
 
-/*
-#include <stdlib.h>
-#include <ctime>
-using namespace std;
-*/
-
 #ifndef __SPIRALALGORITHM_H__
 #define __SPIRALALGORITHM_H__
+
+#ifdef _M_IX86
+#include <windows.h>
+#else
+//#include <stream.h>
+#include <stdlib.h>
+#endif
 
 class SpiralAlgorithm {
 
@@ -52,15 +53,10 @@ class SpiralAlgorithm {
    * @param screenWidth the width of the screen in pixels.
    * @param screenHeight the height of the screen in pixels.
    * @param numColors the number of colors in the palette primary direction.
-   * @param colorWidth the width of the strip of color.
-   * @param emptyWidth the width of the default color region.
-   * @param bConstantColor whether or not to hold the color index constant.
-   * @param bRandomColor whether or not the initial color is randomly selected.
    * @see calc()
    */
-  virtual void initialize(int* field, int screenWidth, int screenHeight,
-			  int numColors, int colorWidth, int emptyWidth,
-			  bool bConstantColor, bool bRandomColor);
+  virtual void initialize(int* field, const int screenWidth, 
+			  const int screenHeight, const int numColors);
 
   /**
    * Completes one iteration of the algorithm.  Returns true if the algorithm
@@ -75,7 +71,7 @@ class SpiralAlgorithm {
    * @return true if the spiral generation is complete.
    * @see calc();
    */
-  bool calc(int numIterations);
+  bool calc(const int numIterations);
 
   /**
    * This is a convenience function that is the same as calling calc(-1).
@@ -90,21 +86,16 @@ class SpiralAlgorithm {
    * @param screenWidth the width of the screen in pixels.
    * @param screenHeight the height of the screen in pixels.
    * @param numColors the number of colors in the palette primary direction.
-   * @param colorWidth the width of the strip of color.
-   * @param emptyWidth the width of the default color region.
-   * @param bConstantColor whether or not to hold the color index constant.
+   * @param bIncrementColor whether the colors increment as they spiral out.
    * @see initialize()
    */
-  void initialize(int* field, int screenWidth, int screenHeight,
-		  int numColors, int colorWidth, int emptyWidth,
-		  bool bConstantColor);
+  void initializeBase(int* field, const int screenWidth, const int screenHeight,
+		      const int numColors);
 
   int _width;
   int _height;
   int _numColors;
-  int _colorWidth;
-  int _emptyWidth;
-  bool _bConstantColor;
+  int* _field;
 };
 
 #endif

@@ -24,6 +24,17 @@
 
 #include "BackgroundProfile.h"
 
+  /**
+   * Default constructor/destructor
+   */
+BackgroundProfile::BackgroundProfile() {
+  _name = "Uninitialized Base Backround Profile";
+  _xmlTypeValue = "Base Background Profile";
+}
+BackgroundProfile::~BackgroundProfile() {
+  // no es nada
+}
+
 /* Attempts to load this background profile object from the
  * specified QDomNode.
  */

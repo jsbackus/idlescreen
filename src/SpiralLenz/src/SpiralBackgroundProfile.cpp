@@ -25,35 +25,32 @@
 #include <QtXml/QDomElement>
 #include <QtXml/QDomText>
 
-//#include "../../common/utility/misc_funcs.h"
-
 #include "utility/misc_funcs.h"
-#include "PlasmaFractalBackgroundProfile.h"
-#include "PlasmaFractal.h"
+#include "SpiralBackgroundProfile.h"
+#include "SpiralBackground.h"
+#include "spirals/SpiralAlgorithm.h"
 
-PlasmaFractalBackgroundProfile::PlasmaFractalBackgroundProfile() {
-  _xmlTypeValue = "PlasmaFractalBackground";
+SpiralBackgroundProfile::SpiralBackgroundProfile() {
+  _xmlTypeValue = "SpiralBackground";
 
   //defaults
   _name = "Empty";
   _palName = "";
-  _coarseness = 1.0;
-  _genStepsPerTick = 2048;
+  _genStepsPerTick = 100;
   _bAnimatePalette = true;
   _paletteXSpeed = 1;
   _paletteYSpeed = 1;
-  _bClampColorIndex = true;
 }
 
-PlasmaFractalBackgroundProfile::~PlasmaFractalBackgroundProfile() {
+SpiralBackgroundProfile::~SpiralBackgroundProfile() {
+  // no es nada
 }
 
-/* Attempts to load this background profile object from the
+/**
+ * Attempts to load this background profile object from the
  * specified QDomNode.
  */
-BackgroundProfile* PlasmaFractalBackgroundProfile::load(QDomNode &node) {
-  float tmpF;
-  int tmpI;
+BackgroundProfile* SpiralBackgroundProfile::load(QDomNode &node) {
   QDomElement tempElem;
 
   //sanity check on the input
@@ -65,70 +62,68 @@ BackgroundProfile* PlasmaFractalBackgroundProfile::load(QDomNode &node) {
   if(tempElem.isNull() || tempElem.text() != _xmlTypeValue)
     return NULL;
 
-  PlasmaFractalBackgroundProfile* retVal = new PlasmaFractalBackgroundProfile();
+  SpiralBackgroundProfile* retVal = new SpiralBackgroundProfile();
+  if(retVal == NULL)
+    return NULL;
+
+  // load base
+  retVal->loadBase(node);
+
+  // derivative classes would load data here...
+
+  // return new profile
+  return retVal;
+}
+
+
+/**
+ * Attempts to load the base profile object from the
+ * specified QDomNode.
+ */
+void SpiralBackgroundProfile::loadBase(QDomNode &node) {
+  int tmpI;
+  QDomElement tempElem;
 
   tempElem = node.firstChildElement("name");
   if(!tempElem.isNull()) {
-    retVal->_name = tempElem.text();
-  }
-
-  tempElem = node.firstChildElement("coarseness");
-  if(!tempElem.isNull()) {
-    tmpF = tempElem.text().toFloat();
-    if(tmpF > 0.00 && tmpF < 10000.00) {
-      retVal->_coarseness = tmpF;
-    }
+    QString str = tempElem.text();
+    setName(str);
   }
 
   tempElem = node.firstChildElement("steps_per_tick");
   if(!tempElem.isNull()) {
     tmpI = tempElem.text().toInt();
-    if(tmpI > 0 && tmpI < 30000) {
-      retVal->_genStepsPerTick = tmpI;
-    }
+    setGenStepsPerTick(tmpI);
   }
 
   tempElem = node.firstChildElement("anmiate_palette");
   if(!tempElem.isNull()) {
     QString param = tempElem.text();
-    retVal->_bAnimatePalette = stringToBool(param);
+    setAnimatePalette(stringToBool(param));
   }
 
   tempElem = node.firstChildElement("palette_x_speed");
   if(!tempElem.isNull()) {
     tmpI = tempElem.text().toInt();
-    if(tmpI >= 0 && tmpI < 30000) {
-      retVal->_paletteXSpeed = tmpI;
-    }
+    setPaletteXSpeed(tmpI);
   }
 
   tempElem = node.firstChildElement("palette_y_speed");
   if(!tempElem.isNull()) {
     tmpI = tempElem.text().toInt();
-    if(tmpI >= 0 && tmpI < 30000) {
-      retVal->_paletteYSpeed = tmpI;
-    }
-  }
-
-  tempElem = node.firstChildElement("clamp_color");
-  if(!tempElem.isNull()) {
-    QString param = tempElem.text();
-    retVal->_bClampColorIndex = stringToBool(param);
+    setPaletteYSpeed(tmpI);
   }
 
   tempElem = node.firstChildElement("palette");
   if(!tempElem.isNull()) {
-    retVal->_palName = tempElem.text();
+    setPaletteName(tempElem.text());
   }
-	
-  return retVal;
 }
 
-
-/*
+/**
  * Returns a QDomNode object that represents this profile.
  */
-QDomNode PlasmaFractalBackgroundProfile::save(QDomDocument* doc) {
+QDomNode SpiralBackgroundProfile::save(QDomDocument* doc) {
   QString tempStr;
   QDomText tempNode;
   QDomElement tempElem;
@@ -140,179 +135,143 @@ QDomNode PlasmaFractalBackgroundProfile::save(QDomDocument* doc) {
   tempElem.appendChild(tempNode);
   retVal.appendChild(tempElem);
 
+  // save base class values
+  saveBase(&retVal, doc);
+
+  // derivative clases would save data here
+
+  // return node.
+  return retVal;
+}
+
+
+/**
+ * Returns a QDomNode object that represents the base profile.
+ */
+void SpiralBackgroundProfile::saveBase(QDomElement* node, QDomDocument* doc) {
+
+  QString tempStr;
+  QDomText tempNode;
+  QDomElement tempElem;
+
   //name
   tempNode = doc->createTextNode(_name);
   tempElem = doc->createElement("name");
   tempElem.appendChild(tempNode);
-  retVal.appendChild(tempElem);
+  node->appendChild(tempElem);
 
-  //coarseness
-  tempStr.setNum(_coarseness);
-  tempNode = doc->createTextNode(tempStr);
-  tempElem = doc->createElement("coarseness");
-  tempElem.appendChild(tempNode);
-  retVal.appendChild(tempElem);
-	
   //steps per tick
   tempStr.setNum(_genStepsPerTick);
   tempNode = doc->createTextNode(tempStr);
   tempElem = doc->createElement("steps_per_tick");
   tempElem.appendChild(tempNode);
-  retVal.appendChild(tempElem);
+  node->appendChild(tempElem);
 
   //animate palette?
   tempNode = doc->createTextNode(boolToString(_bAnimatePalette));
   tempElem = doc->createElement("anmiate_palette");
   tempElem.appendChild(tempNode);
-  retVal.appendChild(tempElem);
+  node->appendChild(tempElem);
 
   //palette X speed
   tempStr.setNum(_paletteXSpeed);
   tempNode = doc->createTextNode(tempStr);
   tempElem = doc->createElement("palette_x_speed");
   tempElem.appendChild(tempNode);
-  retVal.appendChild(tempElem);
+  node->appendChild(tempElem);
 
   //palette Y speed
   tempStr.setNum(_paletteYSpeed);
   tempNode = doc->createTextNode(tempStr);
   tempElem = doc->createElement("palette_y_speed");
   tempElem.appendChild(tempNode);
-  retVal.appendChild(tempElem);
-
-  //clamp color index?
-  tempNode = doc->createTextNode(boolToString(_bClampColorIndex));
-  tempElem = doc->createElement("clamp_color");
-  tempElem.appendChild(tempNode);
-  retVal.appendChild(tempElem);
+  node->appendChild(tempElem);
 
   //palette name
   tempNode = doc->createTextNode(_palName);
   tempElem = doc->createElement("palette");
   tempElem.appendChild(tempNode);
-  retVal.appendChild(tempElem);
-
-  return retVal;
+  node->appendChild(tempElem);
 }
 
-/*
+/**
  * Creates and returns a new background object.
  */
-Background* PlasmaFractalBackgroundProfile::getNewBackgroundObj(int height, int width, QHash<QString, IndexedPaletteProfile*>* palHash) {
-  return new PlasmaFractal(width, height,
-			   palHash->value(_palName)->createPalette(), _coarseness, _genStepsPerTick,
-			   _bAnimatePalette, _paletteXSpeed, _paletteYSpeed, _bClampColorIndex);
+Background* SpiralBackgroundProfile::getNewBackgroundObj(int height, int width,
+							 QHash<QString, IndexedPaletteProfile*>* palHash) {
+
+  SpiralAlgorithm* alg = new SpiralAlgorithm();
+  if(alg == NULL)
+    return NULL;
+
+  return new SpiralBackground(width, height, alg,
+			      palHash->value(_palName)->createPalette(),
+			      _bAnimatePalette, _paletteXSpeed, _paletteYSpeed,
+			      _genStepsPerTick);
 }
 
-/*
+/**
  * get/set palette name.
  */
-QString PlasmaFractalBackgroundProfile::getPaletteName() {
+QString SpiralBackgroundProfile::getPaletteName() {
   return _palName;
 }
 
-void PlasmaFractalBackgroundProfile::setPaletteName(QString paletteName) {
+void SpiralBackgroundProfile::setPaletteName(QString paletteName) {
   _palName = paletteName;
 }
 
-/*
- * get/set coarseness.
- */
-float PlasmaFractalBackgroundProfile::getCoarseness() {
-  return _coarseness;
-}
-
-void PlasmaFractalBackgroundProfile::setCoarseness(float coarseness) {
-  _coarseness = coarseness;
-}
-
-/*
+/**
  * get/set steps per tick
  */
-int PlasmaFractalBackgroundProfile::getGenStepsPerTick() {
+int SpiralBackgroundProfile::getGenStepsPerTick() {
   return _genStepsPerTick;
 }
 
-void PlasmaFractalBackgroundProfile::setGenStepsPerTick(int genStepsPerTick) {
-  _genStepsPerTick = genStepsPerTick;
+void SpiralBackgroundProfile::setGenStepsPerTick(int genStepsPerTick) {
+    _genStepsPerTick = genStepsPerTick;
 }
 
-/*
+/**
  * Get/set animate palette.
  */
-bool PlasmaFractalBackgroundProfile::getAnimatePalette() {
+bool SpiralBackgroundProfile::getAnimatePalette() {
   return _bAnimatePalette;
 }
 
-void PlasmaFractalBackgroundProfile::setAnimatePalette(bool bAnimatePalette) {
+void SpiralBackgroundProfile::setAnimatePalette(bool bAnimatePalette) {
   _bAnimatePalette = bAnimatePalette;
 }
 
-/*
+/**
  * get/set palette x speed.
  */
-float PlasmaFractalBackgroundProfile::getPaletteXSpeed() {
+float SpiralBackgroundProfile::getPaletteXSpeed() {
   return _paletteXSpeed;
 }
 
-void PlasmaFractalBackgroundProfile::setPaletteXSpeed(float speed) {
-  _paletteXSpeed = speed;
+void SpiralBackgroundProfile::setPaletteXSpeed(float speed) {
+  if(0.0 <= speed && speed <= 30000.0)
+    _paletteXSpeed = speed;
 }
 
-/*
+/**
  * get/set palette y speed.
  */
-float PlasmaFractalBackgroundProfile::getPaletteYSpeed() {
+float SpiralBackgroundProfile::getPaletteYSpeed() {
   return _paletteYSpeed;
 }
 
-void PlasmaFractalBackgroundProfile::setPaletteYSpeed(float speed) {
-  _paletteYSpeed = speed;
-}
-
-/*
- * Get/set clamp color index.
- */
-bool PlasmaFractalBackgroundProfile::getClampColorIndex() {
-  return _bClampColorIndex;
-}
-
-void PlasmaFractalBackgroundProfile::setClampColorIndex(bool bClampColorIndex) {
-  _bClampColorIndex = bClampColorIndex;
-}
-
-/*
- * Overloaded assignment operator
- */
-PlasmaFractalBackgroundProfile& PlasmaFractalBackgroundProfile::operator=(PlasmaFractalBackgroundProfile& other) {
-  _name = other._name;
-  _palName = other._palName;
-  _coarseness = other._coarseness;
-  _genStepsPerTick = other._genStepsPerTick;
-  _bAnimatePalette = other._bAnimatePalette;
-  _paletteXSpeed = other._paletteXSpeed;
-  _paletteYSpeed = other._paletteYSpeed;
-  _bClampColorIndex = other._bClampColorIndex;
-
-  return *this;
-}
-
-/*
- * Creates a new object with this object's settings.
- */
-BackgroundProfile* PlasmaFractalBackgroundProfile::clone() {
-  PlasmaFractalBackgroundProfile* retVal = new PlasmaFractalBackgroundProfile();
-
-  *retVal = *this;
-
-  return (BackgroundProfile*)retVal;
+void SpiralBackgroundProfile::setPaletteYSpeed(float speed) {
+  if(0.0 <= speed && speed <= 30000.0)
+    _paletteYSpeed = speed;
 }
 
 /**
  * Called whenever palette names change
  */
-void PlasmaFractalBackgroundProfile::paletteNameChanged(QString oldName,
-							QString newName) {
+void SpiralBackgroundProfile::paletteNameChanged(QString oldName,
+						 QString newName) {
   // if the palette name matches the old name, change the name.
   if(_palName == oldName) {
     _palName = newName;
@@ -322,11 +281,46 @@ void PlasmaFractalBackgroundProfile::paletteNameChanged(QString oldName,
 /**
  * Called whenever a palette is removed.
  */
-void PlasmaFractalBackgroundProfile::paletteRemoved(QString palName) {
+void SpiralBackgroundProfile::paletteRemoved(QString palName) {
   // if this palette has been removed, set current palette name to ""
   if(_palName == palName) {
     _palName = QString("");
   }
 }
+
+/**
+ * Copies the base values of the specified profile to this profile.
+ */
+void SpiralBackgroundProfile::baseCopy(SpiralBackgroundProfile& other) {
+  _name = other._name;
+  _palName = other._palName;
+  _genStepsPerTick = other._genStepsPerTick;
+  _bAnimatePalette = other._bAnimatePalette;
+  _paletteXSpeed = other._paletteXSpeed;
+  _paletteYSpeed = other._paletteYSpeed;
+  
+}
+
+/**
+ * Overloaded assignment operator
+ */
+SpiralBackgroundProfile& SpiralBackgroundProfile::operator=(SpiralBackgroundProfile& other) {
+  
+  baseCopy(other);
+
+  return *this;
+}
+
+/**
+ * Creates a new object with this object's settings.
+ */
+BackgroundProfile* SpiralBackgroundProfile::clone() {
+  SpiralBackgroundProfile* retVal = new SpiralBackgroundProfile();
+
+  *retVal = *this;
+
+  return (BackgroundProfile*)retVal;
+}
+
 
 

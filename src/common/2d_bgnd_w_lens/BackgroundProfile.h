@@ -44,58 +44,64 @@
 
 class BackgroundProfile {
 
-public:
-	/* Attempts to load this background profile object from the
-	 * specified QDomNode.
-	 */
-	virtual BackgroundProfile* load(QDomNode &node);
+ public:
+  /**
+   * Default constructor/destructor
+   */
+  BackgroundProfile();
+  virtual ~BackgroundProfile();
 
-	/*
-	 * Returns a QDomNode object that represents this profile.
-	 */
-	virtual QDomNode save(QDomDocument* doc);
+  /* Attempts to load this background profile object from the
+   * specified QDomNode.
+   */
+  virtual BackgroundProfile* load(QDomNode &node);
 
-	/*
-	 * Creates and returns a new background object.
-	 */
-	virtual Background* getNewBackgroundObj(int height, int width, QHash<QString, IndexedPaletteProfile*>* palHash);
+  /*
+   * Returns a QDomNode object that represents this profile.
+   */
+  virtual QDomNode save(QDomDocument* doc);
 
-	/**
-	 * Called whenever palette names change
-	 */
-	virtual void paletteNameChanged(QString oldName, QString newName);
+  /*
+   * Creates and returns a new background object.
+   */
+  virtual Background* getNewBackgroundObj(int height, int width, QHash<QString, IndexedPaletteProfile*>* palHash);
+
+  /**
+   * Called whenever palette names change
+   */
+  virtual void paletteNameChanged(QString oldName, QString newName);
 	
-	/**
-	 * Called whenever a palette is removed.
-	 */
-	virtual void paletteRemoved(QString palName);
+  /**
+   * Called whenever a palette is removed.
+   */
+  virtual void paletteRemoved(QString palName);
 
-	/*
-	 * Get/set the name of this profile.
-	 */
-	void setName(QString &name);
-	QString getName();
+  /*
+   * Get/set the name of this profile.
+   */
+  void setName(QString &name);
+  QString getName();
 
-	/*
-	 * Returns the tag name used by Dom elements for all
-	 * subclasses of BackgroundProfile.
-	 */
-	static QString getXMLTagName();
+  /*
+   * Returns the tag name used by Dom elements for all
+   * subclasses of BackgroundProfile.
+   */
+  static QString getXMLTagName();
 
-	/*
-	 * Returns the type of BackgroundProfile.
-	 */
-	QString getBackgroundType();
+  /*
+   * Returns the type of BackgroundProfile.
+   */
+  QString getBackgroundType();
 
-	/*
-	 * Creates a new object with this object's settings.
-	 */
-	virtual BackgroundProfile* clone();
+  /*
+   * Creates a new object with this object's settings.
+   */
+  virtual BackgroundProfile* clone();
 
-protected:
+ protected:
 
-	QString _name;
-	QString _xmlTypeValue; /* Needs set by subclasses!*/
+  QString _name;
+  QString _xmlTypeValue; /* Needs set by subclasses!*/
 };
 
 #endif

@@ -18,6 +18,9 @@ win32:SOURCES	=	$$COMMON_PATH/core/win_main.cpp
 unix:SOURCES    =       $$COMMON_PATH/core/unix_main.cpp
 SOURCES         +=      $$COMMON_PATH/core/win_misc_funcs.cpp
 
+SOURCES		+=	$$COMMON_PATH/spirals/SpiralAlgorithm.cpp
+SOURCES		+=	$$COMMON_PATH/spirals/RectangularSpiralAlgorithm.cpp
+
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPalette.cpp
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteDialog.cpp
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteDialogEntryButton.cpp
@@ -30,7 +33,6 @@ SOURCES		+=	$$COMMON_PATH/utility/misc_funcs.cpp
 SOURCES		+=	$$COMMON_PATH/utility/ImportExportDialog.cpp
 SOURCES		+=	$$COMMON_PATH/utility/HelpDialog.cpp
 SOURCES		+=	$$COMMON_PATH/gpl_related/gpldialog.cpp
-SOURCES		+=	$$COMMON_PATH/plasma/PlasmaAlgorithm.cpp
 
 SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/opengl_main.cpp
 SOURCES		+=	$$COMMON_PATH/2d_bgnd_w_lens/Background.cpp $$COMMON_PATH/2d_bgnd_w_lens/BackgroundProfile.cpp
@@ -53,6 +55,9 @@ SOURCES		+=	$$SOURCE_PATH/ProfileEditDialog.cpp
 
 HEADERS		=	$$COMMON_PATH/core/win_misc_funcs.h
 
+HEADERS		+=	$$COMMON_PATH/spirals/SpiralAlgorithm.h
+HEADERS		+=	$$COMMON_PATH/spirals/RectangularSpiralAlgorithm.h
+
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPalette.h
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteDialog.h
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteDialogEntryButton.h
@@ -65,7 +70,6 @@ HEADERS		+=	$$COMMON_PATH/utility/misc_funcs.h
 HEADERS		+=	$$COMMON_PATH/utility/ImportExportDialog.h
 HEADERS		+=	$$COMMON_PATH/utility/HelpDialog.h
 HEADERS		+=	$$COMMON_PATH/gpl_related/gpldialog.h
-HEADERS		+=	$$COMMON_PATH/plasma/PlasmaAlgorithm.h
 HEADERS		+=	$$COMMON_PATH/core/opengl_main.h
 
 HEADERS		+=	$$COMMON_PATH/2d_bgnd_w_lens/Background.h $$COMMON_PATH/2d_bgnd_w_lens/BackgroundProfile.h

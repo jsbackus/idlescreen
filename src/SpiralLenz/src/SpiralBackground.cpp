@@ -26,12 +26,27 @@
 #include "SpiralBackground.h"
 
 /**
- * Constructor takes the dimensions, a pointer to the palette,
- * whether to rotate the palette, and the palette color skip.
+ * Constructor takes the dimensions, a pointer to the algorithm,
+ * a pointer to the palette, whether to rotate the palette, 
+ * and the palette color skip.  This class takes responsibility for
+ * destroying both the algorithm and the palette.
+ * @param sizeX The width of the background.
+ * @param sizeY The height of the background.
+ * @param algorithm A pointer to the spiral algorithm.
+ * @param pal A pointer to the palette.
+ * @param bAnimatePalette Whether or not to animate the palette.
+ * @param paletteXSpeed The palette rotational speed in the primary direction.
+ * @param paletteYSpeed The palette rotational speed in the secondary dir.
+ * @param genStepsPerTick The number of generation steps per tick.
  */
-SpiralBackground::SpiralBackground(int sizeX, int sizeY, IndexedPalette* pal,
-				   bool bAnimatePalette, float paletteXSpeed,
-				   float paletteYSpeed) {
+SpiralBackground::SpiralBackground(int sizeX, int sizeY, 
+				   SpiralAlgorithm* algorithm,
+				   IndexedPalette* pal, bool bAnimatePalette,
+				   float paletteXSpeed, float paletteYSpeed,
+				   int genStepsPerTick) {
+
+  // general defaults
+  _algorithm = NULL;
 
   // base class specific
   initIndexedPaletteBackground(sizeX,sizeY);
@@ -39,27 +54,22 @@ SpiralBackground::SpiralBackground(int sizeX, int sizeY, IndexedPalette* pal,
   _bEnableAnimation = bAnimatePalette;
   _xSpeed = paletteXSpeed;
   _ySpeed = paletteYSpeed;
+  _algorithm = algorithm;
+  _numGenStepsPerTick = genStepsPerTick;
 
   _bSetupFinished = false;
 
-  // general defaults
-  _numGenStepsPerTick = 0;
-  _bRandomColor = false;
-  _algorithm = NULL;
-  _style = SINGLE;
-
-  // SINGLE style specific
-  _bLerpToDefault = false;
-  _singleWidth = 1;
-  // end SINGLE style
-
-
   // initialize field to -1 (no color)
-  for(int i=0;i<_height*_width;i++)
-    {
+  if(_field != NULL) {
+    for(int i=0;i<_sizeX*_sizeY;i++) {
       _field[i] = -1;
     }
+  }
 
+  // initialize the algorithm
+  if(_algorithm != NULL) {
+    _algorithm->initialize(_field, sizeX, sizeY, _paletteWidth);
+  }
 }
 
 SpiralBackground::~SpiralBackground() {
@@ -67,70 +77,16 @@ SpiralBackground::~SpiralBackground() {
 }
 
 /**
- * Initializes the generator algorithm to generate a single-color
- * spiral of the specified width, rotating through the primary palette
- * direction as it extends outward.  If bLerpToDefaultColor is true,
- * the palette color will be in the middle with, the default palette color
- * on the borders.  If bRandomColor is true, the first color index is 
- * randomly picked.
- * If genStepsPerTick is 0, then it will all be done in one swoop.
- */
-void SpiralBackground::genSingleColorSpiral(SpiralBackgroundShape shape,
-					    int genStepsPerTick, int width,
-					    bool bRandomColor,
-					    bool bLerpToDefaultColor) {
-  _numGenStepsPerTick = genStepsPerTick;
-  _bRandomColor = bRandomColor;
-
-  _style = SINGLE;
-  _singleWidth = width;
-  _bLerpToDefaultColor = bLerpToDefaultColor;
-
-  //_algorithm =
-  //_shape = shape;
-}
-
-/**
- * Initializes the generator algorithm to generate a multi-color spiral,
- * that remains constant through the whole spiral.  The width is the
- * width (primary axis) of the palette.  If bRandomColor is true,
- * the initial index is randomly picked and the palette will be wrapped.
- * If genStepsPerTick is 0, then it will all be done in one swoop.
- */
-void SpiralBackground::genMultiColorSpiral(SpiralBackgroundShape shape,
-					   int genStepsPerTick, 
-					   bool bRandomColor) {
-  _numGenStepsPerTick = genStepsPerTick;
-  _bRandomColor = bRandomColor;
-
-  _style = MULTIWIDTH;
-
-  //_shape = shape;
-  //_algorithm = 
-}
-
-/**
  * Finishes generating the spiral then rotates the palette when done.
  */
 void SpiralBackground::clocktick() {
-  if(_paletteWidth > 0)
-    {
-      if(!_bSetupFinished)
-	{
-	  spiralGenStep();
-	}
-      else
-	{
-	  rotateColorIndex();
-	}
+  if(_paletteWidth > 0) {
+    if(!_bSetupFinished && _algorithm != NULL) {
+      if(_algorithm->calc(_numGenStepsPerTick))
+	_bSetupFinished = true;
+    } else {
+      rotateColorIndex();
     }
-}
-
-/**
- * Performs one iteration of the fractal generation.
- */
-void SpiralBackground::spiralGenStep() {
-  if(_algorithm.calc(_numGenStepsPerTick))
-    _bSetupFinished = true;
+  }
 }
 

@@ -127,6 +127,33 @@ if test "$enable_plasmagenerator" == "yes";
 	[man_targets="$man_targets PlasmaGenerator/man_page/PlasmaGenerator.1"]
 fi
 
+AC_ARG_ENABLE([spirallenz], [AC_HELP_STRING([--enable-spirallenz],
+		      [build SpiralLenz screen saver default=yes])],
+		      [enable_spirallenz=$enableval],
+		      [enable_spirallenz=yes])
+
+if test "$enable_spirallenz" == "yes";
+   then 
+   	[qt_targets="$qt_targets SpiralLenz"]
+	[data_targets="$data_targets SpiralLenz.xml"]
+	[man_targets="$man_targets SpiralLenz/man_page/SpiralLenz.1"]
+fi
+
+AC_ARG_ENABLE([spirallenz-glut], [AC_HELP_STRING([--enable-spirallenz-glut],
+		      [build SpiralLenz GLUT demo default=no])],
+		      [enable_spirallenz_glut=$enableval],
+		      [enable_spirallenz_glut=no])
+
+if test "$enable_spirallenz_glut" == "yes";
+   then
+	[qt_targets="$qt_targets SpiralLenz_glut"]
+   	[enable_glut="yes"]
+	[data_targets="$data_targets SpiralLenz.xml"]
+	[man_targets="$man_targets SpiralLenz/man_page/SpiralLenz.1"]
+fi
+
+
+# substitute in targets
 AC_SUBST(bintrg, $qt_targets)
 AC_SUBST(datatrg, $data_targets)
 AC_SUBST(mantrg, $man_targets)

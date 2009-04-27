@@ -34,72 +34,72 @@
 
 class Background {
 
-public:
-	/**
-	 * Draws the whole Background.
-	 */
-	virtual void drawBackground(screen_struct* screenObj);
+ public:
+  /**
+   * Draws the whole Background.
+   */
+  virtual void drawBackground(screen_struct* screenObj);
 
-	/**
-	 * Whether or not the background should animate
-	 * itself (if it supports it)
-	 */
-	void enableAnimation(bool bEnableAnimation);
+  /**
+   * Whether or not the background should animate
+   * itself (if it supports it)
+   */
+  void enableAnimation(bool bEnableAnimation);
 
-	/**
-	 * Call this every tick to animate.
-	 * Must be overloaded by derived class.
-	 */
-	virtual void clocktick();
+  /**
+   * Call this every tick to animate.
+   * Must be overloaded by derived class.
+   */
+  virtual void clocktick();
 
-	/**
-	 * Used to set whether to show the fractal generation or not.
-	 * If so, the number of steps are shown per render pass.
-	 */
-	//void setShowGeneration(bool bShowGen, int numPasses);
+  /**
+   * Used to set whether to show the fractal generation or not.
+   * If so, the number of steps are shown per render pass.
+   */
+  //void setShowGeneration(bool bShowGen, int numPasses);
 
-	/**
-	 * Returns true if the background has finished whatever
-	 * setup it needs to do, animated or otherwise.
-	 */
-	bool isSetupFinished();
+  /**
+   * Returns true if the background has finished whatever
+   * setup it needs to do, animated or otherwise.
+   */
+  bool isSetupFinished();
 
-	/**
-	 * Constructor takes the background dimensions as
-	 * arguments.
-	 */
-	Background(int sizeX, int sizeY);
+  /**
+   * Constructor takes the background dimensions as
+   * arguments.
+   */
+  Background(int sizeX, int sizeY);
 
-	~Background(void);
+  ~Background(void);
 
-	//*** Begin Screen Related ***
-	int getScreenWidth();
-	int getScreenHeight();
-	int getTextureWidth();
-	int getTextureHeight();
-	//*** End Screen Related
+  //*** Begin Screen Related ***
+  int getScreenWidth();
+  int getScreenHeight();
+  int getTextureWidth();
+  int getTextureHeight();
+  //*** End Screen Related
 
-protected:
-	/**
-	 * Default constructor...
-	 */
-	Background();
+ protected:
+  /**
+   * Default constructor...
+   */
+  Background();
 
-	/**
-	 * Called from the constructor and does all of the work,
-	 * so that derived classes can call from their constructors.
-	 * sizeX and sizeY are the dimensions of the background, not
-	 * necessarily the size of the screen object, which has to
-	 * be a power of 2.
-	 */
-	void initBackground(int sizeX, int sizeY);
+  /**
+   * Called from the constructor and does all of the work,
+   * so that derived classes can call from their constructors.
+   * sizeX and sizeY are the dimensions of the background, not
+   * necessarily the size of the screen object, which has to
+   * be a power of 2.
+   */
+  void initBackground(int sizeX, int sizeY);
 
-	int _sizeX;
-    int _sizeY;
+  int _sizeX;
+  int _sizeY;
 
-	bool _bEnableAnimation;
+  bool _bEnableAnimation;
 
-	bool _bSetupFinished;
+  bool _bSetupFinished;
 };
 
 #endif

@@ -103,3 +103,16 @@ Qt::CheckState boolToCheckState(bool bVal) {
   return Qt::Unchecked;
 }
 
+/**
+ * Rounds a float to the nearest whole number and casts to integer.
+ */
+int roundFtoI(const float& val) {
+  return (val < 0.0) ? int(val-0.5) : int(val+0.5);
+}
+
+/**
+ * Rounds a double to the nearest whole number and casts to integer.
+ */
+int roundDtoI(const double& val) {
+  return (val < 0.0) ? int(val-0.5) : int(val+0.5);
+}

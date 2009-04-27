@@ -24,6 +24,8 @@
 
 #include <QString>
 
+//#ifndef __MISC_FUNCS_H__
+//#define __MISC_FUNCS_H__
 /**
  * Returns a random integer just like rand() does, however it will
  * periodically reseed the generator using the current time.
@@ -55,3 +57,19 @@ extern QString randStr(int length);
  * Converts the specified bool to Qt::CheckState.
  */
 extern Qt::CheckState boolToCheckState(bool bVal);
+
+/**
+ * Rounds a float to the nearest whole number and casts to integer.
+ */
+extern int roundFtoI(const float& val);/* {
+  return (val < 0.0) ? int(val-0.5) : int(val+0.5);
+  }*/
+
+/**
+ * Rounds a double to the nearest whole number and casts to integer.
+ */
+extern int roundDtoI(const double& val);/* {
+  return (val < 0.0) ? int(val-0.5) : int(val+0.5);
+  }*/
+
+//#endif

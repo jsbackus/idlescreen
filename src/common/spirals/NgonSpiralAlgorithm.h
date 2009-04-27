@@ -23,28 +23,33 @@
  */
 
 /**
- * This algorithm will generate a rectangular spiral.
+ * This is a generic N-gon spiral algorithm.  If N is invalid, a polar
+ * spiral algorithm is used.
  */
 
 #include "utility/misc_funcs.h"
 #include "SpiralAlgorithm.h"
 
-#ifndef __RECTANGULARSPIRALALGORITHM_H__
-#define __RECTANGULARSPIRALALGORITHM_H__
+#ifndef __NGONSPIRALALGORITHM_H__
+#define __NGONSPIRALALGORITHM_H__
 
-enum RectangularSpiralAlgorithmDir { UP=0, DOWN=1, LEFT=2, RIGHT=3 };
+//enum NgonSpiralAlgorithmDir { UP=0, DOWN=1, LEFT=2, RIGHT=3 };
 
-class RectangularSpiralAlgorithm : public SpiralAlgorithm {
+#define NGONSPIRAL_PI 3.14159265f
+#define NGONSPIRAL_MAX_N 20
+
+class NgonSpiralAlgorithm : public SpiralAlgorithm {
 
  public:
 
   /**
    * Default constructor.
    */
-  RectangularSpiralAlgorithm();
+  NgonSpiralAlgorithm();
 
   /**
    * Constructor takes initialization parameters.
+   * @param N the number of sides the Ngon has.  N=0 for a polar spiral.
    * @param colorWidth the width of the strip of color.
    * @param emptyWidth the width of the default color region.
    * @param bConstantColor whether or not to hold the color index constant.
@@ -52,11 +57,11 @@ class RectangularSpiralAlgorithm : public SpiralAlgorithm {
    * @param bIncrementColor whether to increment the color as it spirals out.
    * @see calc()
    */
-  RectangularSpiralAlgorithm(const int colorWidth, const int emptyWidth,
-			     const bool bConstantColor, const bool bRandomColor,
-			     const bool bIncrementColor);
+  NgonSpiralAlgorithm(const int N, const int colorWidth, const int emptyWidth,
+		      const bool bConstantColor, const bool bRandomColor,
+		      const bool bIncrementColor);
 
-  ~RectangularSpiralAlgorithm();
+  ~NgonSpiralAlgorithm();
 
   /**
    * Initializes the algorithm.  Doesn't perform any actual generation.
@@ -65,8 +70,8 @@ class RectangularSpiralAlgorithm : public SpiralAlgorithm {
    * @param screenHeight the height of the screen in pixels.
    * @param numColors the number of colors in the palette primary direction.
    */
-  void initialize(int* field, const int screenWidth, const int screenHeight,
-		  const int numColors);
+  void initialize(int* field, const int screenWidth, 
+		  const int screenHeight, const int numColors);
 
   /**
    * Completes one iteration of the algorithm.  Returns true if the algorithm
@@ -75,6 +80,20 @@ class RectangularSpiralAlgorithm : public SpiralAlgorithm {
   bool calc();
 
  private:
+  /**
+   * Calculates a new X,Y using a polar spiral.  Utilizes an adaptive
+   * algorithm to adjust thetaStep such that the new (x,y) value will
+   * be adjacent but not on the previous (x,y) value.
+   * @param x the previous X value.  On return, it is the new X value.
+   * @param y the previous Y value.  On return, it is the new Y value.
+   * @param r the previous R value.  On return, it is the new R value.
+   * @param theta the previous Theta value.  It is updated on return.
+   * @param thetaStep the previous Theta step value.  Updated on return.
+   * @return True if the calculation is complete.
+   */
+  bool calcSpiral(double* x, double* y, double* r, double* theta, 
+		  double* thetaStep);
+
   /**
    * Calculates both the corner and "straight away" segments.
    * These segments are _segmentSize x _segmentSize in size.
@@ -87,30 +106,52 @@ class RectangularSpiralAlgorithm : public SpiralAlgorithm {
    * if _bConstantColor is false.  In the case where _bConstantColor is
    * true, the index offset will always be 0.
    */
-  void calcSegments();
+  //void calcSegments();
 
   /**
    * Rotates and draws the specified segment at (_currX,_currY) based
    * on _dir.
    * @param seg Must be either _cornerSeg or _straightSeg.
    */
-  void drawSegment(int* seg);
+  //void drawSegment(int* seg);
 
+  // begin parameters
+  int _n;
   int _colorWidth;
   int _emptyWidth;
   bool _bConstantColor;
   bool _bRandomColor;
   bool _bIncrementColor;
+  // end parameters
 
-  int _segmentSize;
+  // begin spiral specific
+  double _rCoeff; // accounts for clockwise/counterclockwise!
+  double _currR;
+  double _currTheta;
+  double _lastThetaStep;
+  double _maxR;   //!< polar stopping condition
+  // end spiral specific
+
+  double _currX;
+  double _currY;
+  int _nextIdx;
+
+  // begin constants to speed up calculations
+  int _screenXOffset;
+  int _screenYOffset;
+  int _segmentWidth;
+  int _maxFieldIdx;   //> _sizeX * _sizeY - 1;
+  // end constants
+
+  // begin debug
+  int _stepCount;
+
+  /*
   int* _cornerSeg;
   int* _straightSeg;
 
-  RectangularSpiralAlgorithmDir _dir;
+  NgonSpiralAlgorithmDir _dir;
   bool _bClockwise;
-  float _currX;
-  float _currY;
-  int _nextIdx;
 
   int _xSegs;  //> either current or next number of segments
   int _ySegs;  //> either current or next number of segments
@@ -119,9 +160,8 @@ class RectangularSpiralAlgorithm : public SpiralAlgorithm {
   int _yMaxSegs; //> Maximum number of segments in the y direction.
 
   // These are to speed up some calculations, since they only need done once.
-  int _maxFieldIdx;   //> _sizeX * _sizeY - 1;
   float _halfSegSize; //> _segmentSize / 2.0
-
+  */
 };
 
 #endif
