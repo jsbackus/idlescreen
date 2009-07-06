@@ -115,6 +115,10 @@ Section "Qt Libraries"
   File "${QTDIR}\lib\QtCore4.dll"
   File "${QTDIR}\lib\QtGui4.dll"
   File "${QTDIR}\lib\QtXml4.dll"
+  # these files apparently aren't on all windows installations...
+  File "${SYSDIR}\msvcp71.dll"
+  File "${SYSDIR}\msvcr71.dll"
+
 
   # plug ins
   File "${QTDIR}\plugins\imageformats\qgif?.dll"
