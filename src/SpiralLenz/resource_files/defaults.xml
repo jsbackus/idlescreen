@@ -3,11 +3,16 @@
  <BackgroundProfile>
   <type>RectangularSpiralBackground</type>
   <name>Classic RGB Profile</name>
-  <steps_per_tick>2048</steps_per_tick>
+  <steps_per_tick>1024</steps_per_tick>
   <anmiate_palette>true</anmiate_palette>
   <palette_x_speed>1</palette_x_speed>
   <palette_y_speed>1</palette_y_speed>
   <palette>Classic RGB Palette</palette>
+  <color_width>1</color_width>
+  <empty_width>1</empty_width>
+  <constant_color>false</constant_color>
+  <random_color>false</random_color>
+  <increment_color>false</increment_color>
  </BackgroundProfile>
  <IndexedPaletteProfile>
   <name>Classic RGB Palette</name>
@@ -98,7 +103,8 @@
  </MasterProfile>
  <random_master_profiles>false</random_master_profiles>
  <gpl_accepted>false</gpl_accepted>
- <master_profile_history_size>3</master_profile_history_size>
+ <master_profile_history_size>0</master_profile_history_size>
+ <master_profile_history/>
  <selected_master_profile_list>
   <selected_entry>
    <name>Classic RGB</name>

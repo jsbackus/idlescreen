@@ -20,6 +20,7 @@ SOURCES		+=	$$COMMON_PATH/core/win_misc_funcs.cpp
 SOURCES		+=	$$COMMON_PATH/spirals/SpiralAlgorithm.cpp
 SOURCES		+=	$$COMMON_PATH/spirals/RectangularSpiralAlgorithm.cpp
 SOURCES		+=	$$COMMON_PATH/spirals/NgonSpiralAlgorithm.cpp
+SOURCES		+=	$$COMMON_PATH/spirals/PolarSpiralAlgorithm.cpp
 
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPalette.cpp
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteDialog.cpp
@@ -63,6 +64,7 @@ HEADERS		=	$$COMMON_PATH/core/win_misc_funcs.h
 HEADERS		+=	$$COMMON_PATH/spirals/SpiralAlgorithm.h
 HEADERS		+=	$$COMMON_PATH/spirals/RectangularSpiralAlgorithm.h
 HEADERS		+=	$$COMMON_PATH/spirals/NgonSpiralAlgorithm.h
+HEADERS		+=	$$COMMON_PATH/spirals/PolarSpiralAlgorithm.h
 
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPalette.h
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteDialog.h

@@ -5,15 +5,14 @@
 #include <math.h>
 using namespace std;
 
-#include "NgonSpiralAlgorithm.h"
+#include "PolarSpiralAlgorithm.h"
 
 /**
  * Constructor.
  */
-NgonSpiralAlgorithm::NgonSpiralAlgorithm() {
+PolarSpiralAlgorithm::PolarSpiralAlgorithm() {
 
   // parameters
-  _n = 0;
   _colorWidth = 1;
   _emptyWidth = 0;
   _bConstantColor = true;
@@ -37,7 +36,6 @@ NgonSpiralAlgorithm::NgonSpiralAlgorithm() {
 
   /**
    * Constructor takes initialization parameters.
-   * @param N the number of sides the Ngon has.  N=0 for a polar spiral.
    * @param colorWidth the width of the strip of color.
    * @param emptyWidth the width of the default color region.
    * @param bConstantColor whether or not to hold the color index constant.
@@ -45,7 +43,7 @@ NgonSpiralAlgorithm::NgonSpiralAlgorithm() {
    * @param bIncrementColor whether to increment the color as it spirals out.
    * @see calc()
    */
-NgonSpiralAlgorithm::NgonSpiralAlgorithm(const int N, const int colorWidth, 
+PolarSpiralAlgorithm::PolarSpiralAlgorithm(const int colorWidth, 
 					 const int emptyWidth,
 					 const bool bConstantColor,
 					 const bool bRandomColor,
@@ -63,7 +61,6 @@ NgonSpiralAlgorithm::NgonSpiralAlgorithm(const int N, const int colorWidth,
   _currY = 0.0;
 
   // set parameters
-  _n = N;
   _colorWidth = colorWidth;
   _emptyWidth = emptyWidth;
   _bConstantColor = bConstantColor;
@@ -79,18 +76,18 @@ NgonSpiralAlgorithm::NgonSpiralAlgorithm(const int N, const int colorWidth,
   _segmentWidth = _colorWidth + (_emptyWidth<<1);
 
   // calculate spiral constants and initial values
-  _rCoeff = double(_segmentWidth)/(2.0*NGONSPIRAL_PI);  
+  _rCoeff = double(_segmentWidth)/(2.0*SPIRALALGORITHM_PI);  
   _rCoeff *= (jrand() % 2 == 0) ? 1.0 : -1.0;  // whether clockwise or not.
   _currR = 0.0;
 
   // for now, just start at 0.
   _currTheta = 0.0;
-  _lastThetaStep = NGONSPIRAL_PI/16.0;
+  _lastThetaStep = SPIRALALGORITHM_PI/16.0;
 
 }
 
 
-NgonSpiralAlgorithm::~NgonSpiralAlgorithm() {
+PolarSpiralAlgorithm::~PolarSpiralAlgorithm() {
 }
 
 /**
@@ -100,7 +97,7 @@ NgonSpiralAlgorithm::~NgonSpiralAlgorithm() {
  * @param screenHeight the height of the screen in pixels.
  * @param numColors the number of colors in the palette primary direction.
  */
-void NgonSpiralAlgorithm::initialize(int* field, const int screenWidth, 
+void PolarSpiralAlgorithm::initialize(int* field, const int screenWidth, 
 				     const int screenHeight, 
 				     const int numColors) {
   initializeBase(field, screenWidth, screenHeight, numColors);
@@ -141,23 +138,16 @@ void NgonSpiralAlgorithm::initialize(int* field, const int screenWidth,
  * Completes one iteration of the algorithm.  Returns true if the algorithm
  * is completed.
  */
-bool NgonSpiralAlgorithm::calc() {
+bool PolarSpiralAlgorithm::calc() {
   if(_field == NULL)
     return true;
-
-    if(_stepCount < 0)
+  
+  if(_stepCount < 0)
     return true;
   //_stepCount--;
-  // if N is valid, use the N-gon spiral calculations.
-  // Otherwise, use the polar spiral calculations
-  bool retVal;
-  if(2 < _n && _n <= NGONSPIRAL_MAX_N) {
-    retVal = true; // < Temporary!
-  } else {
-    retVal = calcSpiral(&_currX, &_currY, &_currR, &_currTheta, 
-			&_lastThetaStep);
-  }
-
+  
+  bool retVal = calcSpiral();
+  
   // set pixel to next color, if it is within the boundaries.
   int px = roundDtoI(_currX)+_screenXOffset;
   int py = roundDtoI(_currY)+_screenYOffset;
@@ -187,24 +177,18 @@ bool NgonSpiralAlgorithm::calc() {
  * algorithm to adjust thetaStep such that the new (x,y) value will
  * be adjacent but not on the previous (x,y) value.
  * 
- * @param x the previous X value.  On return, it is the new X value.
- * @param y the previous Y value.  On return, it is the new Y value.
- * @param r the previous R value.  On return, it is the new R value.
- * @param theta the previous Theta value.  It is updated on return.
- * @param thetaStep the previous Theta step value.  Updated on return.
  * @return True if the calculation is complete.
  */
-bool NgonSpiralAlgorithm::calcSpiral(double* x, double* y, double* r, 
-				     double* theta, double* thetaStep) {
+bool PolarSpiralAlgorithm::calcSpiral() {
   //cout<<"Entering calcSpiral"<<endl;
   double newX;
   double newY;
   double newR;
   double newTheta;
-  double newThetaStep = *thetaStep;
+  double newThetaStep = _lastThetaStep;
 
-  int iOldX = roundDtoI(*x);
-  int iOldY = roundDtoI(*y);
+  int iOldX = roundDtoI(_currX);
+  int iOldY = roundDtoI(_currY);
   int iNewX;
   int iNewY;
  
@@ -212,7 +196,7 @@ bool NgonSpiralAlgorithm::calcSpiral(double* x, double* y, double* r,
   bool bDone = false;
   while(!bDone) {
     // update Theta
-    newTheta = *theta + newThetaStep;
+    newTheta = _currTheta + newThetaStep;
 
     // calculate the new R, X and Y
     newR = _rCoeff * newTheta;
@@ -243,7 +227,7 @@ bool NgonSpiralAlgorithm::calcSpiral(double* x, double* y, double* r,
 
     if(++escape_count >= 100) {
       /*
-      cout<<"NgonSpiralAlgorithm::calcSpiral() Escape count reached!"<<endl;
+      cout<<"PolarSpiralAlgorithm::calcSpiral() Escape count reached!"<<endl;
       cout<<"maxR: "<<_maxR<<endl;
       */
       //exit(1);
@@ -256,11 +240,11 @@ bool NgonSpiralAlgorithm::calcSpiral(double* x, double* y, double* r,
   // !!! NOTE NEED TO ADD IN CODE TO HANDLE _colorWidth
 
   // send out values.
-  *x = newX;
-  *y = newY;
-  *r = newR;
-  *theta = newTheta;
-  *thetaStep = newThetaStep;
+  _currX = newX;
+  _currY = newY;
+  _currR = newR;
+  _currTheta = newTheta;
+  _lastThetaStep = newThetaStep;
 
   return (_rCoeff < 0.0) ? (newR <= _maxR) : (newR >= _maxR);
 }

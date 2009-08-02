@@ -23,29 +23,26 @@
  */
 
 /**
- * This is a generic N-gon spiral algorithm.  If N is invalid, a polar
- * spiral algorithm is used.
+ * This algorithm generates a polar spiral.
  */
 
-#include "utility/Vector2D.h"
 #include "utility/misc_funcs.h"
 #include "SpiralAlgorithm.h"
 
-#ifndef __NGONSPIRALALGORITHM_H__
-#define __NGONSPIRALALGORITHM_H__
+#ifndef __POLARSPIRALALGORITHM_H__
+#define __POLARSPIRALALGORITHM_H__
 
-class NgonSpiralAlgorithm : public SpiralAlgorithm {
+class PolarSpiralAlgorithm : public SpiralAlgorithm {
 
  public:
 
   /**
    * Default constructor.
    */
-  NgonSpiralAlgorithm();
+  PolarSpiralAlgorithm();
 
   /**
    * Constructor takes initialization parameters.
-   * @param N the number of sides the Ngon has.  N=0 for a polar spiral.
    * @param colorWidth the width of the strip of color.
    * @param emptyWidth the width of the default color region.
    * @param bConstantColor whether or not to hold the color index constant.
@@ -53,11 +50,11 @@ class NgonSpiralAlgorithm : public SpiralAlgorithm {
    * @param bIncrementColor whether to increment the color as it spirals out.
    * @see calc()
    */
-  NgonSpiralAlgorithm(const int N, const int colorWidth, const int emptyWidth,
+  PolarSpiralAlgorithm(const int colorWidth, const int emptyWidth,
 		      const bool bConstantColor, const bool bRandomColor,
 		      const bool bIncrementColor);
 
-  ~NgonSpiralAlgorithm();
+  ~PolarSpiralAlgorithm();
 
   /**
    * Initializes the algorithm.  Doesn't perform any actual generation.
@@ -80,18 +77,11 @@ class NgonSpiralAlgorithm : public SpiralAlgorithm {
    * Calculates a new X,Y using a polar spiral.  Utilizes an adaptive
    * algorithm to adjust thetaStep such that the new (x,y) value will
    * be adjacent but not on the previous (x,y) value.
-   * @param x the previous X value.  On return, it is the new X value.
-   * @param y the previous Y value.  On return, it is the new Y value.
-   * @param r the previous R value.  On return, it is the new R value.
-   * @param theta the previous Theta value.  It is updated on return.
-   * @param thetaStep the previous Theta step value.  Updated on return.
    * @return True if the calculation is complete.
    */
-  bool calcSpiral(double* x, double* y, double* r, double* theta, 
-		  double* thetaStep);
+  bool calcSpiral();
 
   // begin parameters
-  int _n;
   int _colorWidth;
   int _emptyWidth;
   bool _bConstantColor;
@@ -99,13 +89,11 @@ class NgonSpiralAlgorithm : public SpiralAlgorithm {
   bool _bIncrementColor;
   // end parameters
 
-  // begin spiral specific
   double _rCoeff; // accounts for clockwise/counterclockwise!
   double _currR;
   double _currTheta;
-  double _thetaStep;
+  double _lastThetaStep;
   double _maxR;   //!< polar stopping condition
-  // end spiral specific
 
   double _currX;
   double _currY;
@@ -120,23 +108,6 @@ class NgonSpiralAlgorithm : public SpiralAlgorithm {
 
   // begin debug
   int _stepCount;
-
-  /*
-  int* _cornerSeg;
-  int* _straightSeg;
-
-  NgonSpiralAlgorithmDir _dir;
-  bool _bClockwise;
-
-  int _xSegs;  //> either current or next number of segments
-  int _ySegs;  //> either current or next number of segments
-  int _remainingSegs; //> Segments remaining to draw.
-  int _xMaxSegs; //> Maximum number of segments in the x direction.
-  int _yMaxSegs; //> Maximum number of segments in the y direction.
-
-  // These are to speed up some calculations, since they only need done once.
-  float _halfSegSize; //> _segmentSize / 2.0
-  */
 };
 
 #endif

@@ -44,11 +44,21 @@ bool SpiralAlgorithm::calc() {
  * the algorithm will continue until finished.
  */
 bool SpiralAlgorithm::calc(const int numIterations) {
+
+  int i=0;
+  bool bDone = false;
+  while(i++<numIterations && !bDone) {
+    bDone = calc();
+  }
+
+  return bDone;
+  /*
 	for(int i=0; i<numIterations; i++) {
 		if(calc())
 			return true;
 	}
 	return false;  
+  */
 }
 
 /**

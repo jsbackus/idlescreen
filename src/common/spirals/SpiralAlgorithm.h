@@ -36,6 +36,8 @@
 #include <stdlib.h>
 #endif
 
+#define SPIRALALGORITHM_PI 3.14159265f
+
 class SpiralAlgorithm {
 
  public:
