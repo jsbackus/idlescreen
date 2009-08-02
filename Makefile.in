@@ -60,7 +60,7 @@ bin/PlasmaLenz : src/PlasmaLenz/project_files/PlasmaLenz_scr.pro
 	$(MAKE) -f Makefile.PlasmaLenz_scr
 
 bin/PlasmaLenz_glut : src/PlasmaLenz/project_files/PlasmaLenz_glut.pro
-	cd $(srcdir)src/PlasmaLenz/project_files/ && $(QMAKE) PlasmaLenz_glut.pro \
+	cd $(srcdir)/src/PlasmaLenz/project_files/ && $(QMAKE) PlasmaLenz_glut.pro \
 	-o Makefile.PlasmaLenz_glut && \
 	$(MAKE) -f Makefile.PlasmaLenz_glut
 
