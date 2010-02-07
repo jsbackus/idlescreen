@@ -36,7 +36,10 @@ using namespace std;
 #include "SpiralBackground.h"
 
 // begin tmp
-#include "spirals/NgonSpiralAlgorithm.h"
+// modified 02/06/10 to get back on track..
+//#include "spirals/NgonSpiralAlgorithm.h"
+#include "spirals/RectangularSpiralAlgorithm.h"
+// end mod
 #include "spirals/PolarSpiralAlgorithm.h"
 // end tmp
 
@@ -255,20 +258,21 @@ Background* RectangularSpiralBackgroundProfile::getNewBackgroundObj(int height,
 								    int width,
 							 QHash<QString, IndexedPaletteProfile*>* palHash) {
 
-
+  /*
   PolarSpiralAlgorithm* alg = 
     new PolarSpiralAlgorithm(_colorWidth,_emptyWidth,_bConstantColor,
 			    _bRandomColor, _bIncrementColor);
+  */
   /*
   NgonSpiralAlgorithm* alg = 
     new NgonSpiralAlgorithm(0,_colorWidth,_emptyWidth,_bConstantColor,
 			    _bRandomColor, _bIncrementColor);
   */
-  /*
+
   RectangularSpiralAlgorithm* alg = 
     new RectangularSpiralAlgorithm(_colorWidth,_emptyWidth,_bConstantColor,
 				   _bRandomColor, _bIncrementColor);
-  */
+
   if(alg == NULL)
     return NULL;
 

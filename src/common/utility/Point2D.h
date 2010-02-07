@@ -28,7 +28,7 @@
  */
 
 #include <iostream>
-#include <meth.h>
+#include <math.h>
 
 using namespace std;
 
@@ -72,28 +72,25 @@ class Point2D {
    */
   void setY(const double y=0.0);
 
+  /**
+   * Sets both the x & y values.
+   */
+  void setValue(const double x=0.0, const double y=0.0);
+
   Point2D& operator=(const Point2D& other);
-  Point2D& operator==(const Point2D& other);
-  Point2D& operator!=(const Point2D& other);
+  bool operator==(const Point2D& other);
+  bool operator!=(const Point2D& other);
   // these operations geometrically don't make sense, but are for ease of use.
   Point2D& operator*(const double val);
   Point2D& operator/(const double val);
   Point2D& operator*=(const double val);
   Point2D& operator/=(const double val);
 
+  friend ostream& operator<<(ostream& os, const Point2D& point);
+
  private:
   double _x;
   double _y;
 };
-
-// **** Begin Friend definitions ****
-
-/**
- * friend vector to dump to an ostream
- */
-friend ostream& operator<<(ostream& os, const Point2D& point) {
-  os<<"("<<point.getX()<<","<<point.getY()<<")";
-  return os;
-}
 
 #endif

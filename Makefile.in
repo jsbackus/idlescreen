@@ -46,13 +46,20 @@ xscrdatadir = /usr/share/xscreensaver/hacks.conf.d/
 UNINSTALL_XSCR = $(xscrdatadir)/$(INSTALL_XSCR)
 UPDATEXSCR = @UPDATEXSCR@
 
-.PHONY : forceall all clean doc repoclean distclean
+.PHONY : forceall all clean doc repoclean distclean unit_tests
 
 forceall :
 	-rm bin/*
 	$(MAKE) all
 
 all : $(TRG)
+
+unit_tests : bin/common_unit_tests
+
+bin/common_unit_tests : src/common/unit_tests/unit_tests.pro src/common/unit_tests/unit_tests_main.cpp
+	cd $(srcdir)/src/common/unit_tests/ && $(QMAKE) unit_tests.pro \
+	-o Makefile.unit_tests && \
+	$(MAKE) -f Makefile.unit_tests
 
 bin/PlasmaLenz : src/PlasmaLenz/project_files/PlasmaLenz_scr.pro
 	cd $(srcdir)/src/PlasmaLenz/project_files/ && $(QMAKE) PlasmaLenz_scr.pro \
@@ -109,6 +116,7 @@ clean :
 	-rm bin/AcidRain bin/AcidRain_glut
 	-rm bin/SpiralLenz bin/SpiralLenz_glut
 	-rm bin/PlasmaGenerator
+	-rm bin/*unit_tests
 	-cd $(srcdir)/src/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_scr clean
 	-cd $(srcdir)/src/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_glut clean
 	-cd $(srcdir)/src/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_scr clean
@@ -126,6 +134,7 @@ distclean:
 	-rm bin/Crawlies bin/Crawlies_glut
 	-rm bin/AcidRain bin/AcidRain_glut
 	-rm bin/SpiralLenz bin/SpiralLenz_glut
+	-rm bin/*unit_tests
 	-cd $(srcdir)/src/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_scr distclean
 	-cd $(srcdir)/src/PlasmaLenz/project_files/ && $(MAKE) -f Makefile.PlasmaLenz_glut distclean
 	-cd $(srcdir)/src/Crawlies/project_files/ && $(MAKE) -f Makefile.Crawlies_scr distclean
