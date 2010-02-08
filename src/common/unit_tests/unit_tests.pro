@@ -20,15 +20,19 @@ INCLUDEPATH = $$COMMON_PATH #$$SOURCE_PATH $$RESOURCE_PATH
 
 # Input
 SOURCES  = unit_tests_main.cpp
+SOURCES += $$COMMON_PATH/utility/misc_funcs.cpp
+SOURCES += $$COMMON_PATH/utility/unit_tests/Test_MiscFuncs.cpp
 SOURCES += $$COMMON_PATH/utility/Point2D.cpp
 SOURCES += $$COMMON_PATH/utility/unit_tests/Test_Point2D.cpp
-#SOURCES += $$COMMON_PATH/utility/Vector2D.cpp
-#SOURCES += $$COMMON_PATH/utility/unit_tests/Test_Vector2D.cpp
+SOURCES += $$COMMON_PATH/utility/Vector2D.cpp
+SOURCES += $$COMMON_PATH/utility/unit_tests/Test_Vector2D.cpp
 
-HEADERS  = $$COMMON_PATH/utility/Point2D.h
+HEADERS  = $$COMMON_PATH/utility/misc_funcs.h
+HEADERS += $$COMMON_PATH/utility/unit_tests/Test_MiscFuncs.h
+HEADERS += $$COMMON_PATH/utility/Point2D.h
 HEADERS += $$COMMON_PATH/utility/unit_tests/Test_Point2D.h
-#HEADERS += $$COMMON_PATH/utility/Vector2D.h
-#HEADERS += $$COMMON_PATH/utility/unit_tests/Test_Vector2D.h
+HEADERS += $$COMMON_PATH/utility/Vector2D.h
+HEADERS += $$COMMON_PATH/utility/unit_tests/Test_Vector2D.h
 
 TARGET		= common_unit_tests
 #RC_FILE	= $$RESOURCE_PATH/win_resource.rc

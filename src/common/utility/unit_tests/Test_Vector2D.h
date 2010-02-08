@@ -26,13 +26,13 @@
  * This set of classes is for unit testing Point2D.
  */
 
-#ifndef __TEST_POINT2D_H__
-#define __TEST_POINT2D_H__
+#ifndef __TEST_VECTOR2D_H__
+#define __TEST_VECTOR2D_H__
 
 #include <QtTest/QtTest>
-#include "../Point2D.h"
+#include "../Vector2D.h"
 
-class Test_Point2D: public QObject {
+class Test_Vector2D: public QObject {
   Q_OBJECT
 
  private slots:
@@ -40,14 +40,22 @@ class Test_Point2D: public QObject {
   void Test_GetSetY();
   void Test_SetValue();
   void Test_Constructor();
-  void Test_Epsilon();
+  void Test_Magnitude();
+  void Test_Normalize();
+  void Test_GetNormal();
+  void Test_Dot();
+  void Test_IsParallelTo();
+  void Test_IsNormalTo();
+
   void Test_OperatorSet();
   void Test_OperatorEqual();
   void Test_OperatorNotEqual();
+  /*
   void Test_OperatorMultiply();
   void Test_OperatorDivide();
   void Test_OperatorMultiplyEqual();
   void Test_OperatorDivideEqual();
+  */
   void Test_OperatorOstream();
 
  private:

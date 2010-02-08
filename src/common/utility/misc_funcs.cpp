@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <ctime>
 
+//#include <iostream>
 using namespace std;
 
 #include <QString>
@@ -115,4 +116,26 @@ int roundFtoI(const float& val) {
  */
 int roundDtoI(const double& val) {
   return (val < 0.0) ? int(val-0.5) : int(val+0.5);
+}
+
+/**
+ * Compares to doubles using the specified precision.
+ */
+bool relativeCompare(const double& A, const double& B, 
+		     const double& epsilon) {
+  double tmpA = (A > 0.0) ? A : -1.0 * A;
+  double tmpB = (B > 0.0) ? B : -1.0 * B;
+  double delta = (tmpA > tmpB) ? tmpA - tmpB : tmpB - tmpA;
+  return (delta <= epsilon);
+}
+
+/**
+ * Compares to floats using the specified precision.
+ */
+bool relativeCompare(const float& A, const float& B, 
+		     const float& epsilon) {
+  float tmpA = (A > 0.0) ? A : -1.0 * A;
+  float tmpB = (B > 0.0) ? B : -1.0 * B;
+  float delta = (tmpA > tmpB) ? tmpA - tmpB : tmpB - tmpA;
+  return (delta <= epsilon);
 }

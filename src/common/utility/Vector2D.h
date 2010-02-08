@@ -59,20 +59,29 @@ class Vector2D {
    * Gets the x value.
    */
   double getX();
+
   /**
    * Sets the x value.
    */
   void setX(const double x=0.0);
+
   /**
    * Gets the y value.
    */
   double getY();
 
-
   /**
    * Sets the y value.
    */
   void setY(const double y=0.0);
+
+  /**
+   * Sets the x & y values.
+   *
+   * @param x The x value of the vector.
+   * @param y The y value of the vector.
+   */
+  void setValue(const double x=0.0, const double y=0.0);
 
   /**
    * Gets the magnitude of the vector.
@@ -90,6 +99,11 @@ class Vector2D {
   void normalize();
 
   /**
+   * Returns the dot product of the specified vector with this vector.
+   */
+  double dot(const Vector2D other);
+
+  /**
    * Returns true if the specified vector is parallel to this vector.
    */
   bool isParallelTo(const Vector2D other);
@@ -100,10 +114,30 @@ class Vector2D {
   bool isNormalTo(const Vector2D other);
 
   /**
-   * Returns the dot product of the specified vector with this vector.
+   * Sets the default epsilon value.
    */
-  double dot(const Vector2D other);
+  static void setDefaultEpsilon(const double& epsilon);
+  
+  /**
+   * Gets the default epsilon value.
+   */
+  static double getDefaultEpsilon();
 
+  /**
+   * Sets the epsilon value for this object.
+   */
+  void setEpsilon(const double &epsilon);
+
+  /**
+   * Gets the epsilon value for this object.
+   */
+  double getEpsilon();
+
+  Vector2D& operator=(const Vector2D& other);
+  bool operator==(const Vector2D& other);
+  bool operator!=(const Vector2D& other);
+
+#ifdef __NEEDS_DEBUGGING__
   /**
    * Calculates the angle between the specified vector and this vector.
    */
@@ -117,6 +151,15 @@ class Vector2D {
    * @param b The point to check.
    */
   bool isOnLine(const Point2D a, const point2D b);
+
+  /**
+   * Checks to see if point B is on the line specified
+   * by this vector and point A.
+   *
+   * @param a A point known to be on the line.
+   * @param b The point to check.
+   */
+  Point2D getPoint(const Point2D a, const double distance=1.0);
 
   /**
    * Finds the point of intersection of the line specified
@@ -133,56 +176,30 @@ class Vector2D {
   bool getIntersectingPt(const Point2D pA, const Vector2D vB, 
 			 const Point2D pB, Vector2D* result);
 
-  Vector2D& operator=(const Vector2D& other);
   Vector2D& operator+(const Vector2D& other);
+  Vector2D& operator-(const Vector2D& other);
   Vector2D& operator*(const double val);
   Vector2D& operator*(const double val, Vector2D& v);
   Vector2D& operator/(const double val);
   Vector2D& operator+=(const Vector2D& other);
   Vector2D& operator*=(const double val);
   Vector2D& operator/=(const double val);
-  Vector2D& operator==(const Vector2D& other);
-  Vector2D& operator!=(const Vector2D& other);
   Vector2D& operator-=(const Vector2D& other);
-  Vector2D& operator-(const Vector2D& other);
+
+  friend Vector2D& operator-(const Point2D& initial, const Point2D& final);
+  friend Point2D& operator+(const Point2D& p, const Vector2D& v);
+  friend Point2D& operator+(const Vector2D& v, const Point2D& p);
+#endif
+  friend ostream& operator<<(ostream& os, const Vector2D& vector);
 
  private:
   double _x;
   double _y;
 
   bool _bIsNormalized; //!< cuts down on excess calculations.
+
+  double _epsilon;
+  static double DEFAULT_EPSILON;
 };
-
-// **** Begin Friend definitions ****
-
-/**
- * friend vector to dump to an ostream
- */
-friend ostream& operator<<(ostream& os, const Vector2D& vector) {
-  os<<"("<<vector.getX()<<","<<vector.getY()<<")";
-  return os;
-}
-
-/**
- * point subtraction results in a vector
- */
-friend Vector2D& operator-(const Point2D& initial, const Point2D& final) {
-  double x = final.getX() - initial.getX();
-  double y = final.getY() - initial.getY();
-  Vector2D retVal(x, y);
-  return retVal;
-}
-
-/**
- * A point plus a vector results in a new point.
- */
-friend Point2D& operator+(const Point2D& p, const Vector2D& v) {
-  Point2D retVal;
-  retVal.setX(p.getX()+v.getX());
-  retVal.setY(p.getY()+v.getY());
-}
-friend Point2D& operator+(const Vector2D& v, const Point2D& p) {
-  return p+v;
-}
 
 #endif

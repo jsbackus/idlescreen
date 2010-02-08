@@ -77,6 +77,26 @@ class Point2D {
    */
   void setValue(const double x=0.0, const double y=0.0);
 
+  /**
+   * Sets the default epsilon value.
+   */
+  static void setDefaultEpsilon(const double& epsilon);
+  
+  /**
+   * Gets the default epsilon value.
+   */
+  static double getDefaultEpsilon();
+
+  /**
+   * Sets the epsilon value for this object.
+   */
+  void setEpsilon(const double &epsilon);
+
+  /**
+   * Gets the epsilon value for this object.
+   */
+  double getEpsilon();
+
   Point2D& operator=(const Point2D& other);
   bool operator==(const Point2D& other);
   bool operator!=(const Point2D& other);
@@ -91,6 +111,9 @@ class Point2D {
  private:
   double _x;
   double _y;
+
+  double _epsilon;
+  static double DEFAULT_EPSILON;
 };
 
 #endif

@@ -108,6 +108,23 @@ void Test_Point2D::Test_Constructor() {
   QVERIFY(testPointC.getY() == -21734.1);
 }
 
+void Test_Point2D::Test_Epsilon() {
+  Point2D testPointA;
+
+  // get/set Defaults
+  double defVal = 0.0000001;
+  QVERIFY(testPointA.getDefaultEpsilon() == defVal);
+  testPointA.setDefaultEpsilon(0.001);
+  QVERIFY(testPointA.getDefaultEpsilon() == 0.001);
+  
+  Point2D testPointB;
+  QVERIFY(testPointB.getEpsilon() == 0.001);
+  testPointB.setEpsilon(0.0007);
+  QVERIFY(testPointB.getEpsilon() == 0.0007);
+
+  // return to default
+  testPointA.setDefaultEpsilon(defVal);
+}
 void Test_Point2D::Test_OperatorSet() {
   Point2D testPoint;
 

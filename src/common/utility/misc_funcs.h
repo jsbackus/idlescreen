@@ -72,4 +72,16 @@ extern int roundDtoI(const double& val);/* {
   return (val < 0.0) ? int(val-0.5) : int(val+0.5);
   }*/
 
+/**
+ * Compares to doubles using the specified precision.
+ */
+extern bool relativeCompare(const double& A, const double& B, 
+			    const double& epsilon);
+
+/**
+ * Compares to floats using the specified precision.
+ */
+extern bool relativeCompare(const float& A, const float& B, 
+			    const float& epsilon);
+
 //#endif

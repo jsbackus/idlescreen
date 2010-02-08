@@ -1,5 +1,36 @@
-
+#include "misc_funcs.h"
 #include "Vector2D.h"
+
+// Set default value of the global epsilon
+double Vector2D::DEFAULT_EPSILON = 0.0000001;
+
+/**
+ * Sets the default epsilon value.
+ */
+void Vector2D::setDefaultEpsilon(const double& epsilon) {
+  DEFAULT_EPSILON = epsilon;
+}
+
+/**
+ * Gets the default epsilon value.
+ */
+double Vector2D::getDefaultEpsilon() {
+  return DEFAULT_EPSILON;
+}
+
+/**
+ * Sets the epsilon value for this object.
+ */
+void Vector2D::setEpsilon(const double &epsilon) {
+  _epsilon = epsilon;
+}
+
+/**
+ * Gets the epsilon value for this object.
+ */
+double Vector2D::getEpsilon() {
+  return _epsilon;
+}
 
 /**
  * Constructor.
@@ -7,10 +38,11 @@
  * @param x The initial x value of the vector.
  * @param y The initial y value of the vector.
  */
-Vector2D::Vector2D(const double x=0.0, const double y=0.0) {
+Vector2D::Vector2D(const double x, const double y) {
   _x = x;
   _y = y;
   _bIsNormalized = false;
+  _epsilon = DEFAULT_EPSILON;
 }
   
 /**
@@ -28,7 +60,7 @@ double Vector2D::getX() {
 /**
  * Sets the x value.
  */
-void Vector2D::setX(const double x=0.0) {
+void Vector2D::setX(const double x) {
   _x = x;
   _bIsNormalized = false;
 }
@@ -42,9 +74,20 @@ double Vector2D::getY() {
 /**
  * Sets the y value.
  */
-void Vector2D::setY(const double y=0.0) {
+void Vector2D::setY(const double y) {
   _y = y;
   _bIsNormalized = false;
+}
+
+/**
+ * Sets the x & y values.
+ *
+ * @param x The x value of the vector.
+ * @param y The y value of the vector.
+ */
+void Vector2D::setValue(const double x, const double y) {
+  _x = x;
+  _y = y;
 }
 
 /**
@@ -78,11 +121,21 @@ Vector2D Vector2D::getNormal() {
 void Vector2D::normalize() {
   if(!_bIsNormalized) {
     double mag = magnitude();
-    _x = _x/mag;
-    _y = _y/mag;
-    _bIsNormalized = true;
+    if(!relativeCompare(mag, 0.0, _epsilon)) {
+      _x = _x/mag;
+      _y = _y/mag;
+      _bIsNormalized = true;
+    }
   }
 }
+
+/**
+ * Returns the dot product of the specified vector with this vector.
+ */
+double Vector2D::dot(const Vector2D other) {
+  return (_x*other._x+_y*other._y);
+}
+
 
 /**
  * Returns true if the specified vector is parallel to this vector.
@@ -94,26 +147,42 @@ bool Vector2D::isParallelTo(const Vector2D other) {
   otherUnitV.normalize();
 
   return 
-    ( (thisUnitV._x == otherUnitV._x || thisUnitV._x == -1.0*otherUnitV._x) &&
-      (thisUnitV._y == otherUnitV._y || thisUnitV._y == -1.0*otherUnitV._y) );
+    ( relativeCompare(thisUnitV.magnitude(), 1.0, _epsilon) &&
+      relativeCompare(otherUnitV.magnitude(), 1.0, _epsilon) &&
+      (relativeCompare(thisUnitV._x, otherUnitV._x, _epsilon) || 
+       relativeCompare(thisUnitV._x, 1.0*otherUnitV._x, _epsilon)) &&
+      (relativeCompare(thisUnitV._y, otherUnitV._y, _epsilon) || 
+       relativeCompare(thisUnitV._y, 1.0*otherUnitV._y, _epsilon)) );
 }
 
 /**
  * Returns true if the specified vector is normal to this vector.
  */
 bool Vector2D::isNormalTo(const Vector2D other) {
-  Vector2D otherNormV = other.getNormal();
+  Vector2D thisV = *this;
+  Vector2D otherNormV = other;
 
-  return isParallel(otherNormV);
+  return thisV.isParallelTo(otherNormV.getNormal());
 }
 
-/**
- * Returns the dot product of the specified vector with this vector.
- */
-double Vector2D::dot(const Vector2D other) {
-  return (_x*other._x+_y*other._y);
-}
+Vector2D& Vector2D::operator=(const Vector2D& other) {
+  // no need to check for self-assignment, since we're not 
+  // allocating/deallocating memory.
+  _x = other._x;
+  _y = other._y;
+  _bIsNormalized = other._bIsNormalized;
 
+  return *this;
+}
+bool Vector2D::operator==(const Vector2D& other) {
+  return (relativeCompare(_x, other._x, _epsilon) && 
+	  relativeCompare(_y, other._y, _epsilon));
+}
+bool Vector2D::operator!=(const Vector2D& other) {
+  return !(*this == other);
+
+}
+#ifdef __NEEDS_DEBUGING__
 /**
  * Calculates the angle between the specified vector and this vector.
  * Note: returns a value between [0, pi] or NaN if values are invalid.
@@ -173,67 +242,78 @@ bool Vector2D::getIntersectingPt(const Point2D pA, const Vector2D vB,
   return false;
 }
 
-Vector2D& Vector2D::operator=(const Vector2D& other) {
-  // no need to check for self-assignment, since we're not 
-  // allocating/deallocating memory.
-  _x = other._x;
-  _y = other._y;
-  _bIsNormalized = other._bIsNormalized;
-
+Vector2D& Vector2D::operator+(const Vector2D& other) {
+  *this += other;
   return *this;
 }
-Vector2D& Vector2D::operator+(const Vector2D& other) {
-  Vector2D retVal = *this;
-  retVal += other;
-  return retVal;
-}
 Vector2D& Vector2D::operator*(const double val) {
-  Vector2D retVal = *this;
-  retVal *= val;
-  return retVal;
+  *this *= val;
+  return *this;
 }
 Vector2D& Vector2D::operator*(const double val, Vector2D& v) {
   return v*val;
 }
 Vector2D& Vector2D::operator/(const double val) {
-  Vector2D retVal = *this;
-  retVal /= val;
-  return retVal;
+  *this /= val;
+  return *this;
 }
 Vector2D& Vector2D::operator+=(const Vector2D& other) {
-  Vector2D retVal = *this;
-  retVal._x += other._x;
-  retVal._y += other._y;
-  retVal._bIsNormalized = false;
-  return retVal;
+  _x += other._x;
+  _y += other._y;
+  _bIsNormalized = false;
+  return *this;
 }
 Vector2D& Vector2D::operator*=(const double val) {
-  Vector2D retVal = *this;
-  retVal._x *= val;
-  retVal._y *= val;
-  retVal._bIsNormalized = false;
-  return retVal;  
+  _x *= val;
+  _y *= val;
+  _bIsNormalized = false;
+  return *this;  
 }
 Vector2D& Vector2D::operator/=(const double val) {
-  Vector2D retVal = *this;
-  retVal *= (1.0/val);
-  return retVal;
-}
-Vector2D& Vector2D::operator==(const Vector2D& other) {
-  return (_x == other._x && _y == other._y);
-}
-Vector2D& Vector2D::operator!=(const Vector2D& other) {
-  return !(*this == other);
-
+  *this *= (1.0/val);
+  return *this;
 }
 Vector2D& Vector2D::operator-=(const Vector2D& other) {
   Vector2D otherInv = other * -1.0;
-  Vector2D retVal = *this;
-  retVal += otherInv;
-  return retVal;
+  *this += otherInv;
+  return *this;
 }
 Vector2D& Vector2D::operator-(const Vector2D& other) {
-  Vector2D retVal = *this;
-  retVal -= other;
+  *this -= other;
+  return *this;
+}
+
+// **** Begin Friend definitions ****
+
+/**
+ * point subtraction results in a vector
+ */
+Vector2D& operator-(const Point2D& initial, const Point2D& final) {
+  double x = final.getX() - initial.getX();
+  double y = final.getY() - initial.getY();
+  Vector2D retVal(x, y);
   return retVal;
 }
+
+/**
+ * A point plus a vector results in a new point.
+ */
+Point2D& operator+(const Point2D& p, const Vector2D& v) {
+  Point2D retVal;
+  retVal.setX(p.getX()+v.getX());
+  retVal.setY(p.getY()+v.getY());
+}
+Point2D& operator+(const Vector2D& v, const Point2D& p) {
+  return p+v;
+}
+#endif
+
+/**
+ * friend vector to dump to an ostream
+ */
+ostream& operator<<(ostream& os, const Vector2D& vector) {
+  Vector2D tmp = vector;
+  os<<"("<<tmp.getX()<<","<<tmp.getY()<<")";
+  return os;
+}
+

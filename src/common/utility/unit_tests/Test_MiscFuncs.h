@@ -23,32 +23,29 @@
  */
 
 /**
- * This set of classes is for unit testing Point2D.
+ * This set of classes is for unit testing the functions in misc_funcs.
  */
 
-#ifndef __TEST_POINT2D_H__
-#define __TEST_POINT2D_H__
+#ifndef __TEST_MISC_FUNCS_H__
+#define __TEST_MISC_FUNCS_H__
 
 #include <QtTest/QtTest>
-#include "../Point2D.h"
+#include "../misc_funcs.h"
 
-class Test_Point2D: public QObject {
+class Test_MiscFuncs: public QObject {
   Q_OBJECT
 
  private slots:
-  void Test_GetSetX();
-  void Test_GetSetY();
-  void Test_SetValue();
-  void Test_Constructor();
-  void Test_Epsilon();
-  void Test_OperatorSet();
-  void Test_OperatorEqual();
-  void Test_OperatorNotEqual();
-  void Test_OperatorMultiply();
-  void Test_OperatorDivide();
-  void Test_OperatorMultiplyEqual();
-  void Test_OperatorDivideEqual();
-  void Test_OperatorOstream();
+  void Test_Jrand();
+  void Test_BoolToString();
+  void Test_StringToBool();
+  void Test_DotProduct();
+  void Test_RandStr();
+  void Test_BoolToCheckState();
+  void Test_RoundFToI();
+  void Test_RoundDToI();
+  void Test_RelativeCompareF();
+  void Test_RelativeCompareD();
 
  private:
 };

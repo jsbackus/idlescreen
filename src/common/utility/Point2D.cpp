@@ -21,7 +21,39 @@
  *     http://trolltech.com/
  * 
  */
+#include "misc_funcs.h"
 #include "Point2D.h"
+
+// Set default value of the global epsilon
+double Point2D::DEFAULT_EPSILON = 0.0000001;
+
+/**
+ * Sets the default epsilon value.
+ */
+void Point2D::setDefaultEpsilon(const double& epsilon) {
+  DEFAULT_EPSILON = epsilon;
+}
+
+/**
+ * Gets the default epsilon value.
+ */
+double Point2D::getDefaultEpsilon() {
+  return DEFAULT_EPSILON;
+}
+
+/**
+ * Sets the epsilon value for this object.
+ */
+void Point2D::setEpsilon(const double &epsilon) {
+  _epsilon = epsilon;
+}
+
+/**
+ * Gets the epsilon value for this object.
+ */
+double Point2D::getEpsilon() {
+  return _epsilon;
+}
 
 /**
  * Constructor.
@@ -32,6 +64,7 @@
 Point2D::Point2D(const double x, const double y) {
   _x = x;
   _y = y;
+  _epsilon = DEFAULT_EPSILON;
 }
   
 /**
@@ -84,7 +117,8 @@ void Point2D::setValue(const double x, const double y) {
 }
 
 bool Point2D::operator==(const Point2D& other) {
-  return (_x == other._x && _y == other._y);
+  return (relativeCompare(1.0+_x, 1.0+other._x, _epsilon) && 
+	  relativeCompare(1.0+_y,1.0+other._y, _epsilon));
 }
 bool Point2D::operator!=(const Point2D& other) {
   return !(*this == other);
