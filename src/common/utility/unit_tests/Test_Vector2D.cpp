@@ -386,6 +386,195 @@ void Test_Vector2D::Test_IsNormalTo() {
   QVERIFY(!testVectorB.isNormalTo(testVectorA));
 }
 
+void Test_Vector2D::Test_GetAngle() {
+  Vector2D testVectorA;
+  Vector2D testVectorB;
+
+  // Parallel vectors
+  double angle = 0.0;
+  double mag = 3.5;
+  testVectorA.setValue(1.0,0.0);
+  testVectorB.setValue(mag*cos(angle),mag*sin(angle));
+  QVERIFY(relativeCompare(testVectorA.getAngle(testVectorB),angle, 1.0e-6));
+  QVERIFY(relativeCompare(testVectorB.getAngle(testVectorA),angle, 1.0e-6));
+
+  // Perpendicular vectors
+  angle = 1.570763;
+  mag = 17.4;
+  testVectorA.setValue(1.0,0.0);
+  testVectorB.setValue(mag*cos(angle),mag*sin(angle));
+  QVERIFY(relativeCompare(testVectorA.getAngle(testVectorB),angle, 1.0e-6));
+  QVERIFY(relativeCompare(testVectorB.getAngle(testVectorA),angle, 1.0e-6));
+
+  // Acute vectors
+  angle = 0.478115;
+  mag = 0.653;
+  testVectorA.setValue(1.0,0.0);
+  testVectorB.setValue(mag*cos(angle),mag*sin(angle));
+  QVERIFY(relativeCompare(testVectorA.getAngle(testVectorB),angle, 1.0e-6));
+  QVERIFY(relativeCompare(testVectorB.getAngle(testVectorA),angle, 1.0e-6));
+
+  // Obtuse vectors
+  angle = 3.071099;
+  mag = 19273.1;
+  testVectorA.setValue(1.0,0.0);
+  testVectorB.setValue(mag*cos(angle),mag*sin(angle));
+  QVERIFY(relativeCompare(testVectorA.getAngle(testVectorB),angle, 1.0e-6));
+  QVERIFY(relativeCompare(testVectorB.getAngle(testVectorA),angle, 1.0e-6));
+
+  // both set to default
+  angle = 0.0;
+  testVectorA.setValue();
+  testVectorB.setValue();
+  QVERIFY(relativeCompare(testVectorA.getAngle(testVectorB),angle, 1.0e-6));
+  QVERIFY(relativeCompare(testVectorB.getAngle(testVectorA),angle, 1.0e-6));
+}
+
+void Test_Vector2D::Test_Rotate() {
+  Vector2D testVector;
+  double angle;
+  double x;
+  double y;
+  // Parallel vectors
+  angle = 0.0;
+  x = 1.345;
+  y = 2.714;
+  testVector.setValue(x,y);
+  testVector.rotate(angle);
+  QVERIFY(relativeCompare(testVector.getX(),x*cos(angle)-y*sin(angle), 1.0e-6));
+  QVERIFY(relativeCompare(testVector.getY(),x*sin(angle)+y*cos(angle), 1.0e-6));
+
+  // perpendicular vectors
+  angle = 1.570796;
+  x = 1.345;
+  y = 2.714;
+  testVector.setValue(x,y);
+  testVector.rotate(angle);
+  QVERIFY(relativeCompare(testVector.getX(),x*cos(angle)-y*sin(angle), 1.0e-6));
+  QVERIFY(relativeCompare(testVector.getY(),x*sin(angle)+y*cos(angle), 1.0e-6));
+
+  // 180 degrees
+  angle = 3.1415927;
+  x = 1.345;
+  y = 2.714;
+  testVector.setValue(x,y);
+  testVector.rotate(angle);
+  QVERIFY(relativeCompare(testVector.getX(),x*cos(angle)-y*sin(angle), 1.0e-6));
+  QVERIFY(relativeCompare(testVector.getY(),x*sin(angle)+y*cos(angle), 1.0e-6));
+
+  // some positive angle
+  angle = 0.558505;
+  x = 1.345;
+  y = 2.714;
+  testVector.setValue(x,y);
+  testVector.rotate(angle);
+  QVERIFY(relativeCompare(testVector.getX(),x*cos(angle)-y*sin(angle), 1.0e-6));
+  QVERIFY(relativeCompare(testVector.getY(),x*sin(angle)+y*cos(angle), 1.0e-6));
+
+  // some negative angle
+  angle = -0.558505;
+  x = 1.345;
+  y = 2.714;
+  testVector.setValue(x,y);
+  testVector.rotate(angle);
+  QVERIFY(relativeCompare(testVector.getX(),x*cos(angle)-y*sin(angle), 1.0e-6));
+  QVERIFY(relativeCompare(testVector.getY(),x*sin(angle)+y*cos(angle), 1.0e-6));
+
+  // set to default
+  angle = 1.954769;
+  testVector.setValue();
+  testVector.rotate(angle);
+  QVERIFY(relativeCompare(testVector.getX(),0.0, 1.0e-6));
+  QVERIFY(relativeCompare(testVector.getY(),0.0, 1.0e-6));
+}
+
+void Test_Vector2D::Test_GetPoint() {
+  Vector2D vector;
+  Point2D origin;
+  Point2D result;
+  double scalar;
+
+  // simple case
+  vector.setValue(1.0,1.0);
+  origin.setValue(2.0,5.0);
+  scalar = 12.0;
+  result = vector.getPoint(origin, scalar);
+  QVERIFY(relativeCompare(result.getX(),vector.getX()*scalar+origin.getX(), 
+			  1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),vector.getY()*scalar+origin.getY(), 
+			  1.0e-6));
+
+  // fractional case
+  vector.setValue(10.0,10.0);
+  origin.setValue(17.3,91.4);
+  scalar = 0.5;
+  result = vector.getPoint(origin, scalar);
+  QVERIFY(relativeCompare(result.getX(),vector.getX()*scalar+origin.getX(), 
+			  1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),vector.getY()*scalar+origin.getY(), 
+			  1.0e-6));
+
+  // negative case
+  vector.setValue(1.0,1.0);
+  vector.normalize();
+  origin.setValue(0.0,0.0);
+  scalar = -1914.1341;
+  result = vector.getPoint(origin, scalar);
+  QVERIFY(relativeCompare(result.getX(),vector.getX()*scalar+origin.getX(), 
+			  1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),vector.getY()*scalar+origin.getY(), 
+			  1.0e-6));
+
+  // default case
+  vector.setValue();
+  origin.setValue();
+  scalar = 12.0;
+  result = vector.getPoint(origin, scalar);
+  QVERIFY(relativeCompare(result.getX(),0.0, 1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),0.0, 1.0e-6));
+
+}
+
+void Test_Vector2D::Test_IsOnLine() {
+  Vector2D vector;
+  Point2D origin;
+  Point2D testPoint;
+
+  // positive slope
+  vector.setValue(1.0,1.0);
+  origin.setValue(2.0,5.0);
+  testPoint.setValue(4.7,7.7);
+  QVERIFY(vector.isOnLine(origin,testPoint));
+
+  // negative slope
+  vector.setValue(1.0,1.0);
+  origin.setValue(2.0,5.0);
+  testPoint.setValue(-1.3,1.7);
+  QVERIFY(vector.isOnLine(origin,testPoint));
+
+  // not on line
+  vector.setValue(1.0,1.0);
+  origin.setValue(2.0,5.0);
+  testPoint.setValue(4.7,5.7);
+  QVERIFY(!vector.isOnLine(origin,testPoint));
+
+  // same point
+  vector.setValue(1.0,1.0);
+  origin.setValue(2.0,5.0);
+  testPoint.setValue(2.0,5.0);
+  QVERIFY(vector.isOnLine(origin,testPoint));
+
+  // default vector
+  vector.setValue();
+  origin.setValue(2.0,5.0);
+  testPoint.setValue(2.0,5.0);
+  QVERIFY(vector.isOnLine(origin,testPoint));
+}
+
+void Test_Vector2D::Test_GetIntersectingPt() {
+  QFAIL("Not implemented yet!");
+}
+
 void Test_Vector2D::Test_OperatorSet() {
   Vector2D testVector;
 
@@ -450,6 +639,359 @@ void Test_Vector2D::Test_OperatorNotEqual() {
   QVERIFY(!(testVector != testVectorC));
 }
 
+void Test_Vector2D::Test_OperatorScalarMultiplyEqual() {
+  Vector2D testVector;
+  double scalar;
+  double x;
+  double y;
+
+  // simple case
+  x = 17.234;
+  y = 1.1091;
+  scalar = 0.9324;
+  testVector.setValue(x,y);
+  testVector *= scalar;
+  QVERIFY(relativeCompare(testVector.getX(),x*scalar,1.0e-6));
+  QVERIFY(relativeCompare(testVector.getY(),y*scalar,1.0e-6));
+
+  // scalar is 0.0
+  x = 17.234;
+  y = 1.1091;
+  scalar = 0.0;
+  testVector.setValue(x,y);
+  testVector *= scalar;
+  QVERIFY(relativeCompare(testVector.getX(),0.0,1.0e-6));
+  QVERIFY(relativeCompare(testVector.getY(),0.0,1.0e-6));
+
+  // vector is default
+  scalar = 0.9324;
+  testVector.setValue();
+  testVector *= scalar;
+  QVERIFY(relativeCompare(testVector.getX(),0.0,1.0e-6));
+  QVERIFY(relativeCompare(testVector.getY(),0.0,1.0e-6));
+}
+
+void Test_Vector2D::Test_OperatorScalarMultiply() {
+  Vector2D testVector;
+  Vector2D result;
+  double scalar;
+  double x;
+  double y;
+
+  // Test V * S
+  // simple case
+  x = 17.234;
+  y = 1.1091;
+  scalar = 0.9324;
+  testVector.setValue(x,y);
+  result = testVector * scalar;
+  QVERIFY(relativeCompare(result.getX(),x*scalar,1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),y*scalar,1.0e-6));
+
+  // scalar is 0.0
+  x = 17.234;
+  y = 1.1091;
+  scalar = 0.0;
+  testVector.setValue(x,y);
+  result = testVector * scalar;
+  QVERIFY(relativeCompare(result.getX(),x*scalar,1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),y*scalar,1.0e-6));
+
+  // vector is default
+  scalar = 0.9324;
+  testVector.setValue();
+  result = testVector * scalar;
+  QVERIFY(relativeCompare(result.getX(),0.0,1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),0.0,1.0e-6));
+
+  // Test S * V
+  // simple case
+  x = -0.9134;
+  y = 21.234;
+  scalar = 17.143;
+  testVector.setValue(x,y);
+  result = scalar * testVector;
+  QVERIFY(relativeCompare(result.getX(),x*scalar,1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),y*scalar,1.0e-6));
+
+  // scalar is 0.0
+  x = -0.9134;
+  y = 21.234;
+  scalar = 0.0;
+  testVector.setValue(x,y);
+  result = scalar * testVector;
+  QVERIFY(relativeCompare(result.getX(),x*scalar,1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),y*scalar,1.0e-6));
+
+  // vector is default
+  scalar = 17.143;
+  testVector.setValue();
+  result = scalar * testVector;
+  QVERIFY(relativeCompare(result.getX(),0.0,1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),0.0,1.0e-6));
+}
+
+void Test_Vector2D::Test_OperatorScalarDivideEqual() {
+  Vector2D testVector;
+  double scalar;
+  double x;
+  double y;
+
+  // simple case
+  x = 17.234;
+  y = 1.1091;
+  scalar = 0.9324;
+  testVector.setValue(x,y);
+  testVector /= scalar;
+  QVERIFY(relativeCompare(testVector.getX(),x/scalar,1.0e-6));
+  QVERIFY(relativeCompare(testVector.getY(),y/scalar,1.0e-6));
+
+  // scalar is 0.0
+  x = 17.234;
+  y = 1.1091;
+  scalar = 0.0;
+  testVector.setValue(x,y);
+  testVector /= scalar;
+  QVERIFY(testVector.getX() == x/scalar);
+  QVERIFY(testVector.getY() == y/scalar);
+
+  // vector is default
+  scalar = 0.9324;
+  testVector.setValue();
+  testVector /= scalar;
+  QVERIFY(relativeCompare(testVector.getX(),0.0,1.0e-6));
+  QVERIFY(relativeCompare(testVector.getY(),0.0,1.0e-6));
+}
+
+void Test_Vector2D::Test_OperatorScalarDivision()  {
+  Vector2D testVector;
+  Vector2D result;
+  double scalar;
+  double x;
+  double y;
+
+  // simple case
+  x = 17.234;
+  y = 1.1091;
+  scalar = 0.9324;
+  testVector.setValue(x,y);
+  result = testVector / scalar;
+  QVERIFY(relativeCompare(result.getX(),x/scalar,1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),y/scalar,1.0e-6));
+
+  // scalar is 0.0
+  x = 17.234;
+  y = 1.1091;
+  scalar = 0.0;
+  testVector.setValue(x,y);
+  result = testVector / scalar;
+  QVERIFY(testVector.getX() == x/scalar);
+  QVERIFY(testVector.getY() == y/scalar);
+
+  // vector is default
+  scalar = 0.9324;
+  testVector.setValue();
+  result = testVector / scalar;
+  QVERIFY(relativeCompare(result.getX(),0.0,1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),0.0,1.0e-6));
+}
+
+void Test_Vector2D::Test_VectorAddEqual() {
+  Vector2D testVectorA;
+  Vector2D testVectorB;
+  double x;
+  double y;
+
+  // simple case
+  x = 1.7324;
+  y = 9.1534;
+  testVectorA.setValue(x,y);
+  testVectorB.setValue(0.8234,17.2341);
+  testVectorA += testVectorB;
+  QVERIFY(relativeCompare(testVectorA.getX(),testVectorB.getX()+x,1.0e-6));
+  QVERIFY(relativeCompare(testVectorA.getY(),testVectorB.getY()+y,1.0e-6));
+
+  // rhs is default
+  x = 1.7324;
+  y = 9.1534;
+  testVectorA.setValue(x,y);
+  testVectorB.setValue();
+  testVectorA += testVectorB;
+  QVERIFY(relativeCompare(testVectorA.getX(),x,1.0e-6));
+  QVERIFY(relativeCompare(testVectorA.getY(),y,1.0e-6));
+
+  // lhs is default
+  testVectorA.setValue();
+  testVectorB.setValue(0.8234,17.2341);
+  testVectorA += testVectorB;
+  QVERIFY(relativeCompare(testVectorA.getX(),testVectorB.getX(),1.0e-6));
+  QVERIFY(relativeCompare(testVectorA.getY(),testVectorB.getY(),1.0e-6));
+}
+
+void Test_Vector2D::Test_VectorAddition() {
+  Vector2D testVectorA;
+  Vector2D testVectorB;
+  Vector2D result;
+  double x;
+  double y;
+
+  // simple case
+  x = 1.7324;
+  y = 9.1534;
+  testVectorA.setValue(x,y);
+  testVectorB.setValue(0.8234,17.2341);
+  result = testVectorA + testVectorB;
+  QVERIFY(relativeCompare(result.getX(),x+testVectorB.getX(),1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),y+testVectorB.getY(),1.0e-6));
+
+  // rhs is default
+  x = 1.7324;
+  y = 9.1534;
+  testVectorA.setValue(x,y);
+  testVectorB.setValue();
+  result = testVectorA + testVectorB;
+  QVERIFY(relativeCompare(result.getX(),x+testVectorB.getX(),1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),y+testVectorB.getY(),1.0e-6));
+
+  // lhs is default
+  testVectorA.setValue();
+  testVectorB.setValue(0.8234,17.2341);
+  result = testVectorA + testVectorB;
+  QVERIFY(relativeCompare(result.getX(),0.0+testVectorB.getX(),1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),0.0+testVectorB.getY(),1.0e-6));
+}
+
+void Test_Vector2D::Test_VectorSubEqual() {
+  Vector2D testVectorA;
+  Vector2D testVectorB;
+  Vector2D result;
+  double x;
+  double y;
+
+  // simple case
+  x = 1.7324;
+  y = 9.1534;
+  testVectorA.setValue(x,y);
+  testVectorB.setValue(0.8234,17.2341);
+  testVectorA -= testVectorB;
+  QVERIFY(relativeCompare(testVectorA.getX(),x-testVectorB.getX(),1.0e-6));
+  QVERIFY(relativeCompare(testVectorA.getY(),y-testVectorB.getY(),1.0e-6));
+
+  // rhs is default
+  x = 1.7324;
+  y = 9.1534;
+  testVectorA.setValue(x,y);
+  testVectorB.setValue();
+  testVectorA -= testVectorB;
+  QVERIFY(relativeCompare(testVectorA.getX(),x-testVectorB.getX(),1.0e-6));
+  QVERIFY(relativeCompare(testVectorA.getY(),y-testVectorB.getY(),1.0e-6));
+
+  // lhs is default
+  testVectorA.setValue();
+  testVectorB.setValue(0.8234,17.2341);
+  testVectorA -= testVectorB;
+  QVERIFY(relativeCompare(testVectorA.getX(),0.0-testVectorB.getX(),1.0e-6));
+  QVERIFY(relativeCompare(testVectorA.getY(),0.0-testVectorB.getY(),1.0e-6));
+}
+
+void Test_Vector2D::Test_VectorSubtraction() {
+  Vector2D testVectorA;
+  Vector2D testVectorB;
+  Vector2D result;
+  double x;
+  double y;
+
+  // simple case
+  x = 1.7324;
+  y = 9.1534;
+  testVectorA.setValue(x,y);
+  testVectorB.setValue(0.8234,17.2341);
+  result = testVectorA - testVectorB;
+  QVERIFY(relativeCompare(result.getX(),x-testVectorB.getX(),1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),y-testVectorB.getY(),1.0e-6));
+
+  // rhs is default
+  x = 1.7324;
+  y = 9.1534;
+  testVectorA.setValue(x,y);
+  testVectorB.setValue();
+  result = testVectorA - testVectorB;
+  QVERIFY(relativeCompare(result.getX(),x-testVectorB.getX(),1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),y-testVectorB.getY(),1.0e-6));
+
+  // lhs is default
+  testVectorA.setValue();
+  testVectorB.setValue(0.8234,17.2341);
+  result = testVectorA - testVectorB;
+  QVERIFY(relativeCompare(result.getX(),0.0-testVectorB.getX(),1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),0.0-testVectorB.getY(),1.0e-6));
+}
+
+void Test_Vector2D::Test_PointVectorAddition() {
+  Point2D p;
+  Point2D result;
+  Vector2D v;
+
+  // Test_GetPoint() tests most of the functionality...
+
+  // P+V case
+  p.setValue(27.123, 191.143);
+  v.setValue(13.2341, 17.0981);
+  result = p+v;
+  QVERIFY(relativeCompare(result.getX(),p.getX()+v.getX(), 1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),p.getY()+v.getY(), 1.0e-6));
+
+  // V+P case
+  p.setValue(0.324, -0.4231);
+  v.setValue(1.723, 9.2341);
+  result = v+p;
+  QVERIFY(relativeCompare(result.getX(),p.getX()+v.getX(), 1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),p.getY()+v.getY(), 1.0e-6));
+}
+
+void Test_Vector2D::Test_PointVectorSubtraction() {
+  Point2D p;
+  Point2D result;
+  Vector2D v;
+
+  // Test_GetPoint() tests most of the functionality...
+
+  // P-V case
+  p.setValue(27.123, 191.143);
+  v.setValue(13.2341, 17.0981);
+  result = p-v;
+  QVERIFY(relativeCompare(result.getX(),p.getX()-v.getX(), 1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),p.getY()-v.getY(), 1.0e-6));
+
+}
+
+void Test_Vector2D::Test_PointSubtraction() {
+  Point2D a;
+  Point2D b;
+  Vector2D result;
+
+  // positive case
+  a.setValue(1.4, 5.7);
+  b.setValue(6.7, 23.9);
+  result = b - a;
+  QVERIFY(relativeCompare(result.getX(),b.getX()-a.getX(), 1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),b.getY()-a.getY(), 1.0e-6));
+
+  // negative case
+  a.setValue(6.7, 23.9);
+  b.setValue(1.4, 5.7);
+  result = b - a;
+  QVERIFY(relativeCompare(result.getX(),b.getX()-a.getX(), 1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),b.getY()-a.getY(), 1.0e-6));
+
+  // both defaults case
+  a.setValue();
+  b.setValue();
+  result = b - a;
+  QVERIFY(relativeCompare(result.getX(),b.getX()-a.getX(), 1.0e-6));
+  QVERIFY(relativeCompare(result.getY(),b.getY()-a.getY(), 1.0e-6));
+}
+
 void Test_Vector2D::Test_OperatorOstream() {
   double xVal;
   double yVal;
@@ -488,159 +1030,4 @@ void Test_Vector2D::Test_OperatorOstream() {
   
   QVERIFY(testStrB == controlStrB);
 }
-
-#ifdef __NEEDS_DEBUGGING__
-
-void Test_Vector2D::Test_OperatorMultiply() {
-  double xVal = 5.4;
-  double yVal = 7.2;
-  double mul;
-  Vector2D testVector(xVal, yVal);
-
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // Positive number
-  mul = 4.91;
-  testVector = testVector * mul;
-  xVal *= mul;
-  yVal *= mul;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // Negative number
-  mul = -0.15;
-  testVector = testVector * mul;
-  xVal *= mul;
-  yVal *= mul;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // Zero
-  mul = 0.0;
-  testVector = testVector * mul;
-  xVal *= mul;
-  yVal *= mul;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-}
-
-void Test_Vector2D::Test_OperatorDivide() {
-  double xVal = 32.149;
-  double yVal = 91.43;
-  double div;
-  Vector2D testVector(xVal, yVal);
-
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // Positive number
-  div = 0.7291;
-  testVector = testVector / div;
-  xVal /= div;
-  yVal /= div;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // Negative number
-  div = -15.941;
-  testVector = testVector / div;
-  xVal /= div;
-  yVal /= div;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // One
-  div = 1.0;
-  testVector = testVector / div;
-  xVal /= div;
-  yVal /= div;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // Zero
-  div = 0.0;
-  testVector = testVector / div;
-  xVal /= div;
-  yVal /= div;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-}
-
-void Test_Vector2D::Test_OperatorMultiplyEqual() {
-  double xVal = 1.19;
-  double yVal = 910.14;
-  double mul;
-  Vector2D testVector(xVal, yVal);
-
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // Positive number
-  mul = 0.1234613;
-  testVector *= mul;
-  xVal *= mul;
-  yVal *= mul;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // Negative number
-  mul = -7234.19;
-  testVector *= mul;
-  xVal *= mul;
-  yVal *= mul;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // Zero
-  mul = 0.0;
-  testVector *= mul;
-  xVal *= mul;
-  yVal *= mul;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-}
-
-void Test_Vector2D::Test_OperatorDivideEqual() {
-  double xVal = 12.1;
-  double yVal = 0.7143;
-  double div;
-  Vector2D testVector(xVal, yVal);
-
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // Positive number
-  div = 71.45;
-  testVector /= div;
-  xVal /= div;
-  yVal /= div;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // Negative number
-  div = -0.941613;
-  testVector /= div;
-  xVal /= div;
-  yVal /= div;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // One
-  div = 1.0;
-  testVector /= div;
-  xVal /= div;
-  yVal /= div;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-
-  // Zero
-  div = 0.0;
-  testVector /= div;
-  xVal /= div;
-  yVal /= div;
-  QVERIFY(testVector.getX() == xVal);
-  QVERIFY(testVector.getY() == yVal);
-}
-#endif
 

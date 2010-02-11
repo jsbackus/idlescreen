@@ -46,16 +46,26 @@ class Test_Vector2D: public QObject {
   void Test_Dot();
   void Test_IsParallelTo();
   void Test_IsNormalTo();
+  void Test_GetAngle();
+  void Test_Rotate();
+  void Test_GetPoint();
+  void Test_IsOnLine();
+  void Test_GetIntersectingPt();
 
   void Test_OperatorSet();
   void Test_OperatorEqual();
   void Test_OperatorNotEqual();
-  /*
-  void Test_OperatorMultiply();
-  void Test_OperatorDivide();
-  void Test_OperatorMultiplyEqual();
-  void Test_OperatorDivideEqual();
-  */
+  void Test_OperatorScalarMultiplyEqual();
+  void Test_OperatorScalarMultiply();
+  void Test_OperatorScalarDivideEqual();
+  void Test_OperatorScalarDivision();
+  void Test_VectorAddEqual();
+  void Test_VectorAddition();
+  void Test_VectorSubEqual();
+  void Test_VectorSubtraction();
+  void Test_PointVectorAddition();
+  void Test_PointVectorSubtraction();
+  void Test_PointSubtraction();
   void Test_OperatorOstream();
 
  private:

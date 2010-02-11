@@ -57,7 +57,7 @@ class Point2D {
   /**
    * Gets the x value.
    */
-  double getX();
+   double getX();
   /**
    * Sets the x value.
    */

@@ -174,28 +174,55 @@ Vector2D& Vector2D::operator=(const Vector2D& other) {
 
   return *this;
 }
-bool Vector2D::operator==(const Vector2D& other) {
-  return (relativeCompare(_x, other._x, _epsilon) && 
-	  relativeCompare(_y, other._y, _epsilon));
-}
-bool Vector2D::operator!=(const Vector2D& other) {
-  return !(*this == other);
 
-}
-#ifdef __NEEDS_DEBUGING__
 /**
  * Calculates the angle between the specified vector and this vector.
  * Note: returns a value between [0, pi] or NaN if values are invalid.
+ * If one or both of the vectors has a length of zero, a value of
+ * 0.0 is returned.
  */
 double Vector2D::getAngle(const Vector2D other) {
   
   // we know that mag(v1)*mag(v2)*cos(theta)=normal(v1) dot v2
   // thus theta = arccos( (normal(v1) dot v2) / ( mag(v1)*mag(v2) ) )
-  Vector2D norm = getNormal();
+  Vector2D norm = *this;
   Vector2D otherUnitV = other;
+  norm.normalize();
   otherUnitV.normalize(); // dealing with normal vectors makes the math easy.
 
+  if(norm.magnitude() != 1.0 || otherUnitV.magnitude() != 1.0) {
+    return 0.0;
+  }
+
   return acos(norm.dot(otherUnitV));
+}
+
+/**
+ * Rotates the vector by the angle radians.
+ */
+void Vector2D::rotate(const double angle) {
+  double newX = _x*cos(angle)-_y*sin(angle);
+  double newY = _x*sin(angle)+_y*cos(angle);
+
+  _x = newX;
+  _y = newY;
+}
+
+
+/**
+ * Returns the point that is described by traveling along a scaled
+ * version of this vector from the specified point.  Note that
+ * this vector is not normalized beforehand.
+ *
+ * @param a Origination point.
+ * @param scalar The amount to scale this vector by first.
+ */
+Point2D Vector2D::getPoint(const Point2D a, const double scalar) {
+  Point2D retVal = a;
+  retVal.setX(retVal.getX()+scalar*_x);
+  retVal.setY(retVal.getY()+scalar*_y);
+
+  return retVal;
 }
 
 /**
@@ -205,11 +232,23 @@ double Vector2D::getAngle(const Vector2D other) {
  * @param a A point known to be on the line.
  * @param b The point to check.
  */
-bool Vector2D::isOnLine(const Point2D a, const point2D b) {
+bool Vector2D::isOnLine(const Point2D a, const Point2D b) {
+  // check to see if the points are the same.  If so, easy peasy!
+  Point2D copyA = a;
+  if(copyA == b) {
+    return true;
+  }
+
+  // create a replica and ensure that its magnitude isn't 0.0.
+  Vector2D replica = *this;
+  if(relativeCompare(replica.magnitude(),0.0, _epsilon)) {
+    return true;
+  }
   // If the vector from point B to point A is parallel to vector V, then
-  // point B is on the line.
-  Vector2D v2 = b - a;
-  return isParallel(v2);
+  // point B is on the line.  
+  Vector2D v2;
+  v2 = b - a;
+  return replica.isParallelTo(v2);
 }
 
 /**
@@ -228,30 +267,43 @@ bool Vector2D::isOnLine(const Point2D a, const point2D b) {
  * @return True if the lines intersect, false if they do not.
  */
 bool Vector2D::getIntersectingPt(const Point2D pA, const Vector2D vB, 
-				 const Point2D pB, Vector2D* result) {
+				 const Point2D pB, Point2D& result) {
 
-  double numer = vB._x*(pB.getY() - pA.getY()) - 
-    vB._y*(pB.getX() - pA.getX());
-  double denom = vB._y*_x - vB._x*_y;
+  Point2D rPA = pA;
+  Point2D rPB = pB;
+  Vector2D rVB = vB;
+  double numer = rVB._x*(rPB.getY() - rPA.getY()) - 
+    rVB._y*(rPB.getX() - rPA.getX());
+  double denom = rVB._y*_x - rVB._x*_y;
   if(denom != 0) {
-    if(result != NULL) {
-      Vector2D vF = (*this) * (numer / denom);
-      result = pA + vF;
-    }
+    Vector2D vF = (*this) * (numer / denom);
+    result = rPA + vF;
   }
   return false;
 }
 
-Vector2D& Vector2D::operator+(const Vector2D& other) {
-  *this += other;
-  return *this;
+bool Vector2D::operator==(const Vector2D& other) {
+  return (relativeCompare(_x, other._x, _epsilon) && 
+	  relativeCompare(_y, other._y, _epsilon));
+}
+bool Vector2D::operator!=(const Vector2D& other) {
+  return !(*this == other);
+
 }
 Vector2D& Vector2D::operator*(const double val) {
   *this *= val;
   return *this;
 }
-Vector2D& Vector2D::operator*(const double val, Vector2D& v) {
-  return v*val;
+Vector2D& Vector2D::operator*=(const double val) {
+  _x *= val;
+  _y *= val;
+  _bIsNormalized = false;
+  return *this;  
+}
+
+Vector2D& Vector2D::operator+(const Vector2D& other) {
+  *this += other;
+  return *this;
 }
 Vector2D& Vector2D::operator/(const double val) {
   *this /= val;
@@ -263,18 +315,15 @@ Vector2D& Vector2D::operator+=(const Vector2D& other) {
   _bIsNormalized = false;
   return *this;
 }
-Vector2D& Vector2D::operator*=(const double val) {
-  _x *= val;
-  _y *= val;
-  _bIsNormalized = false;
-  return *this;  
-}
 Vector2D& Vector2D::operator/=(const double val) {
-  *this *= (1.0/val);
+  _x /= val;
+  _y /= val;
+  _bIsNormalized = false;
   return *this;
 }
 Vector2D& Vector2D::operator-=(const Vector2D& other) {
-  Vector2D otherInv = other * -1.0;
+  Vector2D otherInv = other;
+  otherInv *= -1.0;
   *this += otherInv;
   return *this;
 }
@@ -285,28 +334,41 @@ Vector2D& Vector2D::operator-(const Vector2D& other) {
 
 // **** Begin Friend definitions ****
 
-/**
- * point subtraction results in a vector
- */
-Vector2D& operator-(const Point2D& initial, const Point2D& final) {
-  double x = final.getX() - initial.getX();
-  double y = final.getY() - initial.getY();
-  Vector2D retVal(x, y);
-  return retVal;
+Vector2D operator*(const double val, const Vector2D& v) {
+  Vector2D tmp = v;
+  return tmp*val;
 }
 
 /**
  * A point plus a vector results in a new point.
  */
-Point2D& operator+(const Point2D& p, const Vector2D& v) {
-  Point2D retVal;
-  retVal.setX(p.getX()+v.getX());
-  retVal.setY(p.getY()+v.getY());
+Point2D operator+(const Point2D& p, const Vector2D& v) {
+  Vector2D repV = v;
+  Point2D retVal = repV.getPoint(p,1.0);
+  return retVal;
 }
-Point2D& operator+(const Vector2D& v, const Point2D& p) {
-  return p+v;
+
+Point2D operator+(const Vector2D& v, const Point2D& p) {
+  Vector2D repV = v;
+  Point2D retVal = repV.getPoint(p,1.0);
+  return retVal;
 }
-#endif
+
+Point2D operator-(const Point2D& p, const Vector2D& v) {
+  Vector2D repV = v;
+  Point2D retVal = repV.getPoint(p,-1.0);
+  return retVal;
+}
+
+/**
+ * point subtraction results in a vector
+ */
+Vector2D operator-(const Point2D& final, const Point2D& initial) {
+  Point2D f = final;
+  Point2D i = initial;
+  Vector2D retVal(f.getX() - i.getX(),f.getY() - i.getY());
+  return retVal;
+}
 
 /**
  * friend vector to dump to an ostream
@@ -316,4 +378,3 @@ ostream& operator<<(ostream& os, const Vector2D& vector) {
   os<<"("<<tmp.getX()<<","<<tmp.getY()<<")";
   return os;
 }
-
