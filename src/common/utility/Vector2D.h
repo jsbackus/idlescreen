@@ -101,17 +101,17 @@ class Vector2D {
   /**
    * Returns the dot product of the specified vector with this vector.
    */
-  double dot(const Vector2D other);
+  double dot(const Vector2D& other);
 
   /**
    * Returns true if the specified vector is parallel to this vector.
    */
-  bool isParallelTo(const Vector2D other);
+  bool isParallelTo(const Vector2D& other);
 
   /**
    * Returns true if the specified vector is normal to this vector.
    */
-  bool isNormalTo(const Vector2D other);
+  bool isNormalTo(const Vector2D& other);
 
   /**
    * Calculates the angle between the specified vector and this vector.
@@ -119,7 +119,7 @@ class Vector2D {
    * If one or both of the vectors has a length of zero, a value of
    * 0.0 is returned.
    */
-  double getAngle(const Vector2D other);
+  double getAngle(const Vector2D& other);
 
   /**
    * Rotates the vector by the angle radians.
@@ -134,7 +134,13 @@ class Vector2D {
    * @param a Origination point.
    * @param scalar The amount to scale this vector by first.
    */
-  Point2D getPoint(const Point2D a, const double scalar=1.0);
+  Point2D getPoint(const Point2D& a, const double scalar=1.0);
+
+  /**
+   * Calculates the distance from point a to point b.  If point b is
+   * not on the line described by this vector and point a, NaN is returned.
+   */
+  double getDistanceToPoint(const Point2D& a, const Point2D& b);
 
   /**
    * Checks to see if point B is on the line specified
@@ -143,31 +149,22 @@ class Vector2D {
    * @param a A point known to be on the line.
    * @param b The point to check.
    */
-  bool isOnLine(const Point2D a, const Point2D b);
+  bool isOnLine(const Point2D& a, const Point2D& b);
 
   /**
-   * Sets the default epsilon value.
+   * Finds the point of intersection of the line specified
+   * by this vector and point A and the line specified by
+   * vector V2 and point B.  Returns false if the lines
+   * do not intersect.  The resulting point is put into result.
+   *
+   * @param a A point on the line specified by this vector.
+   * @param v2 The vector describing the other line.
+   * @param b A point on the line described by vector v.
+   * @param result The resulting point.
+   * @return the multiplier, or NAN if lines don't intersect.
    */
-  static void setDefaultEpsilon(const double& epsilon);
-  
-  /**
-   * Gets the default epsilon value.
-   */
-  static double getDefaultEpsilon();
-
-  /**
-   * Sets the epsilon value for this object.
-   */
-  void setEpsilon(const double &epsilon);
-
-  /**
-   * Gets the epsilon value for this object.
-   */
-  double getEpsilon();
-
-  Vector2D& operator=(const Vector2D& other);
-  bool operator==(const Vector2D& other);
-  bool operator!=(const Vector2D& other);
+  double getIntersectingMul(const Point2D& pA, const Vector2D& vB, 
+			    const Point2D& pB);
 
   /**
    * Finds the point of intersection of the line specified
@@ -181,8 +178,32 @@ class Vector2D {
    * @param result The resulting point.
    * @return True if the lines intersect, false if they do not.
    */
-  bool getIntersectingPt(const Point2D pA, const Vector2D vB, 
-			 const Point2D pB, Point2D& result);
+  bool getIntersectingPt(const Point2D& pA, const Vector2D& vB, 
+			 const Point2D& pB, Point2D& result);
+
+  /**
+   * Sets the default epsilon value.
+   */
+  static void setDefaultEpsilon(const double epsilon);
+  
+  /**
+   * Gets the default epsilon value.
+   */
+  static double getDefaultEpsilon();
+
+  /**
+   * Sets the epsilon value for this object.
+   */
+  void setEpsilon(const double epsilon);
+
+  /**
+   * Gets the epsilon value for this object.
+   */
+  double getEpsilon();
+
+  Vector2D& operator=(const Vector2D& other);
+  bool operator==(const Vector2D& other);
+  bool operator!=(const Vector2D& other);
 
   Vector2D& operator*(const double val);
   Vector2D& operator*=(const double val);

@@ -49,8 +49,9 @@ class Test_Vector2D: public QObject {
   void Test_GetAngle();
   void Test_Rotate();
   void Test_GetPoint();
+  void Test_GetDistanceToPoint();
   void Test_IsOnLine();
-  void Test_GetIntersectingPt();
+  void Test_Intersections();
 
   void Test_OperatorSet();
   void Test_OperatorEqual();

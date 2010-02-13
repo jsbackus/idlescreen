@@ -1,3 +1,6 @@
+#include <iostream>
+using namespace std;
+
 #include <QtTest/QtTest>
 #include <QList>
 #include "utility/unit_tests/Test_MiscFuncs.h"
@@ -31,5 +34,6 @@ int main(int argc, char** argv) {
     }
   }
 
+  cout<<"=---> Total Tests Failed: "<<retVal<<endl;
   return retVal;
 }

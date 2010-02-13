@@ -117,8 +117,8 @@ void Point2D::setValue(const double x, const double y) {
 }
 
 bool Point2D::operator==(const Point2D& other) {
-  return (relativeCompare(1.0+_x, 1.0+other._x, _epsilon) && 
-	  relativeCompare(1.0+_y,1.0+other._y, _epsilon));
+  return (relativeCompare(_x, other._x, _epsilon) && 
+	  relativeCompare(_y,other._y, _epsilon));
 }
 bool Point2D::operator!=(const Point2D& other) {
   return !(*this == other);

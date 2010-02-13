@@ -7,7 +7,7 @@ double Vector2D::DEFAULT_EPSILON = 0.0000001;
 /**
  * Sets the default epsilon value.
  */
-void Vector2D::setDefaultEpsilon(const double& epsilon) {
+void Vector2D::setDefaultEpsilon(const double epsilon) {
   DEFAULT_EPSILON = epsilon;
 }
 
@@ -21,7 +21,7 @@ double Vector2D::getDefaultEpsilon() {
 /**
  * Sets the epsilon value for this object.
  */
-void Vector2D::setEpsilon(const double &epsilon) {
+void Vector2D::setEpsilon(const double epsilon) {
   _epsilon = epsilon;
 }
 
@@ -132,7 +132,7 @@ void Vector2D::normalize() {
 /**
  * Returns the dot product of the specified vector with this vector.
  */
-double Vector2D::dot(const Vector2D other) {
+double Vector2D::dot(const Vector2D& other) {
   return (_x*other._x+_y*other._y);
 }
 
@@ -140,7 +140,7 @@ double Vector2D::dot(const Vector2D other) {
 /**
  * Returns true if the specified vector is parallel to this vector.
  */
-bool Vector2D::isParallelTo(const Vector2D other) {
+bool Vector2D::isParallelTo(const Vector2D& other) {
   Vector2D thisUnitV = *this;
   Vector2D otherUnitV = other;
   thisUnitV.normalize();
@@ -158,7 +158,7 @@ bool Vector2D::isParallelTo(const Vector2D other) {
 /**
  * Returns true if the specified vector is normal to this vector.
  */
-bool Vector2D::isNormalTo(const Vector2D other) {
+bool Vector2D::isNormalTo(const Vector2D& other) {
   Vector2D thisV = *this;
   Vector2D otherNormV = other;
 
@@ -181,7 +181,7 @@ Vector2D& Vector2D::operator=(const Vector2D& other) {
  * If one or both of the vectors has a length of zero, a value of
  * 0.0 is returned.
  */
-double Vector2D::getAngle(const Vector2D other) {
+double Vector2D::getAngle(const Vector2D& other) {
   
   // we know that mag(v1)*mag(v2)*cos(theta)=normal(v1) dot v2
   // thus theta = arccos( (normal(v1) dot v2) / ( mag(v1)*mag(v2) ) )
@@ -217,12 +217,42 @@ void Vector2D::rotate(const double angle) {
  * @param a Origination point.
  * @param scalar The amount to scale this vector by first.
  */
-Point2D Vector2D::getPoint(const Point2D a, const double scalar) {
+Point2D Vector2D::getPoint(const Point2D& a, const double scalar) {
   Point2D retVal = a;
   retVal.setX(retVal.getX()+scalar*_x);
   retVal.setY(retVal.getY()+scalar*_y);
 
   return retVal;
+}
+
+/**
+ * Calculates the distance from point a to point b.  If point b is
+ * not on the line described by this vector and point a, NaN is returned.
+ */
+double Vector2D::getDistanceToPoint(const Point2D& a, const Point2D& b) {
+  Point2D inA = a;
+  Point2D inB = b;
+
+  // check to ensure points aren't the same.
+  if(inA == inB) {
+    return 0.0;
+  }
+
+  // Check to ensure point is on line
+  Vector2D replica = *this;
+  if(replica.isOnLine(inA, inB)) {
+    // use the first dimension that isn't 0.0.  If both are, then return
+    // NAN (shouldn't get to that point).
+    if(!relativeCompare(_x, 0.0, _epsilon)) {
+      return (inB.getX()-inA.getX())/_x;
+    } else if(!relativeCompare(_y, 0.0, _epsilon)) {
+      return (inB.getY()-inA.getY())/_y;
+    } else {
+      return NAN;
+    }
+  }
+  // not the same line, return NaN.
+  return NAN;
 }
 
 /**
@@ -232,7 +262,7 @@ Point2D Vector2D::getPoint(const Point2D a, const double scalar) {
  * @param a A point known to be on the line.
  * @param b The point to check.
  */
-bool Vector2D::isOnLine(const Point2D a, const Point2D b) {
+bool Vector2D::isOnLine(const Point2D& a, const Point2D& b) {
   // check to see if the points are the same.  If so, easy peasy!
   Point2D copyA = a;
   if(copyA == b) {
@@ -241,14 +271,42 @@ bool Vector2D::isOnLine(const Point2D a, const Point2D b) {
 
   // create a replica and ensure that its magnitude isn't 0.0.
   Vector2D replica = *this;
+  replica.normalize();
   if(relativeCompare(replica.magnitude(),0.0, _epsilon)) {
     return true;
   }
+
   // If the vector from point B to point A is parallel to vector V, then
   // point B is on the line.  
   Vector2D v2;
   v2 = b - a;
   return replica.isParallelTo(v2);
+}
+
+double Vector2D::getIntersectingMul(const Point2D& pA, const Vector2D& vB, 
+				    const Point2D& pB) {
+
+  Point2D rPA = pA;
+  Point2D rPB = pB;
+  Vector2D rVB = vB;
+  Vector2D rVA = *this;
+
+  // calculate the denominator of the intersect formula.  If it is 0,
+  // then the lines are parallel or one or both vectors are undefined.
+  double denom = rVB._y*rVA._x - rVB._x*rVA._y;
+  if(!relativeCompare(denom,0.0, _epsilon)) {
+    // if the points are the same, then return the point.
+    if(rPA == rPB) {
+      return 0.0;
+    } else {
+      // otherwise, calculate the intersection point.
+      double numer = rVB._x*(rPA.getY() - rPB.getY()) - 
+	rVB._y*(rPA.getX() - rPB.getX());
+      return (numer / denom);
+    }
+  }
+  // lines are parallel or vectors are undefined.
+  return NAN;
 }
 
 /**
@@ -266,19 +324,21 @@ bool Vector2D::isOnLine(const Point2D a, const Point2D b) {
  * @param result The resulting point.
  * @return True if the lines intersect, false if they do not.
  */
-bool Vector2D::getIntersectingPt(const Point2D pA, const Vector2D vB, 
-				 const Point2D pB, Point2D& result) {
+bool Vector2D::getIntersectingPt(const Point2D& pA, const Vector2D& vB, 
+				 const Point2D& pB, Point2D& result) {
 
-  Point2D rPA = pA;
-  Point2D rPB = pB;
-  Vector2D rVB = vB;
-  double numer = rVB._x*(rPB.getY() - rPA.getY()) - 
-    rVB._y*(rPB.getX() - rPA.getX());
-  double denom = rVB._y*_x - rVB._x*_y;
-  if(denom != 0) {
-    Vector2D vF = (*this) * (numer / denom);
-    result = rPA + vF;
+  double mul = getIntersectingMul(pA, vB, pB);
+
+  if(!isnan(mul)) {
+    Vector2D rV = *this;
+    rV *= mul;
+    result = pA;
+    result = pA + rV;
+    return true;
   }
+
+  result.setX(NAN);
+  result.setY(NAN);
   return false;
 }
 

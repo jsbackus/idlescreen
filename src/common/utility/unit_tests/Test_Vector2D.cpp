@@ -535,6 +535,46 @@ void Test_Vector2D::Test_GetPoint() {
 
 }
 
+void Test_Vector2D::Test_GetDistanceToPoint() {
+  Vector2D vector;
+  Point2D origin;
+  Point2D testPoint;
+
+  // positive slope, point on line
+  vector.setValue(1.0,1.0);
+  origin.setValue(2.0,5.0);
+  testPoint.setValue(5.3,8.3);
+  QVERIFY(relativeCompare(vector.getDistanceToPoint(origin, testPoint), 
+						    3.3, 1e-6));
+
+  // positive slope, point not on line
+  vector.setValue(1.0,1.0);
+  origin.setValue(2.0,5.0);
+  testPoint.setValue(5.3,7.3);
+  QVERIFY(isnan(vector.getDistanceToPoint(origin, testPoint)));
+
+  // vertical vector
+  vector.setValue(4.0,0.0);
+  origin.setValue(2.0,5.0);
+  testPoint.setValue(0.3,5.0);
+  QVERIFY(relativeCompare(vector.getDistanceToPoint(origin, testPoint), 
+						    -1.7/4.0, 1e-6));
+
+  // horizontal vector
+  vector.setValue(0.0,1.7);
+  origin.setValue(7.1,5.0);
+  testPoint.setValue(7.1,8.3);
+  QVERIFY(relativeCompare(vector.getDistanceToPoint(origin, testPoint), 
+						    3.3/1.7, 1e-6));
+
+  // default vector
+  // positive slope, point on line
+  vector.setValue();
+  origin.setValue(2.0,5.0);
+  testPoint.setValue(5.3,8.3);
+  QVERIFY(isnan(vector.getDistanceToPoint(origin, testPoint)));
+}
+
 void Test_Vector2D::Test_IsOnLine() {
   Vector2D vector;
   Point2D origin;
@@ -571,8 +611,104 @@ void Test_Vector2D::Test_IsOnLine() {
   QVERIFY(vector.isOnLine(origin,testPoint));
 }
 
-void Test_Vector2D::Test_GetIntersectingPt() {
-  QFAIL("Not implemented yet!");
+void Test_Vector2D::Test_Intersections() {
+  Vector2D vA;
+  Vector2D vB;
+  Point2D pA;
+  Point2D pB;
+  Point2D pI;
+  bool bResult;
+
+  // 60 degree case, multiplier
+  vA.setValue(1.0,1.0);
+  pA.setValue(2.0,3.0);
+  vB.setValue(1.0,1.0);
+  vB.rotate(1.047198);
+  pB.setValue(-4.0,5.0);
+  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  QVERIFY(relativeCompare(vA.getIntersectingMul(pA, vB, pB),-4.3093987, 1e-6));
+
+  // Normal case
+  vA.setValue(1.0,1.0);
+  pA.setValue(2.0,3.0);
+  vB.setValue(-1.0,1.0);
+  pB.setValue(-4.0,1.0);
+  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  QVERIFY(bResult);
+  QVERIFY(relativeCompare(pI.getX(),-2.0, 1e-6));
+  QVERIFY(relativeCompare(pI.getY(),-1.0, 1e-6));
+
+  // Parallel case
+  vA.setValue(1.0,2.0);
+  pA.setValue(4.0,1.0);
+  vB.setValue(8.0,16.0);
+  pB.setValue(17.0,15.0);
+  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  QVERIFY(!bResult);
+  QVERIFY(isnan(pI.getX()));
+  QVERIFY(isnan(pI.getY()));
+
+  // Normal case, same point
+  vA.setValue(1.0,4.0);
+  pA.setValue(7.0,9.0);
+  vB.setValue(-4.0,1.0);
+  pB.setValue(7.0,9.0);
+  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  QVERIFY(bResult);
+  QVERIFY(relativeCompare(pI.getX(),7.0, 1e-6));
+  QVERIFY(relativeCompare(pI.getY(),9.0, 1e-6));
+
+  // Parallel case, same point
+  vA.setValue(1.0,1.0);
+  pA.setValue(2.0,3.0);
+  vB.setValue(1.0,1.0);
+  pB.setValue(-4.0,5.0);
+  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  QVERIFY(!bResult);
+  QVERIFY(isnan(pI.getX()));
+  QVERIFY(isnan(pI.getY()));
+
+  // 60 degree case
+  vA.setValue(1.0,1.0);
+  pA.setValue(2.0,3.0);
+  vB.setValue(1.0,1.0);
+  vB.rotate(1.047198);
+  pB.setValue(-4.0,5.0);
+  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  QVERIFY(bResult);
+  QVERIFY(relativeCompare(pI.getX(),-2.3093987, 1e-6));
+  QVERIFY(relativeCompare(pI.getY(),-1.3093987, 1e-6));
+
+  // 60 degree case, same point
+  vA.setValue(1.0,1.0);
+  pA.setValue(2.0,3.0);
+  vB.setValue(1.0,1.0);
+  vB.rotate(1.047198);
+  pB.setValue(2.0,3.0);
+  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  QVERIFY(bResult);
+  QVERIFY(relativeCompare(pI.getX(),2.0, 1e-6));
+  QVERIFY(relativeCompare(pI.getY(),3.0, 1e-6));
+
+  // first vector is default
+  vA.setValue();
+  pA.setValue(2.0,3.0);
+  vB.setValue(-1.0,1.0);
+  pB.setValue(-4.0,5.0);
+  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  QVERIFY(!bResult);
+  QVERIFY(isnan(pI.getX()));
+  QVERIFY(isnan(pI.getY()));
+
+  // second vector is default
+  vA.setValue(1.7,4.9);
+  pA.setValue(2.0,3.0);
+  vB.setValue();
+  pB.setValue(-4.0,5.0);
+  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  QVERIFY(!bResult);
+  QVERIFY(isnan(pI.getX()));
+  QVERIFY(isnan(pI.getY()));
 }
 
 void Test_Vector2D::Test_OperatorSet() {
