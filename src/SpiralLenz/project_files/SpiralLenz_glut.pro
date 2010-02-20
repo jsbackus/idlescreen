@@ -19,7 +19,7 @@ SOURCES		+=	$$COMMON_PATH/core/win_misc_funcs.cpp
 
 SOURCES		+=	$$COMMON_PATH/spirals/SpiralAlgorithm.cpp
 SOURCES		+=	$$COMMON_PATH/spirals/RectangularSpiralAlgorithm.cpp
-//SOURCES		+=	$$COMMON_PATH/spirals/NgonSpiralAlgorithm.cpp
+SOURCES		+=	$$COMMON_PATH/spirals/NgonSpiralAlgorithm.cpp
 SOURCES		+=	$$COMMON_PATH/spirals/PolarSpiralAlgorithm.cpp
 
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPalette.cpp
@@ -30,6 +30,8 @@ SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteEditorTableWidget.cpp
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteEditorTableWidgetItem.cpp
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteEditorTableWidgetSplitDlg.cpp
 SOURCES		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteProfile.cpp
+SOURCES		+=	$$COMMON_PATH/utility/Vector2D.cpp
+SOURCES		+=	$$COMMON_PATH/utility/Point2D.cpp
 SOURCES		+=	$$COMMON_PATH/utility/misc_funcs.cpp
 SOURCES		+=	$$COMMON_PATH/utility/ImportExportDialog.cpp
 SOURCES		+=	$$COMMON_PATH/utility/HelpDialog.cpp
@@ -63,7 +65,7 @@ HEADERS		=	$$COMMON_PATH/core/win_misc_funcs.h
 
 HEADERS		+=	$$COMMON_PATH/spirals/SpiralAlgorithm.h
 HEADERS		+=	$$COMMON_PATH/spirals/RectangularSpiralAlgorithm.h
-//HEADERS		+=	$$COMMON_PATH/spirals/NgonSpiralAlgorithm.h
+HEADERS		+=	$$COMMON_PATH/spirals/NgonSpiralAlgorithm.h
 HEADERS		+=	$$COMMON_PATH/spirals/PolarSpiralAlgorithm.h
 
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPalette.h
@@ -74,6 +76,8 @@ HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteEditorTableWidget.h
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteEditorTableWidgetItem.h
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteEditorTableWidgetSplitDlg.h
 HEADERS		+=	$$COMMON_PATH/IndexedPalette/IndexedPaletteProfile.h
+HEADERS		+=	$$COMMON_PATH/utility/Vector2D.h
+HEADERS		+=	$$COMMON_PATH/utility/Point2D.h
 HEADERS		+=	$$COMMON_PATH/utility/misc_funcs.h
 HEADERS		+=	$$COMMON_PATH/utility/ImportExportDialog.h
 HEADERS		+=	$$COMMON_PATH/utility/HelpDialog.h

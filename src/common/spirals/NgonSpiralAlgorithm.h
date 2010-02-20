@@ -23,16 +23,18 @@
  */
 
 /**
- * This is a generic N-gon spiral algorithm.  If N is invalid, a polar
- * spiral algorithm is used.
+ * This is a generic N-gon spiral algorithm.
  */
 
 #include "utility/Vector2D.h"
+#include "utility/Point2D.h"
 #include "utility/misc_funcs.h"
 #include "SpiralAlgorithm.h"
 
 #ifndef __NGONSPIRALALGORITHM_H__
 #define __NGONSPIRALALGORITHM_H__
+
+#define NGONSPIRALALGORITHM_STEPSIZE 0.5
 
 class NgonSpiralAlgorithm : public SpiralAlgorithm {
 
@@ -71,11 +73,81 @@ class NgonSpiralAlgorithm : public SpiralAlgorithm {
 
   /**
    * Completes one iteration of the algorithm.  Returns true if the algorithm
-   * is completed.
+   * has completed.
    */
   bool calc();
 
  private:
+  /**
+   * Draws a segment from pointA to pointB.  Returns true if any indices were
+   * set within _field.
+   */
+  bool drawSegment(const Point2D& pointA, const Point2D& pointB);
+
+  /**
+   * Updates the color count by the specified amount.
+   */
+  void updateColorCount(const double amnt);
+
+  /**
+   * Sets the specified coordinates to the current color index.  Returns
+   * true if a pixel was actually set.
+   */
+  bool setPixel(const Point2D& p);
+  
+  // begin parameters
+  int _n;
+  int _colorWidth;
+  double _colorWidthDbl;
+  int _emptyWidth;
+  bool _bConstantColor;
+  bool _bRandomColor;
+  bool _bIncrementColor;
+  int _maxFieldIdx;   //> _sizeX * _sizeY - 1;
+  // end parameters
+
+  // begin state data
+  Point2D _origin;
+  Point2D _lastPoint;
+  Vector2D* _axes;
+  Vector2D* _normals;
+  int _curAxis;
+  double _ringNum;
+  int _ringCounter;
+  double _lineWidth;
+  double _growLength;
+  double _bevelAngle;
+  double _bevelLength;
+  double _curColorCount;
+  int _curColorIdx;
+
+  /*
+  // begin old...
+  double _currX;
+  double _currY;
+  int _nextIdx;
+  */
+
+  // begin constants to speed up calculations
+  int _screenXOffset;
+  int _screenYOffset;
+  int _segmentWidth;
+  // end constants
+
+  // end old...
+
+  // begin debug
+  int _stepCount;
+  
+#ifdef BLARGH
+  // begin spiral specific
+  double _rCoeff; // accounts for clockwise/counterclockwise!
+  double _currR;
+  double _currTheta;
+  double _thetaStep;
+  double _maxR;   //!< polar stopping condition
+  // end spiral specific
+
   /**
    * Calculates a new X,Y using a polar spiral.  Utilizes an adaptive
    * algorithm to adjust thetaStep such that the new (x,y) value will
@@ -89,37 +161,6 @@ class NgonSpiralAlgorithm : public SpiralAlgorithm {
    */
   bool calcSpiral(double* x, double* y, double* r, double* theta, 
 		  double* thetaStep);
-
-  // begin parameters
-  int _n;
-  int _colorWidth;
-  int _emptyWidth;
-  bool _bConstantColor;
-  bool _bRandomColor;
-  bool _bIncrementColor;
-  // end parameters
-
-  // begin spiral specific
-  double _rCoeff; // accounts for clockwise/counterclockwise!
-  double _currR;
-  double _currTheta;
-  double _thetaStep;
-  double _maxR;   //!< polar stopping condition
-  // end spiral specific
-
-  double _currX;
-  double _currY;
-  int _nextIdx;
-
-  // begin constants to speed up calculations
-  int _screenXOffset;
-  int _screenYOffset;
-  int _segmentWidth;
-  int _maxFieldIdx;   //> _sizeX * _sizeY - 1;
-  // end constants
-
-  // begin debug
-  int _stepCount;
 
   /*
   int* _cornerSeg;
@@ -137,6 +178,7 @@ class NgonSpiralAlgorithm : public SpiralAlgorithm {
   // These are to speed up some calculations, since they only need done once.
   float _halfSegSize; //> _segmentSize / 2.0
   */
+#endif
 };
 
 #endif

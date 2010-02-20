@@ -625,15 +625,14 @@ void Test_Vector2D::Test_Intersections() {
   vB.setValue(1.0,1.0);
   vB.rotate(1.047198);
   pB.setValue(-4.0,5.0);
-  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
-  QVERIFY(relativeCompare(vA.getIntersectingMul(pA, vB, pB),-4.3093987, 1e-6));
+  QVERIFY(relativeCompare(vA.getIntersectionMul(pA, vB, pB),-4.3093987, 1e-6));
 
   // Normal case
   vA.setValue(1.0,1.0);
   pA.setValue(2.0,3.0);
   vB.setValue(-1.0,1.0);
   pB.setValue(-4.0,1.0);
-  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  bResult=vA.getIntersectionPt(pA, vB, pB, pI);
   QVERIFY(bResult);
   QVERIFY(relativeCompare(pI.getX(),-2.0, 1e-6));
   QVERIFY(relativeCompare(pI.getY(),-1.0, 1e-6));
@@ -643,7 +642,7 @@ void Test_Vector2D::Test_Intersections() {
   pA.setValue(4.0,1.0);
   vB.setValue(8.0,16.0);
   pB.setValue(17.0,15.0);
-  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  bResult=vA.getIntersectionPt(pA, vB, pB, pI);
   QVERIFY(!bResult);
   QVERIFY(isnan(pI.getX()));
   QVERIFY(isnan(pI.getY()));
@@ -653,7 +652,7 @@ void Test_Vector2D::Test_Intersections() {
   pA.setValue(7.0,9.0);
   vB.setValue(-4.0,1.0);
   pB.setValue(7.0,9.0);
-  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  bResult=vA.getIntersectionPt(pA, vB, pB, pI);
   QVERIFY(bResult);
   QVERIFY(relativeCompare(pI.getX(),7.0, 1e-6));
   QVERIFY(relativeCompare(pI.getY(),9.0, 1e-6));
@@ -663,7 +662,7 @@ void Test_Vector2D::Test_Intersections() {
   pA.setValue(2.0,3.0);
   vB.setValue(1.0,1.0);
   pB.setValue(-4.0,5.0);
-  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  bResult=vA.getIntersectionPt(pA, vB, pB, pI);
   QVERIFY(!bResult);
   QVERIFY(isnan(pI.getX()));
   QVERIFY(isnan(pI.getY()));
@@ -674,7 +673,7 @@ void Test_Vector2D::Test_Intersections() {
   vB.setValue(1.0,1.0);
   vB.rotate(1.047198);
   pB.setValue(-4.0,5.0);
-  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  bResult=vA.getIntersectionPt(pA, vB, pB, pI);
   QVERIFY(bResult);
   QVERIFY(relativeCompare(pI.getX(),-2.3093987, 1e-6));
   QVERIFY(relativeCompare(pI.getY(),-1.3093987, 1e-6));
@@ -685,7 +684,7 @@ void Test_Vector2D::Test_Intersections() {
   vB.setValue(1.0,1.0);
   vB.rotate(1.047198);
   pB.setValue(2.0,3.0);
-  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  bResult=vA.getIntersectionPt(pA, vB, pB, pI);
   QVERIFY(bResult);
   QVERIFY(relativeCompare(pI.getX(),2.0, 1e-6));
   QVERIFY(relativeCompare(pI.getY(),3.0, 1e-6));
@@ -695,7 +694,7 @@ void Test_Vector2D::Test_Intersections() {
   pA.setValue(2.0,3.0);
   vB.setValue(-1.0,1.0);
   pB.setValue(-4.0,5.0);
-  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  bResult=vA.getIntersectionPt(pA, vB, pB, pI);
   QVERIFY(!bResult);
   QVERIFY(isnan(pI.getX()));
   QVERIFY(isnan(pI.getY()));
@@ -705,7 +704,7 @@ void Test_Vector2D::Test_Intersections() {
   pA.setValue(2.0,3.0);
   vB.setValue();
   pB.setValue(-4.0,5.0);
-  bResult=vA.getIntersectingPt(pA, vB, pB, pI);
+  bResult=vA.getIntersectionPt(pA, vB, pB, pI);
   QVERIFY(!bResult);
   QVERIFY(isnan(pI.getX()));
   QVERIFY(isnan(pI.getY()));

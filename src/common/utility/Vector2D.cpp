@@ -283,7 +283,7 @@ bool Vector2D::isOnLine(const Point2D& a, const Point2D& b) {
   return replica.isParallelTo(v2);
 }
 
-double Vector2D::getIntersectingMul(const Point2D& pA, const Vector2D& vB, 
+double Vector2D::getIntersectionMul(const Point2D& pA, const Vector2D& vB, 
 				    const Point2D& pB) {
 
   Point2D rPA = pA;
@@ -324,10 +324,10 @@ double Vector2D::getIntersectingMul(const Point2D& pA, const Vector2D& vB,
  * @param result The resulting point.
  * @return True if the lines intersect, false if they do not.
  */
-bool Vector2D::getIntersectingPt(const Point2D& pA, const Vector2D& vB, 
+bool Vector2D::getIntersectionPt(const Point2D& pA, const Vector2D& vB, 
 				 const Point2D& pB, Point2D& result) {
 
-  double mul = getIntersectingMul(pA, vB, pB);
+  double mul = getIntersectionMul(pA, vB, pB);
 
   if(!isnan(mul)) {
     Vector2D rV = *this;

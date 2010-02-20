@@ -19,32 +19,30 @@ NgonSpiralAlgorithm::NgonSpiralAlgorithm() {
   _bConstantColor = true;
   _bRandomColor = false;
   _bIncrementColor = true;
-
-  // internals
-  _nextIdx = 0;
-  _currX = 0.0;
-  _currY = 0.0;
-  _rCoeff = 0.0;
-  _currR = 0.0;
-  _currTheta = 0.0;
-  _maxR = 0.0;
-
-  // misc constants
   _maxFieldIdx = 0;
-  _screenXOffset = 0;
-  _screenYOffset = 0;
+
+  _origin.setValue(0,0);
+  _axes = NULL;
+  _curAxis = -1;
+  _ringNum = -1;
+  _lineWidth = -1.0;
+  _bevelAngle = 0.0;
+  _bevelLength = 0.0;
+  _curColorIdx = 0;
+  _curColorCount = 0.0;
+  _growLength = 0.0;
 }
 
-  /**
-   * Constructor takes initialization parameters.
-   * @param N the number of sides the Ngon has.  N=0 for a polar spiral.
-   * @param colorWidth the width of the strip of color.
-   * @param emptyWidth the width of the default color region.
-   * @param bConstantColor whether or not to hold the color index constant.
-   * @param bRandomColor whether or not the initial color is randomly selected.
-   * @param bIncrementColor whether to increment the color as it spirals out.
-   * @see calc()
-   */
+/**
+ * Constructor takes initialization parameters.
+ * @param N the number of sides the Ngon has.  N=0 for a polar spiral.
+ * @param colorWidth the width of the strip of color.
+ * @param emptyWidth the width of the default color region.
+ * @param bConstantColor whether or not to hold the color index constant.
+ * @param bRandomColor whether or not the initial color is randomly selected.
+ * @param bIncrementColor whether to increment the color as it spirals out.
+ * @see calc()
+ */
 NgonSpiralAlgorithm::NgonSpiralAlgorithm(const int N, const int colorWidth, 
 					 const int emptyWidth,
 					 const bool bConstantColor,
@@ -53,18 +51,15 @@ NgonSpiralAlgorithm::NgonSpiralAlgorithm(const int N, const int colorWidth,
 
   // empty constants until initialize(...) is called
   _maxFieldIdx = 0;
-  _screenXOffset = 0;
-  _screenYOffset = 0;
-  _maxR = 0.0;
-
-  // initial values for internals
-  _nextIdx = 0;
-  _currX = 0.0;
-  _currY = 0.0;
+  /*
+    _screenXOffset = 0;
+    _screenYOffset = 0;
+  */
 
   // set parameters
   _n = N;
   _colorWidth = colorWidth;
+  _colorWidthDbl = (double)colorWidth;
   _emptyWidth = emptyWidth;
   _bConstantColor = bConstantColor;
   _bRandomColor = bRandomColor;
@@ -76,21 +71,60 @@ NgonSpiralAlgorithm::NgonSpiralAlgorithm(const int N, const int colorWidth,
     _emptyWidth = 0;  
 
   // calculate misc constants
-  _segmentWidth = _colorWidth + (_emptyWidth<<1);
+  //_segmentWidth = _colorWidth + (_emptyWidth<<1);
+  _lineWidth = double(_colorWidth + (_emptyWidth<<1));
+  cout<<"Setting linewidth to "<<_lineWidth<<endl;
 
-  // calculate spiral constants and initial values
-  _rCoeff = double(_segmentWidth)/(2.0*NGONSPIRAL_PI);  
-  _rCoeff *= (jrand() % 2 == 0) ? 1.0 : -1.0;  // whether clockwise or not.
-  _currR = 0.0;
+  // allocate space for axes & their normals
+  if(!(3 <= _n && _n < 1024))
+    return;
+  _axes = new Vector2D[_n];
+  _normals = new Vector2D[_n];
+  if(_axes == NULL || _normals == NULL) {
+    _n = 0;
+    return;
+  }
 
-  // for now, just start at 0.
-  _currTheta = 0.0;
-  _lastThetaStep = NGONSPIRAL_PI/16.0;
+  // create & calculate axes
+  double delta = 2.0 * M_PI / ((double)_n);
+  if(relativeCompare(delta, M_PI/2.0, 1e-6)) {
+    _growLength = ((double)_lineWidth);
+  } else if( M_PI/2.0 < delta) {
+    _growLength = ((double)_lineWidth) / sin(M_PI - delta);
+  } else {
+    //_growLength = ((double)_lineWidth) / sin(delta);
+    //_growLength = ((double)_lineWidth) / (2.0*sin(delta));
+    _growLength = ((double)_lineWidth);
+    //_growLength = ((double)_lineWidth) * sin(delta);
+  }
+  _bevelAngle = delta/2.0;
+  double angle = 0.0; //((double)(jrand()%360)) / 2.0*PI;
+  int i;
+  for(i=0; i<_n; i++) {
+    _axes[i].setValue(1.0,0.0);
+    _axes[i].rotate(angle);
+    _normals[i] = _axes[i].getNormal();
+    cout<<"i: "<<i<<", angle: "<<angle<<", axis: "<<_axes[i]<<", n: "
+	<<_normals[i]<<endl;
+    angle += delta;
+  }
+  _bevelLength = sin(_bevelAngle) * _lineWidth/2.0;
 
+  _curColorCount = 0.0;
+  _curAxis = 0;
+  _ringNum = 0.0;
 }
 
 
 NgonSpiralAlgorithm::~NgonSpiralAlgorithm() {
+  if(_axes != NULL) {
+    delete [] _axes;
+    _axes = NULL;
+  }
+  if(_normals != NULL) {
+    delete [] _normals;
+    _normals = NULL;
+  }
 }
 
 /**
@@ -112,31 +146,262 @@ void NgonSpiralAlgorithm::initialize(int* field, const int screenWidth,
   if(_numColors <= 0)
     return;
 
-  // calculate remaining internal constants
-  _maxFieldIdx = screenWidth * screenHeight - 1;
-  _screenXOffset = screenWidth>>1;
-  _screenYOffset = screenHeight>>1;
+  _maxFieldIdx = screenWidth*screenHeight-1;
 
-  // calculate polar stopping condition.
-  _maxR = sqrt( _screenXOffset*_screenXOffset + 
-		_screenYOffset*_screenYOffset);
-  if(_rCoeff < 0.0) {
-    _maxR *= -1.0;
-  }
+  _origin.setValue((screenWidth>>1)+_lineWidth/2.0+0.5, 
+		   (screenHeight>>1)+_lineWidth/2.0+0.5 );
 
   // pick initial color
   if(_bRandomColor) {
-    _nextIdx = jrand() % numColors;
+    _curColorIdx = jrand() % numColors;
   } else {
-    _nextIdx = 0;
+    _curColorIdx = 0;
   }
+  _curColorCount = 0.0;
 
   // begin debug
-  _stepCount = 128; //16;
+  _stepCount = 16;
   // end debug
-
 }
 
+/**
+ * Completes one iteration of the algorithm.  Returns true if the algorithm
+ * has completed.
+ */
+bool NgonSpiralAlgorithm::calc() {
+  if(_field == NULL)
+    return true;
+
+  // begin debug
+  cout<<"Count: "<<_stepCount<<endl;
+  /*
+  if(_stepCount < 0)
+    return true;
+  _stepCount--;
+  */
+  // end debug
+  
+  // draw a segment
+  Point2D beginPoint;
+  Point2D endPoint;
+
+  cout<<"Cur Axis: "<<_curAxis<<", ring: "<<_ringNum
+      <<", grow length: "<<_growLength<<endl;
+  // check to see if the first segment has been drawn, since it is
+  // the only "odd" one.
+  if(_ringNum < 1.0) {
+    // nope, so draw a segment from the origin to the first midpoint.
+    beginPoint = _origin;
+    //Vector2D tmpV = _axes[0];
+    //tmpV.rotate(0.5*_bevelAngle);
+    endPoint = _axes[0].getPoint(_origin, _growLength);
+    // set up for next round.
+    _lastPoint = endPoint;
+    _curAxis = 0;
+    _ringNum = _growLength;
+    _ringCounter = _n-2;
+  } else {
+    // start at last midpoint
+    beginPoint = _lastPoint;
+    // find the next midpoint on the next axis.  If the current axis is the
+    // last axis in the set, then increment the ring number too.
+    int nextAxis = (_curAxis+1)%_n;
+    _ringCounter--;
+    if(_ringCounter <= 0) {
+      _ringNum+=_growLength;
+      _ringCounter = _n-2;
+    }
+    _lastPoint = _axes[nextAxis].getPoint(beginPoint, _ringNum);
+    // change axis state for next iteration
+    _curAxis = nextAxis;
+  }
+  // draw the line segment
+  return !drawSegment(beginPoint, _lastPoint);
+}
+
+/**
+ * Draws a segment from pointA to pointB.  Returns true if any indices were
+ * set within _field.
+ */
+bool NgonSpiralAlgorithm::drawSegment(const Point2D& pointA, 
+				      const Point2D& pointB) {
+  cout<<"Drawing Segment from "<<pointA<<" to "<<pointB<<endl;
+  bool bPixelDrawn = false;
+  Point2D pB = pointB;
+  Point2D pA = pointA;
+  Vector2D pathV = pB - pA;
+  pathV.normalize();
+  // calculate normal to the path
+  Vector2D nV = pathV.getNormal();
+  nV.normalize();
+  // calculate bevel vector
+  Vector2D bevV = nV;
+  bevV.normalize();
+  bevV.rotate(1.0*_bevelAngle);
+  // these points represent the actual drawing
+  Point2D pStart;
+  Point2D pEnd;
+  double posOuter;
+  double posInner;
+  double traverseLength;
+
+  cout<<"Path: "<<pathV<<", Normal: "<<nV<<", Bevel: "<<bevV<<endl;
+
+  Point2D bevA = pA;
+  Point2D bevB = pB;
+  if(_colorWidth > 1) {
+    // Calculate the first end of the bevel.
+    bevA = pA + _bevelLength*pathV;
+    // Calculate the end of the bevel on the other end.
+    bevB = pB - _bevelLength*pathV;
+
+    /* 1: draw bevel on starting endpoint */
+    // Traverse the width of the color part of the line, starting
+    // at the point on the normal that is (color width/2)-(current increment) 
+    // length away from the main path draw a line to the intersection of the
+    // bevel vector along the vector that is parallel to path.
+    for(posOuter = 0.0; posOuter < _colorWidthDbl; 
+	posOuter += NGONSPIRALALGORITHM_STEPSIZE) {
+      // calculate the point on the normal.
+      pStart = bevA + (_colorWidthDbl/2.0 - posOuter)*nV;
+
+      // calculate the point on the bevel vector.
+      if(!pathV.getIntersectionPt(pStart, bevV, pA, pEnd)) {
+	cout<<"pathV doesn't intersect bevV!"<<endl;
+	return false;
+      }
+
+      // calculate the traversal length
+      traverseLength = pathV.getDistanceToPoint(pStart, pEnd);
+      // traverse from start to finish setting pixels along the way  - remember, 
+      // we're going backwards!
+      for(posInner = 0.0; posInner > traverseLength; 
+	  posInner -= NGONSPIRALALGORITHM_STEPSIZE) {
+	bPixelDrawn = setPixel(pathV.getPoint(pStart, posInner)) || bPixelDrawn;
+      }
+    }
+    updateColorCount(_bevelLength);
+    cout<<"first bevel done"<<endl;
+  }
+  /* 2: draw segment between beveled ends */
+  // Traverse the length of the segment between bevA and bevB filling in the
+  // color portion of the segment.
+  traverseLength = pathV.getDistanceToPoint(bevA, bevB);
+  cout<<"TraverseLength: "<<traverseLength<<endl;
+  //for(posOuter = 0.0; posOuter < traverseLength; 
+  for(posOuter = 0.0; posOuter < traverseLength; 
+      posOuter += NGONSPIRALALGORITHM_STEPSIZE) {
+    //cout<<"posOuter: "<<posOuter<<endl;
+    
+    // calculate the point on the path.
+    pStart = bevA + posOuter*pathV;
+    //cout<<">> "<<pStart<<" -> ";
+    // now go to the edge of the color region.
+    pStart = pStart + (_colorWidthDbl/2.0)*nV;
+    //cout<<pStart<<endl;
+
+    // traverse from start to finish setting pixels along the way
+    for(posInner = 0.0; posInner < _colorWidthDbl; 
+	posInner += NGONSPIRALALGORITHM_STEPSIZE) {
+      //cout<<"posInner: "<<posInner<<", pStart: "<<pStart<<endl;
+      bPixelDrawn = setPixel(pStart) || bPixelDrawn;
+      updateColorCount(NGONSPIRALALGORITHM_STEPSIZE);
+      pStart = pStart - NGONSPIRALALGORITHM_STEPSIZE*nV;
+    }
+  }
+  cout<<"seg done"<<endl;
+
+  /* 3: draw bevel on tail endpoint */
+  if(_colorWidth > 1) {
+    // Adjust bevV for the new side.
+    bevV.rotate(-1.0*_bevelAngle);
+    // Traverse the width of the color part of the line, starting
+    // at the point on the normal that is (color width/2)-(current increment) 
+    // length away from the main path draw a line to the intersection of the
+    // bevel vector along the vector that is parallel to path.
+    for(posOuter = 0.0; posOuter < _colorWidthDbl; 
+	posOuter += NGONSPIRALALGORITHM_STEPSIZE) {
+      // calculate the point on the normal.
+      pStart = bevB + (_colorWidthDbl/2.0 - posOuter)*nV;
+
+      // calculate the point on the bevel vector.
+      if(!pathV.getIntersectionPt(pStart, bevV, pB, pEnd)) {
+	cout<<"pathV doesn't intersect bevV!"<<endl;
+	return false;
+      }
+
+      // calculate the traversal length
+      traverseLength = pathV.getDistanceToPoint(pStart, pEnd);
+      // traverse from start to finish setting pixels along the way - going
+      // forwards this time!
+      for(posInner = 0.0; posInner < traverseLength; 
+	  posInner += NGONSPIRALALGORITHM_STEPSIZE) {
+	bPixelDrawn = setPixel(pathV.getPoint(pStart, posInner)) || bPixelDrawn;
+      }
+    }
+    updateColorCount(_bevelLength);
+  }
+  return bPixelDrawn;
+}
+
+/**
+ * Updates the color count by the specified amount.
+ */
+void NgonSpiralAlgorithm::updateColorCount(const double amnt) {
+  if(!_bConstantColor) {
+    _curColorCount += amnt;
+    if(_colorWidthDbl <= _curColorCount) {
+      _curColorCount -= _colorWidthDbl;
+      // update the color index.
+      if(_bIncrementColor) {
+	_curColorIdx++;
+	if(_numColors <= _curColorIdx) {
+	  _curColorIdx = 0;
+	}
+      } else {
+	_curColorIdx--;
+	if(_curColorIdx <= 0) {
+	  _curColorIdx = _numColors-1;
+	}
+      }
+    }
+  }
+}
+
+/**
+ * Sets the specified coordinates to the current color index.
+ */
+bool NgonSpiralAlgorithm::setPixel(const Point2D& p) {
+  if(_field == NULL)
+    return false;
+
+  Point2D lclP = p;
+
+  int x = (int)(lclP.getX() + 0.5);
+  int y = (int)(lclP.getY() + 0.5);
+  int pos = y*_width + x;
+
+  //cout<<"Setting pixel: ("<<x<<", "<<y<<")";
+
+  // validate that the pixel is on the screen.
+  if( (0 <= x && x < _width) &&
+      (0 <= y && y < _height) &&
+      pos < _maxFieldIdx) {
+    
+    // it is!  set the pixel to the current color index.
+    _field[pos] = _curColorIdx;
+
+    //cout<<" -> Success!"<<endl;
+
+    return true;
+  }
+
+  //cout<<" -> Failure!"<<endl;
+
+  return false;
+}
+  
+#ifdef BLARGH
 /**
  * Completes one iteration of the algorithm.  Returns true if the algorithm
  * is completed.
@@ -145,7 +410,7 @@ bool NgonSpiralAlgorithm::calc() {
   if(_field == NULL)
     return true;
 
-    if(_stepCount < 0)
+  if(_stepCount < 0)
     return true;
   //_stepCount--;
   // if N is valid, use the N-gon spiral calculations.
@@ -181,7 +446,6 @@ bool NgonSpiralAlgorithm::calc() {
 
   return retVal;
 }
-
 /**
  * Calculates a new X,Y using a polar spiral.  Utilizes an adaptive
  * algorithm to adjust thetaStep such that the new (x,y) value will
@@ -223,10 +487,10 @@ bool NgonSpiralAlgorithm::calcSpiral(double* x, double* y, double* r,
     iNewX = roundDtoI(newX);
     iNewY = roundDtoI(newY);
     /*
-    cout<<"newX: "<<newX<<","<<iNewX<<endl;
-    cout<<"newY: "<<newY<<","<<iNewY<<endl;
-    cout<<"oldX: "<<*x<<","<<iOldX<<endl;
-    cout<<"oldY: "<<*y<<","<<iOldY<<endl;
+      cout<<"newX: "<<newX<<","<<iNewX<<endl;
+      cout<<"newY: "<<newY<<","<<iNewY<<endl;
+      cout<<"oldX: "<<*x<<","<<iOldX<<endl;
+      cout<<"oldY: "<<*y<<","<<iOldY<<endl;
     */
 
     bDone = true;
@@ -243,8 +507,8 @@ bool NgonSpiralAlgorithm::calcSpiral(double* x, double* y, double* r,
 
     if(++escape_count >= 100) {
       /*
-      cout<<"NgonSpiralAlgorithm::calcSpiral() Escape count reached!"<<endl;
-      cout<<"maxR: "<<_maxR<<endl;
+	cout<<"NgonSpiralAlgorithm::calcSpiral() Escape count reached!"<<endl;
+	cout<<"maxR: "<<_maxR<<endl;
       */
       //exit(1);
       //*r = _maxR+1.0;
@@ -264,3 +528,5 @@ bool NgonSpiralAlgorithm::calcSpiral(double* x, double* y, double* r,
 
   return (_rCoeff < 0.0) ? (newR <= _maxR) : (newR >= _maxR);
 }
+
+#endif

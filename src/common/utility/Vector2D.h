@@ -163,7 +163,7 @@ class Vector2D {
    * @param result The resulting point.
    * @return the multiplier, or NAN if lines don't intersect.
    */
-  double getIntersectingMul(const Point2D& pA, const Vector2D& vB, 
+  double getIntersectionMul(const Point2D& pA, const Vector2D& vB, 
 			    const Point2D& pB);
 
   /**
@@ -178,7 +178,7 @@ class Vector2D {
    * @param result The resulting point.
    * @return True if the lines intersect, false if they do not.
    */
-  bool getIntersectingPt(const Point2D& pA, const Vector2D& vB, 
+  bool getIntersectionPt(const Point2D& pA, const Vector2D& vB, 
 			 const Point2D& pB, Point2D& result);
 
   /**
