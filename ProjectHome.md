@@ -1,0 +1,1 @@
+The Idle Screen Project is a collection of screen savers for Windows and Linux.  To facilitate cross-platform compatibility, all screen savers use OpenGL and the Qt libraries and XML to store configuration data.  For screen shots and information on the different screen savers, please see the project home page at http://sites.google.com/site/idlescreenproject.

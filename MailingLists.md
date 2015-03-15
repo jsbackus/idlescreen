@@ -1,0 +1,10 @@
+If you are unable to find the answers to your questions in the [FAQs](FAQs.md), then you may be able to find answers in our mailing lists hosted by Google Groups.  All emails sent through the mailing lists are archived, so please search the archives before emailing the list.  Please also be sure to send emails to the appropriate lists.  If you are having problems with a potential bug or you have questions about a potential feature, please check the [issue tracker](http://code.google.com/p/idlescreen/issues/list) before posting.
+
+You may join the groups by navigating to the Google Groups page of the list(s) of interest (see below) and click on "Join this group" in the side bar on the right, or you may send an email to (Groupname)-subscribe@googlegroups.com.  For instance, to join the announcement list, send an email to announce-idlescreen-subscribe@googlegroups.com with "Subscribe" as the subject.  Note, the former method requires a Google account, whereas the latter method works for those with or without a Google account.
+
+**Notice:** Users are expected to treat each other with courtesy and respect.  Any disrespectful or off-topic posts will be removed.  Repeated abuse will result in the offending user's banishment from the lists.
+
+The following are the Google Groups associated with the Idle Screen Project and their descriptions:
+  * [User Discussion List](http://groups.google.com/group/users-idlescreen) - This list is devoted to user-related topics, such as problems installing, configuration discussions, etc.  If you are unsure of which list you should post your question to, use this one.
+  * [Developer Discussion List](http://groups.google.com/group/dev-idlescreen) - This list is devoted to development-related topics, such as problems compiling, bug and feature discussions, etc.
+  * [Announcement List](http://groups.google.com/group/announce-idlescreen) - This list is devoted to project announcements, such as releases and updates.  Only project members can post to this list.
